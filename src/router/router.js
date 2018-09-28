@@ -1,8 +1,22 @@
 module.exports = [
     {
-      path: '/pages/index/index', // 页面路径，同时是 vue 文件相对于 src 的路径，必填
-      config: { // 页面配置，即 page.json 的内容，可选
-        navigationBarTitleText: 'ceshi',
+      path: '/pages/index/index',
+      config: {
+        navigationBarTitleText: '町盟',
+        enablePullDownRefresh: true
+      }
+    },
+    {
+      path: '/pages/item/index',
+      config: {
+        navigationBarTitleText: '商品详情',
+        enablePullDownRefresh: true
+      }
+    },
+    {
+      path: '/pages/mine/index',
+      config: {
+        navigationBarTitleText: '我的拼单',
         enablePullDownRefresh: true
       }
     }

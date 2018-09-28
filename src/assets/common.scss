@@ -1,0 +1,65 @@
+$background:#FFF;
+$mainbackground: #000;
+$mainColor: #000;
+$subColor : #F46B6A;
+$pcolor:#515151;
+$fontcolor: #232323;
+$fontcolorA:#A0A0A0;
+$fontcolorB: #333333;
+$fontcolorC: #F46B6A;
+$fontcolorD: #1C1C1C;
+$fontcolorE: #C9C9C9;;
+$backgroundA: #F6F6F6;
+$bdBottom:1px solid #EAEAEA;
+$bdBottomA:1px solid #F4F4F4;
+$bdBottomB: 1px solid #FFFFFF;
+$bdBottomC: 1px solid $mainbackground;
+$border-radius:50%;
+$border-radiusA: 1rem;
+$border-radiusB: 0.08rem;
+$opacityColor:rgba(255,255,255,0.8);
+$opacityColorA:rgba(255,255,255,0.2);
+$opacityColorB:rgba(255,255,255,0.5);
+$font-family: "HelveticaNeueDeskInterface-Regula";
+$font-familyA: "PingFangSC-Regular";
+$font-familyB: "PingFangSC-Medium";
+$fontSize:0.28rem;
+$fontSizeA:0.32rem;
+$box-sizing:border-box;
+@mixin clearfix {
+    &:after {
+        clear: both;
+        content: '.';
+        display: block;
+        height: 0;
+        line-height: 0;
+        overflow: hidden;
+    }
+    .clearfix{
+        zoom:1;
+    }
+    *height: 1%;
+}
+@mixin overflow{
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+ /*正三角形*/
+  @mixin triangle_up{
+    width: 0;
+    height: 0;
+    border-left: 0.1rem solid transparent;
+    border-right: 0.1rem solid transparent;
+    border-bottom: 0.15rem solid #f46b6a;
+  }
+  /*倒三角形*/
+  @mixin triangle_down{
+    width: 0;
+    height: 0;
+    border-left: 0.1rem solid transparent;
+    border-right: 0.1rem solid transparent;
+    border-top: 0.15rem solid #7ed321;
+  }
+ 

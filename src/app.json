@@ -1,9 +1,26 @@
 {
-  "pages": [],
+  "pages": ["pages/index/index","pages/mine/index","pages/item/index"],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "WeChat",
     "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "color": "#666666",
+    "selectedColor": "#ff6464",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [{
+      "pagePath": "pages/index/index",
+      "text": "拼团首页",
+      "iconPath": "/static/img/index.png",
+      "selectedIconPath": "/static/img/index-a.png"
+    }, {
+      "pagePath": "pages/mine/index",
+      "text": "我的拼单",
+      "iconPath": "/static/img/mine.png",
+      "selectedIconPath": "/static/img/mine-a.png"
+    }]
   }
 }
