@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App'
 import http from "@/utils/http"
 import './css/common.css'
+import moment from 'moment'
 
 Vue.config.productionTip = false
 App.mpType = 'app'

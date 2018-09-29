@@ -9,21 +9,23 @@ var CopyWebpackPlugin = require('copy-webpack-plugin')
 var relative = require('relative')
 const MpvueEntry = require('mpvue-entry')
 
-function resolve (dir) {
+function resolve(dir) {
   return path.join(__dirname, '..', dir)
 }
 
-function getEntry (rootSrc) {
+function getEntry(rootSrc) {
   var map = {};
   glob.sync(rootSrc + '/pages/**/main.js')
-  .forEach(file => {
-    var key = relative(rootSrc, file).replace('.js', '');
-    map[key] = file;
-  })
-   return map;
+    .forEach(file => {
+      var key = relative(rootSrc, file).replace('.js', '');
+      map[key] = file;
+    })
+  return map;
 }
 
-const appEntry = { app: resolve('./src/main.js') }
+const appEntry = {
+  app: resolve('./src/main.js')
+}
 const pagesEntry = getEntry(resolve('./src'), 'pages/**/main.js')
 const entry = Object.assign({}, appEntry, pagesEntry)
 
@@ -36,9 +38,9 @@ module.exports = {
   output: {
     path: config.build.assetsRoot,
     filename: '[name].js',
-    publicPath: process.env.NODE_ENV === 'production'
-      ? config.build.assetsPublicPath
-      : config.dev.assetsPublicPath
+    publicPath: process.env.NODE_ENV === 'production' ?
+      config.build.assetsPublicPath :
+      config.dev.assetsPublicPath
   },
   resolve: {
     extensions: ['.js', '.vue', '.json'],
@@ -51,7 +53,11 @@ module.exports = {
     mainFields: ['browser', 'module', 'main']
   },
   module: {
-    rules: [
+    rules: [{
+        test: /\.css$/,
+        loader: 'style-loader!css-loader!stylus-loader',
+        include: ['node build/dev-server.js'],
+      },
       {
         test: /\.vue$/,
         loader: 'mpvue-loader',
@@ -105,12 +111,10 @@ module.exports = {
     }], {
       context: 'src/'
     }),
-    new CopyWebpackPlugin([
-      {
-        from: path.resolve(__dirname, '../static'),
-        to: path.resolve(__dirname, '../dist/static'),
-        ignore: ['.*']
-      }
-    ])
+    new CopyWebpackPlugin([{
+      from: path.resolve(__dirname, '../static'),
+      to: path.resolve(__dirname, '../dist/static'),
+      ignore: ['.*']
+    }])
   ]
 }

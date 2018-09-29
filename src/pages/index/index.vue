@@ -18,14 +18,14 @@
           <span>火热拼团中</span>
           </div>
         <div class="c2 text-right" v-show="num == 2">
-          <p class="hd">距开拼还有</p>
-          <p class="bd">
-            <span class="h value">{{time.hou}}</span>
+          <div class="hd">距开拼还有</div>
+          <div class="bd">
+            <span class="value">{{time.hou}}</span>
             <span class="colon">:</span>
-            <span class="m value">{{time.min}}</span>
+            <span class="value">{{time.min}}</span>
             <span class="colon">:</span>
-            <span class="s value">{{time.sec}}</span>
-          </p>
+            <span class="value">{{time.sec}}</span>
+          </div>
         </div>
         </div>
         </div>
@@ -89,7 +89,7 @@
   </div>
 </template>
 <script>
-'use strict';
+"use strict";
 import tools from "@/utils/mp";
 export default {
   data() {
@@ -174,7 +174,7 @@ export default {
   methods: {
     onLoad: function() {
       const _this = this;
-      let goodsList = [{ actEndTime: "2018-09-28 23:32:59" }];
+      let goodsList = [{ actEndTime: "2018-09-30 21:32:59" }];
       let endTimeList = [];
       // 将活动的结束时间参数提成一个单独的数组，方便操作
       goodsList.forEach(o => {
@@ -205,7 +205,7 @@ export default {
         if (endTime - newTime > 0) {
           let time = (endTime - newTime) / 1000;
           // 获取天、时、分、秒
-          let hou = parseInt((time % (60 * 60 * 24)) / 3600);
+          let hou = parseInt(time / 3600);
           let min = parseInt(((time % (60 * 60 * 24)) % 3600) / 60);
           let sec = parseInt(((time % (60 * 60 * 24)) % 3600) % 60);
           obj = {
@@ -302,8 +302,9 @@ export default {
   font-size: 28rpx;
 }
 .colon {
+  color:#000;
   font-size: 28rpx;
-  padding: 0 0.04rem;
+  padding: 4rpx;
 }
 .active {
   color: rgba(0, 0, 0, 1);
@@ -451,6 +452,13 @@ export default {
   color: rgba(0, 0, 0, 1);
   font-size: 32rpx;
   height: 32rpx;
+}
+.value {
+  background-color: #383838;
+  color: #fff;
+  padding: 0.03rem;
+  border-radius: 0.04rem;
+  font-size: 0.28rem;
 }
 .text2 {
   margin: 0 0 0 260rpx;

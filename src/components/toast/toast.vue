@@ -3,7 +3,7 @@
   <div class="weui_mask_transparent"></div>
   <div class="weui_toast">
     <div class="weui_loading" v-if="type === 'loading'">
-      <div v-for="(n, index) in 12" class="weui_loading_leaf" :class="'weui_loading_leaf_' + index"></div>
+      <div v-for="(n, index) in 12" :key="index" class="weui_loading_leaf" :class="'weui_loading_leaf_' + index"></div>
     </div>
     <i class="weui_icon_toast" v-else></i>
     <div class="weui_toast_content">
