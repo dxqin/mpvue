@@ -14,6 +14,13 @@ module.exports = [
       }
     },
     {
+      path: '/pages/mine/detail',
+      config: {
+        navigationBarTitleText: '町盟',
+        enablePullDownRefresh: true
+      }
+    },
+    {
       path: '/pages/mine/index',
       config: {
         navigationBarTitleText: '我的拼单',

@@ -1,0 +1,838 @@
+<template>
+<div>
+  <loading :loadingstatus="loadingstatus">
+  </loading>
+  <div class="detail">
+    <section class="detail_status">
+      <p class="order_status clearfix">
+        <span class="status inline-block">{{orderDetail.statusStr}}</span>
+        <span class="custom-service inline-block fr" @click="cs()">联系客服</span>
+      </p>
+      <p class="order_num">
+        <span v-show="orderDetail.status === 1000 || localCancelOrder === true">&nbsp;</span>
+        <span v-show="orderDetail.status !== 1000 && localCancelOrder === false" class="content">{{orderDetail.orderNo}}</span>
+      </p>
+      <p class="order_time">
+        <span class="title">订单时间:</span>
+        <span class="content">{{orderDetail.timeStr}}</span>
+      </p>
+    </section>
+
+    <section class="detail_express" v-if="orderDetail.status === 3000 || orderDetail.status === 4000">
+      <div>
+        <p class="detail_express_hd">
+          <span>物流信息</span>
+        </p>
+        <div class="detail_express_bd">
+          <div class="detail_express_bd_content">
+            <i class="line inline-block">&nbsp;</i>
+            <span class="inline-block circle"></span>
+            <p class="context">{{expressInfo.context}}</p>
+            <p class="time">{{expressInfo.ftime}}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="detail_address">
+      <p class="detail_address_hd">
+        <span>收货信息</span>
+      </p>
+      <p class="detail_address_bd">
+        <span class="detail_address_bd_title inline-block">收货人：</span>
+        <span class="detail_address_hd_content">{{orderDetail.address.consigneeName}}</span>
+      </p>
+      <p class="detail_address_bd">
+        <span class="detail_address_bd_title inline-block">联系电话：</span>
+        <span class="detail_address_hd_content">{{orderDetail.address.consigneeMobile}}</span>
+      </p>
+      <p class="detail_address_bd">
+        <span class="detail_address_bd_title inline-block">收货地址：</span>
+        <span class="detail_address_hd_content">{{orderDetail.address.addressInfo}}</span>
+      </p>
+    </section>
+
+    <section v-for="(li,index) in orderDetail.orderList" :key="li" v-if="orderDetail.status === 1000 || localCancelOrder === true">
+      <div class="detail_goods">
+        <p class="detail_goods_header">订单{{index + 1}}:</p>
+        <div class="detail_goods_content retinabb" v-for="(item, itemIndex) in li.itemList" :key="item.id">
+          <img class="pic" :src="item.skuImage" alt="商品图片" @click="goodsLink(item.itemId)" />
+          <div class="info">
+            <div>
+              <p class="info_title">{{item.name}}</p>
+              <p class="info_count">{{item.attributesList}}</p>
+              <p class="info_tips" v-if="item.warehouseType === 1">
+                <span class="info_tips_abroad">海外购</span>
+                <span>本商品为海外购产品，保税免邮</span>
+              </p>
+            </div>
+            <div class="info_status">
+              <p>
+                <span class="info_status_value">￥{{item.limitDiscountPrice}}</span>
+                <span class="info_status_count">x{{item.count}}</span>
+                <span class="info_status_discount" v-if="item.privilegeName !== '' ">
+                    <del>￥{{item.price}}</del>
+                    <!-- <span>{{item.privilegeName}}</span> -->
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail_order text-right">
+        <p class="detail_order_express">
+          <span class="title">运费：</span>
+          <span class="content" v-if="li.expressPrice === 0">已包邮</span>
+          <span class="content" v-if="li.expressPrice !== 0">￥{{li.expressPrice}}</span>
+        </p>
+        <p class="detail_order_count">
+          <span class="title">总计：</span>
+          <span class="content value">￥{{li.subOrderTotalPrice}}</span>
+        </p>
+      </div>
+    </section>
+
+    <section v-if="orderDetail.status !== 1000 && localCancelOrder === false" class="detail_s">
+      <div class="detail_goods">
+        <p class="detail_goods_header">商品信息</p>
+        <div class="" v-for="item in orderDetail.itemList" :key="item.id">
+          <div class="detail_goods_content retinabb">
+            <img class="pic" :src="item.skuImage" alt="商品图片" @click="goodsLink(item.itemId)" />
+            <div class="info">
+              <div>
+                <p class="info_title">{{item.name}}</p>
+                <p class="info_count">{{item.attributesList}}</p>
+                <p class="info_tips" v-if="item.warehouseType === 1">
+                  <span class="info_tips_abroad">海外购</span>
+                  <span>本商品为海外购产品，保税免邮</span>
+                </p>
+              </div>
+              <div class="info_status">
+                <p>
+                  <span class="info_status_value">￥{{item.limitDiscountPrice}}</span>
+                  <span class="info_status_count">x{{item.count}}</span>
+                  <span class="info_status_discount" v-if="item.privilegeName !== '' ">
+                      <del>￥{{item.price}}</del>
+                      <!-- <span>{{item.privilegeName}}</span> -->
+                  </span>
+                </p>
+              </div>
+            </div>
+          </div>
+          <p class="detail_goods_info text-right" v-if="item.info && item.info.show">
+            <span :class="{ warn : item.info.warn }">{{item.info.content}}</span>
+            <span class="btn" v-if="item.btn.show" @click="editExpressInfo(item.status,item.orderDetailId)">
+                <span v-show="item.btn.content !== '联系客服'">{{item.btn.content}}</span>
+            <span v-show="item.btn.content === '联系客服'" @click="cs()">{{item.btn.content}}</span>
+            </span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="detail_count">
+      <p class="detail_address_hd">
+        <span>订单金额</span>
+      </p>
+      <p class="detail_address_bd">
+        <span class="detail_address_bd_title inline-block">商品总价：</span>
+        <span class="detail_address_hd_content">￥{{orderDetail.orderAmount}}</span>
+      </p>
+      <p class="detail_address_bd">
+        <span class="detail_address_bd_title inline-block">运费(快递)：</span>
+        <span class="detail_address_hd_content" v-if="orderDetail.expressAmount === 0">已包邮</span>
+        <span class="detail_address_hd_content" v-if="orderDetail.expressAmount !== 0">￥{{orderDetail.expressAmount}}</span>
+      </p>
+      <p class="detail_address_bd" v-for="li in orderDetail.otherDiscount" :key="li.id" v-if="li.type === 0 && li.amount !== 0">
+        <span class="detail_address_bd_title inline-block">{{li.name}}：</span>
+        <span class="detail_address_hd_content">-￥{{li.amount}}</span>
+      </p>
+      <p class="detail_address_bd">
+        <span class="detail_address_bd_title inline-block">佣金抵扣：</span>
+        <span class="detail_address_hd_content">￥{{orderDetail.priceOther}}</span>
+      </p>
+      <p class="detail_address_bd">
+        <span class="detail_address_bd_title inline-block">总计：</span>
+        <span class="detail_address_hd_content">￥{{orderDetail.totalAmount}}</span>
+      </p>
+
+    </section>
+    <div class="pay_methods" v-if="orderDetail.status === 1000">
+        <div class="pay_methods_cell">
+            <text class="pay_methods_cell_title text-defalut">您的支付方式</text>
+            <div class="pay_methods_cell_content wx" @click="payMethod(4)">
+              <div class="pay_methods_cell_content_left">
+                <img class="pay_methods_cell_content_icon_wx" src="/static/svg/wechat.svg" />
+                <div class="pay_methods_cell_content_title">
+                  <text class="defalut">微信支付</text>
+                  <text class="sub">推荐使用微信支付</text>
+                </div>
+              </div>
+
+                <img class="pay_methods_cell_content_select" src="/static/svg/unselect.svg" v-if="channel !== 4" />
+                <img class="pay_methods_cell_content_select" src="/static/svg/select.svg" v-if="channel === 4" />
+            </div>
+            <div class="pay_methods_cell_content credit" @click="payMethod(2)">
+              <div class="pay_methods_cell_content_left">
+
+                <img class="pay_methods_cell_content_icon" src="/static/svg/credit.svg" />
+                <div class="pay_methods_cell_content_title">
+                  <text class="defalut">额度支付</text>
+                  <text class="sub">需要额度还清才能开具发票</text>
+                </div>
+              </div>
+
+                <img class="pay_methods_cell_content_select" src="/static/svg/unselect.svg" v-if="channel !== 2" />
+                <img class="pay_methods_cell_content_select" src="/static/svg/select.svg" v-if="channel === 2" />
+            </div>
+        </div>
+    </div>       
+    <section class="detail_cancel text-center" v-if="orderDetail.status === 1000">
+      <a class="detail_cancel_btn block" @click="cancelOrder()">取消订单</a>
+    </section>
+    <p>&nbsp;</p>
+
+
+    <section class="detail_pay" v-if="orderDetail.status === 1000 || orderDetail.status === 3000">
+      <div class="detail_pay_hd" v-if="orderDetail.status === 1000">
+        <p>
+          <span class="title">合计:</span>
+          <span class="value">￥{{orderDetail.totalAmount}}</span>
+        </p>
+        <p class="tips">{{discount}}<br>订单将自动关闭</p>
+      </div>
+      <p class="detail_pay_hd" v-if="orderDetail.status === 3000 ">
+        <span class="tips_check">{{discount}} 后自动确认收货</span>
+      </p>
+      <a class="detail_pay_btn block text-center" v-if="orderDetail.status === 1000" @click="payNow()">
+        <div class="load3 inline-block" v-show="payStauts">
+          <div class="loader"></div>
+        </div>
+        <span v-show="!payStauts">立即支付</span>
+        <span v-show="payStauts">支付中</span>
+      </a>
+      <a class="detail_pay_btn block text-center" v-if="orderDetail.status === 3000" @click="checkedOrder()">确认收货</a>
+    </section>
+  </div>
+
+  <!-- <modal v-show="dialogControl" type="confirm" title="" @weui-dialog-confirm="handleDialogAction('确定')" @weui-dialog-cancel="handleDialogAction('取消')">
+    <p>取消订单后，本单享受的优惠和佣金抵扣将原路退回，是否继续？</p>
+  </modal>
+  <modal v-show="dialogCheckItem" type="confirm" title="" @weui-dialog-confirm="checkedItem('确定')" @weui-dialog-cancel="checkedItem('取消')">
+    <p>是否要确认该订单？</p>
+  </modal>
+  <toast v-show="toastShow">操作成功</toast>
+  <modal v-show="customService" type="alert" title="联系客服" @weui-dialog-confirm="hideCustomService('我知道了')" :confirm-button="'我知道了'">
+    <p>点击象盟公众号左下角的小键盘按钮，切换到对话框模式，即可输入文字信息联系客服。(9:00—24:00)</p>
+  </modal> -->
+</div>
+</template>
+
+<style lang="stylus" scoped>
+@import './styles/detail.styl';
+
+.pay_methods {
+  background-color: #FFFFFF;
+  margin-bottom: 20rpx;
+}
+
+.pay_methods_cell {
+  margin: 20rpx 40rpx 0 40rpx;
+}
+
+.pay_methods_cell_title {
+  margin-top: 20rpx;
+}
+
+.pay_methods_cell_content {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  align-items: center;
+}
+
+.pay_methods_cell_content {
+  margin-top: 30rpx;
+}
+
+.pay_methods_cell_content.wx {
+  border-bottom: 1rpx solid #d2d2d2;
+}
+
+.pay_methods_cell_content_left {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.pay_methods_cell_content_title .default {
+  color: #000000;
+  font-size: 28rpx;
+}
+
+.pay_methods_cell_content_title .sub {
+  color: #8e97a1;
+  font-size: 24rpx;
+}
+
+.pay_methods_cell_content_icon_wx {
+  width: 68rpx;
+  height: 68rpx;
+}
+
+.pay_methods_cell_content_icon {
+  width: 68rpx;
+  max-height: 68rpx;
+}
+
+.pay_methods_cell_content_title {
+  margin-left: 30rpx;
+  display: flex;
+  flex-direction: column;
+}
+
+.pay_methods_cell_content_title.name {
+  font-size: 28rpx;
+}
+
+.pay_methods_cell_content_title.sub {
+  font-size: 24rpx;
+  color: #8e97a1;
+}
+
+.pay_methods_cell_content_select {
+  width: 40rpx;
+  height: 40rpx;
+  float: right;
+  margin-right: 30rpx;
+}
+</style>
+
+
+<script>
+"use strict";
+import Vue from "vue";
+import Modal from "../../components/dialog/dialog.vue";
+import Toast from "../../components/toast/toast.vue";
+import loading from "../../components/loading/loading";
+import format from "@/utils/format";
+import tools from "@/utils/mp";
+
+export default {
+  data() {
+    const _this = this;
+    return {
+      loadingstatus: _this.loadingstatus,
+      dialogControl: _this.dialogControl,
+      dialogCheckItem: _this.dialogCheckItem,
+      toastShow: _this.toastShow,
+      orderDetail: _this.orderDetail,
+      discount: _this.discount,
+      expressInfo: _this.expressInfo,
+      localCancelOrder: _this.localCancelOrder,
+      customService: _this.customService,
+      payStauts: _this.payStauts,
+      userRecommendFlag: _this.userRecommendFlag,
+      channel: 4
+    };
+  },
+  beforeMount() {
+    const _this = this;
+    _this.init();
+  },
+  computed: {},
+  methods: {
+    init() {
+      const _this = this;
+      _this.loadingstatus = true;
+      _this.expressInfo = {
+        context: ""
+      };
+      _this.localCancelOrder = false;
+      _this.toastShow = false;
+      _this.dialogControl = false;
+      _this.dialogCheckItem = false;
+      _this.customService = false;
+      _this.payStauts = false;
+      _this.userRecommendFlag = 0;
+      //   _this.getDetail();
+    },
+    showToast() {
+      tools.showToast({ title: "操作成功", icon: "success" });
+    },
+    //点击商品图片链接
+    goodsLink(id) {
+      const _this = this;
+      if (false) {
+        _this.$router.push({
+          name: "membership"
+        });
+      } else {
+        _this.$router.push({
+          name: "goodsDetail",
+          params: {
+            id
+          }
+        });
+      }
+    },
+    //获取订单详情
+    getDetail() {
+      const _this = this;
+      let orderNo = _this.$root.$mp.query.id;
+      let type = _this.$root.$mp.query.type;
+      let params = {
+        orderNo
+      };
+      if (type === "multiple") {
+        _this.$http.get("/order/orderDetail", params).then(res => {
+          if (res.code === 0) {
+            _this.orderDetail = res.data;
+            _this.orderDetail.timeStr = format.formatDate(
+              _this.orderDetail.createTime,
+              "YYYY年MM月DD日 HH:mm"
+            );
+            _this.orderDetail.orderAmount =
+              _this.orderDetail.activityOrderAmount;
+            _this.orderDetail.statusStr = format.detailOrderStatus(
+              _this.orderDetail.status
+            );
+            _this.userRecommendFlag =
+              _this.orderDetail.orderList[0].itemList[0].userRecommendFlag;
+            _this.timeDiscount(_this.orderDetail.createTime);
+            _this.loadingstatus = false;
+          }
+        });
+      } else {
+        _this.$http.get("/order/subOrderDetail", params).then(res => {
+          if (res.code === 0) {
+            _this.orderDetail = res.data;
+            _this.orderDetail.timeStr = format.formatDate(
+              _this.orderDetail.createTime,
+              "YYYY年MM月DD日 HH:mm"
+            );
+            _this.orderDetail.orderAmount =
+              _this.orderDetail.activityOrderAmount;
+            _this.orderDetail.statusStr = format.detailOrderStatus(
+              _this.orderDetail.status
+            );
+            _this.userRecommendFlag =
+              _this.orderDetail.itemList[0].userRecommendFlag;
+            //待发货订单
+            if (_this.orderDetail.status === 1000) {
+              _this.timeDiscount(_this.orderDetail.createTime);
+            }
+            //已发货订单
+            if (_this.orderDetail.status === 3000) {
+              _this.timeDiscount(_this.orderDetail.expressUpdateTime);
+            }
+            //已发货&订单完成订单获取物流信息
+            if (
+              _this.orderDetail.status === 3000 ||
+              _this.orderDetail.status === 4000
+            ) {
+              _this.getExpress(_this.orderDetail.orderNo);
+            }
+            if (
+              _this.orderDetail.status !== 1000 &&
+              _this.localCancelOrder === false
+            ) {
+              let itemList = _this.orderDetail.itemList;
+              itemList.forEach((v, i, a) => {
+                itemList[i].btn = {};
+                itemList[i].info = {};
+                switch (itemList[i].status) {
+                  //用户申请退款
+                  case 2001:
+                    itemList[i].info.show = true;
+                    itemList[i].info.content = "已申请退款，等待平台确认";
+                    itemList[i].info.warn = true;
+                    itemList[i].btn.show = false;
+                    itemList[i].btn.content = "";
+                    break;
+                  //退款驳回
+                  case 2002:
+                    itemList[i].info.show = true;
+                    itemList[i].info.content = "退款已驳回";
+                    itemList[i].info.warn = true;
+                    itemList[i].btn.show = true;
+                    itemList[i].btn.content = "联系客服";
+                    break;
+                  //退款驳回（平台发货）
+                  case 2001:
+                    itemList[i].info.show = false;
+                    itemList[i].info.content = "";
+                    itemList[i].info.warn = true;
+                    itemList[i].btn.show = false;
+                    itemList[i].btn.content = "";
+                    break;
+                  //用户申请退货
+                  case 3001:
+                    itemList[i].info.show = true;
+                    itemList[i].info.content = "已申请退货，等待平台确认";
+                    itemList[i].info.warn = true;
+                    itemList[i].btn.show = false;
+                    itemList[i].btn.content = "";
+                    break;
+                  //平台同意退货并要求用户将商品寄回
+                  case 3002:
+                    itemList[i].info.show = true;
+                    itemList[i].info.content = "退货请求已批准，请将商品寄回";
+                    itemList[i].info.warn = false;
+                    itemList[i].btn.show = true;
+                    itemList[i].btn.content = "填写物流信息";
+                    break;
+                  //用户退回货品
+                  case 3003:
+                    itemList[i].info.show = true;
+                    itemList[i].info.content = "退货请求已批准，请将商品寄回";
+                    itemList[i].info.warn = false;
+                    itemList[i].btn.show = true;
+                    itemList[i].btn.content = "修改物流信息";
+                    break;
+                  //平台驳回退货
+                  case 3004:
+                    itemList[i].info.show = true;
+                    itemList[i].info.content = "退货已驳回";
+                    itemList[i].info.warn = true;
+                    itemList[i].btn.show = true;
+                    itemList[i].btn.content = "联系客服";
+                    break;
+                  //退货驳回后用户确认收货或者系统自动收货
+                  case 3003:
+                    itemList[i].info.show = true;
+                    itemList[i].info.content = "退货请求已批准，请将商品寄回";
+                    itemList[i].info.warn = false;
+                    itemList[i].btn.show = true;
+                    itemList[i].btn.content = "修改物流信息";
+                    break;
+                  //平台同意退货退款
+                  // case -1004:
+                  //   itemList[i].info.show = true;
+                  //   itemList[i].info.content = "退货请求已批准，请将商品寄回";
+                  //   itemList[i].info.warn = false;
+                  //   itemList[i].btn.show = true;
+                  //   itemList[i].btn.content = "修改物流信息";
+                  //   break;
+                  //用户申请售后
+                  case 4001:
+                    itemList[i].info.show = true;
+                    itemList[i].info.content = "已申请售后，等待平台确认";
+                    itemList[i].info.warn = true;
+                    itemList[i].btn.show = false;
+                    itemList[i].btn.content = "";
+                    break;
+                  //平台同意售后并要求用户将商品寄回
+                  case 4002:
+                    itemList[i].info.show = true;
+                    itemList[i].info.content = "售后请求已批准，请将商品寄回";
+                    itemList[i].info.warn = false;
+                    itemList[i].btn.show = true;
+                    itemList[i].btn.content = "填写物流信息";
+                    break;
+                  //用户退回商品
+                  case 4003:
+                    itemList[i].info.show = true;
+                    itemList[i].info.content = "售后请求已批准，请将商品寄回";
+                    itemList[i].info.warn = false;
+                    itemList[i].btn.show = true;
+                    itemList[i].btn.content = "修改物流信息";
+                    break;
+                  //售后驳回
+                  case 4004:
+                    itemList[i].info.show = true;
+                    itemList[i].info.content = "售后驳回";
+                    itemList[i].info.warn = true;
+                    itemList[i].btn.show = true;
+                    itemList[i].btn.content = "联系客服";
+                    break;
+                  default:
+                    itemList[i].info.show = false;
+                    itemList[i].info.content = "";
+                    itemList[i].info.warn = false;
+                    itemList[i].btn.show = false;
+                    itemList[i].btn.content = "";
+                }
+              });
+              console.log(itemList);
+            }
+            _this.loadingstatus = false;
+          }
+        });
+      }
+    },
+    //获取物流详情
+    getExpress(id) {
+      const _this = this;
+      // console.log(id);
+      // id = '1702071741162275288338';
+      let params = {
+        orderNo: id
+      };
+      return this.$http.get("/order/express", params).then(res => {
+        if (res.code === 0) {
+          let express = res.data;
+          if (express.expressInfo.length > 0) {
+            _this.expressInfo = express.expressInfo[0];
+          } else {
+            _this.expressInfo.context = "暂无";
+          }
+          sessionStorage.setItem("express", JSON.stringify(express));
+        }
+      });
+    },
+    //支付操作
+    payNow() {
+      const _this = this;
+      let orderNo = _this.$root.$mp.query.id;
+      let data = {
+        orderNo,
+        channel: _this.channel
+      };
+      _this.payStauts = true;
+      _this.$http.get("/pay/orderPay", data).then(res => {
+        if (res.code === 0) {
+          _this.payInfo = res.data;
+          _this.pay = _this.payInfo.pay;
+          if (_this.channel == 2) {
+            // 额度支付
+            this.$http
+              .post("/pay/creditCallback", { orderNo: _this.payInfo.orderNo })
+              .then(res => {
+                if (res.code === 0) {
+                  // 支付成功
+                  wx.showToast({
+                    title: "支付成功",
+                    icon: "none",
+                    duration: 2000
+                  });
+                  setTimeout(function() {
+                    wx.redirectTo({
+                      url:
+                        "/pages/order/list?result=success&id=" +
+                        _this.payInfo.orderNo
+                    });
+                  }, 3000);
+                } else {
+                  // 支付失败
+                  console.log(res.message);
+                  wx.showToast({
+                    title: res.message,
+                    icon: "none",
+                    duration: 2000
+                  });
+                  setTimeout(function() {
+                    wx.redirectTo({
+                      url:
+                        "/pages/order/list?result=success&id=" +
+                        _this.payInfo.orderNo
+                    });
+                  }, 3000);
+                }
+              });
+          } else {
+            // 小程序支付
+            wx.requestPayment({
+              timeStamp: _this.pay.timestamp,
+              nonceStr: _this.pay.nonceStr,
+              package: _this.pay.package,
+              signType: _this.pay.signType,
+              paySign: _this.pay.paySign,
+              success: function(res) {
+                wx.redirectTo({
+                  url:
+                    "/pages/order/list?result=success&id=" +
+                    _this.payInfo.orderNo
+                });
+              },
+              fail: function(res) {
+                wx.redirectTo({
+                  url:
+                    "/pages/order/list?result=failure&id=" +
+                    _this.payInfo.orderNo
+                });
+              },
+              complete: function(res) {}
+            });
+          }
+        }
+      });
+    },
+    //取消订单&自动确认收货倒计时
+    timeDiscount(time) {
+      const _this = this;
+      let type = _this.$root.$mp.query.type;
+      let timeLen = 0;
+      if (type === "multiple") {
+        timeLen = 30;
+      } else {
+        timeLen = 60 * 24 * 14;
+      }
+      setInterval(() => {
+        let diff = this.$moment(
+          this.$moment(time * 1000 + timeLen * 60 * 1000).diff(this.$moment())
+        ).utc();
+        if (diff > 0) {
+          if (type === "multiple") {
+            _this.discount = diff.format("mm分ss秒后");
+          } else {
+            let dd = (_this.discount = diff.format("DD") - 1);
+            _this.discount = dd + diff.format("天HH小时mm分");
+          }
+        } else {
+          if (type === "multiple") {
+            _this.orderDetail.status = -1000;
+          } else {
+            //_this.orderDetail.status = 4000;
+          }
+        }
+      }, 1000);
+    },
+    //退款退货售后操作
+    operation(value, id, status) {
+      const _this = this;
+      //退款 type=refund
+      if (value === 2000) {
+        _this.$router.push({
+          name: "afterSaleReason",
+          params: {
+            type: "refund",
+            id: id
+          }
+        });
+        return;
+      }
+      //退货 type=return
+      if (value === 3000) {
+        _this.$router.push({
+          name: "afterSaleReason",
+          params: {
+            type: "return",
+            id: id
+          }
+        });
+        return;
+      }
+      //售后 type=after
+      if (value === 4000) {
+        _this.$router.push({
+          name: "afterSaleReason",
+          params: {
+            type: "after",
+            id: id
+          }
+        });
+        return;
+      }
+      //退货驳回&交易成功=>申请售后
+      if (value === 3004 && status === 4000) {
+        _this.$router.push({
+          name: "afterSaleReason",
+          params: {
+            type: "after",
+            id: id
+          }
+        });
+        return;
+      }
+    },
+    //填写&修改物流信息跳转
+    editExpressInfo(value, id) {
+      const _this = this;
+      //填写物流信息 type=new
+      if (value === 3002 || value === 4002) {
+        _this.$router.push({
+          name: "afterSaleExpress",
+          params: {
+            type: "new",
+            id: id
+          }
+        });
+        return;
+      }
+      //修改物流信息 type=edit
+      if (value === 3003 || value === 4003) {
+        _this.$router.push({
+          name: "afterSaleExpress",
+          params: {
+            type: "edit",
+            id: id
+          }
+        });
+        return;
+      }
+    },
+    //取消订单按钮
+    cancelOrder() {
+      const _this = this;
+      _this.dialogControl = true;
+    },
+    //确认收货按钮
+    checkedOrder() {
+      const _this = this;
+      _this.dialogCheckItem = true;
+      _this.checkedItem("确定");
+    },
+    //取消订单操作
+    handleDialogAction(action) {
+      const _this = this;
+      if (action === "确定") {
+        let orderNo = _this.$route.params.id;
+        let data = {
+          orderNo
+        };
+        Vue.OneMallHttp()
+          .PUT(data, Vue.OneMallUrl.cancelOrder)
+          .then(res => {
+            if (res.code === 0) {
+              // this.$route.params.type = "single";
+              _this.getDetail();
+              _this.showToast();
+              _this.localCancelOrder = true;
+            }
+          });
+      }
+      _this.dialogControl = false;
+      window.mallUtils.funs.activeTouchMove();
+    },
+    //确认收货操作
+    checkedItem(action) {
+      const _this = this;
+      if (action === "确定") {
+        let orderNo = _this.$root.$mp.query.id;
+        let data = {
+          orderNo
+        };
+        _this.$http.put("/order/orderConfirm", data).then(res => {
+          if (res.code === 0) {
+            _this.getDetail();
+            _this.showToast();
+          }
+        });
+      }
+      _this.dialogCheckItem = false;
+    },
+    hideCustomService(action) {
+      const _this = this;
+      _this.customService = false;
+      window.mallUtils.funs.activeTouchMove();
+    },
+    //客服
+    cs() {
+      const _this = this;
+      _this.customService = true;
+      window.mallUtils.funs.unTouchMove();
+    },
+    payMethod(channel) {
+      const _this = this;
+      _this.channel = channel;
+    }
+  },
+  components: {
+    Modal,
+    Toast,
+    loading
+  }
+};
+</script>

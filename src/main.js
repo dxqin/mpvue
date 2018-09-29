@@ -12,3 +12,4 @@ app.$mount()
 
 //将fly实例挂在Vue原型上
 Vue.prototype.$http = http
+Vue.prototype.$moment = moment
