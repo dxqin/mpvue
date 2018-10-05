@@ -8,7 +8,7 @@
       <div class="list_orders_item" @click="detail(index)">
         <p class="list_orders_item_header">{{li.dateTime}}</p>
         <div class="list_orders_item_content">
-          <img class="pic" :src="li.skuImage" alt="" />
+          <img class="pic" :src="li.skuImage" />
           <div class="info">
             <div>
               <p class="info_title">{{li.name}}</p>

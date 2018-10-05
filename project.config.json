@@ -9,7 +9,7 @@
 	},
 	"miniprogramRoot": "dist/",
 	"compileType": "miniprogram",
-	"appid": "touristappid",
+	"appid": "wx5bbb4368151fafed",
 	"projectname": "dm-mp",
 	"condition": {
 		"search": {

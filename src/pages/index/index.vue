@@ -30,7 +30,7 @@
         </div>
         </div>
         <div v-show="num == 1" class="ub-box ub-col z-margin-top-6-px z-padding-all-8-px" v-for="(item, idx) in list" :key="idx">
-      <div @click="navigate('/pages/item/index')" :class="{'z-border-bottom-1-eee':isLast==false}" class="card ub-box z-padding-v-10-px">
+      <div @click="navigate('/pages/item/paySuccess')" :class="{'z-border-bottom-1-eee':isLast==false}" class="card ub-box z-padding-v-10-px">
       <img :src="item.img" class="z-img-cover">
       <div class="z-padding-h-10-px ub-flex-1 ub-box ub-col">
         <div class="ub-box ub-ver ub-between">
@@ -91,6 +91,7 @@
 <script>
 "use strict";
 import tools from "@/utils/mp";
+import user from "@/utils/user.js";
 export default {
   data() {
     return {
@@ -240,6 +241,11 @@ export default {
   },
   onShow() {
     const _this = this;
+    const token = user.getToken();
+    if (!token) {
+      //未登录，先去登录
+      user.login();
+    }
     _this.onLoad();
   },
   onPullDownRefresh() {
@@ -302,7 +308,7 @@ export default {
   font-size: 28rpx;
 }
 .colon {
-  color:#000;
+  color: #000;
   font-size: 28rpx;
   padding: 4rpx;
 }

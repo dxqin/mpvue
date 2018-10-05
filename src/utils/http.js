@@ -13,7 +13,7 @@ const fly = new Fly()
 // 设置请求基地址
 // fly.config.baseURL = 'http://localhost:8888'
 // fly.config.baseURL = 'http://192.168.2.71:1443'
-fly.config.baseURL = 'https://wx.85caigou.com'
+fly.config.baseURL = 'https://wxtest.dingleague.com'
 
 fly.interceptors.request.use((request) => {
  // 鉴权
