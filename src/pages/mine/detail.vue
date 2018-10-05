@@ -55,7 +55,7 @@
     <section v-for="(li,index) in orderDetail.orderList" :key="li" v-if="orderDetail.status === 1000 || localCancelOrder === true">
       <div class="detail_goods">
         <p class="detail_goods_header">订单{{index + 1}}:</p>
-        <div class="detail_goods_content retinabb" v-for="(item, itemIndex) in li.itemList" :key="item.id">
+        <div class="detail_goods_content retinabb" v-for="(item, itemIndex) in li.itemList" :key="itemIndex">
           <img class="pic" :src="item.skuImage" alt="商品图片" @click="goodsLink(item.itemId)" />
           <div class="info">
             <div>

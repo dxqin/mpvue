@@ -14,7 +14,28 @@ module.exports = [
       }
     },
     {
-      path: '/pages/mine/detail',
+      path: '/pages/item/pay',
+      config: {
+        navigationBarTitleText: '町盟',
+        enablePullDownRefresh: true
+      }
+    },
+    {
+      path: '/pages/item/payError',
+      config: {
+        navigationBarTitleText: '町盟',
+        enablePullDownRefresh: true
+      }
+    },
+    {
+      path: '/pages/item/joinError',
+      config: {
+        navigationBarTitleText: '町盟',
+        enablePullDownRefresh: true
+      }
+    },
+    {
+      path: '/pages/item/paySuccess',
       config: {
         navigationBarTitleText: '町盟',
         enablePullDownRefresh: true
@@ -23,8 +44,15 @@ module.exports = [
     {
       path: '/pages/mine/index',
       config: {
-        navigationBarTitleText: '我的拼单',
+        navigationBarTitleText: '町盟',
         enablePullDownRefresh: true
       }
-    }
+    },
+    {
+      path: '/pages/mine/detail',
+      config: {
+        navigationBarTitleText: '町盟',
+        enablePullDownRefresh: true
+      }
+    },
   ]
