@@ -88,7 +88,7 @@ export default {
       _this.toastShow = false;
       _this.toastShowAll = false;
       _this.currentPage = 1;
-      _this.tabs = ["全部", "待拼单", "待发货", "待收货", "退货／售后"];
+      _this.tabs = ["全部", "待拼单", "待发货", "待收货"];
       _this.select = 0;
       //   _this.firstGetList();
     },

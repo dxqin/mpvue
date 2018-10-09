@@ -1,8 +1,6 @@
 <template>
   <div>
-    <loading :loadingstatus="loadingstatus">
-    </loading>
-    <div class="detail" v-if="detail" :class="{fixPb: activityStatus === 1  || activityStatus === 2 }">
+    <div class="detail" v-if="detail">
 
       <section v-if="detail.itemsExtension.detailType === 1">
         <img class="detail_video_icon" src="https://static.paranoidsqd.com/images/goods/play.png" v-if="detail.itemsExtension.detailType === 1 && playIcon" @click="play" />
@@ -11,111 +9,82 @@
         </d-player>
         </p>
       </section>
-
-      <section v-if="detail.itemsExtension.detailType === 1 && detail.currentActivity[0]">
-        <div v-if="detail.currentActivity.length !== 0 && userInfo.memberLevel === 2" class="detail_activity text-center">{{detail.currentActivity[0].title}}</div>
-      </section>
-
-      <section class="detail_img" v-if="detail.itemsExtension.detailType === 2">
-        <div class="detail_img_context">
-          <p class="detail_img_context_name">{{detail.name}}</p>
-        </div>
-        <img class="detail_img_img block" :src="detail.itemsExtension.graphicUrl" />
-      </section>
-
-      <section v-if="detail.itemsExtension.detailType === 2 && detail.currentActivity[0]">
-        <div v-if="detail.currentActivity.length !== 0 && userInfo.memberLevel === 2" class="detail_activity text-center">{{detail.currentActivity[0].title}}</div>
-      </section>
       
-      <section class="detail_banner swiper-container" v-if="detail.itemsExtension.detailType === 0">
-        <div class="swiper-wrapper">
-          <div class="swiper-slide" v-for="(li,index) in detail.extraImageUri" :key="index"><img class="detail_banner_img" :src="li" /></div>
-        </div>
-        <div class="swiper-pagination"></div>
-      </section>
-
-      <section v-if="detail.itemsExtension.detailType === 0 && detail.currentActivity[0]">
-        <div v-if="detail.currentActivity.length !== 0 && userInfo.memberLevel === 2" class="detail_activity text-center">{{detail.currentActivity[0].title}}</div>
-      </section>
+        <section  v-if="detail.itemsExtension.detailType === 0">
+          <swiper class="swiper" v-bind:indicator-dots="true" v-bind:autoplay="autoplay"
+                  v-bind:interval="interval" v-bind:duration="duration">
+            <block v-for="(li,index) in detail.extraImageUri" :key="index">
+              <swiper-item>
+                <image class="swiper-image" v-bind:mode="widthFix" :src="li" />
+              </swiper-item>
+            </block>
+          </swiper>
+        </section>
 
       <section class="detail_content">
-        <div class="detail_content_td" v-if="detail.itemsExtension.detailType === 1 || detail.itemsExtension.detailType === 2">
-          <img class="detail_content_td_header inline-block" :src="detail.itemsExtension.authorLogo " />
-          <div class="detail_content_td_content">
-            <p class="detail_content_td_content_title">{{detail.itemsExtension.authorName}}倾情推荐</p>
-            <p class="detail_content_td_content_context">{{detail.itemsExtension.authorTime | formatDate('YYYY年MM月DD日 HH时mm分')}} {{detail.itemsExtension.authorAddress}}</p>
-          </div>
-        </div>
 
         <h2 class="detail_content_title" v-if="detail.itemsExtension.detailType === 1 || detail.itemsExtension.detailType === 0">{{detail.name}}</h2>
         <p class="detail_content_subtitle">{{detail.title}}</p>
-        <div class="detail_content_share" v-if="detail.itemsExtension.detailType === 1 || detail.itemsExtension.detailType === 2">
-          <p class="detail_content_share_context" v-show="userInfo.memberLevel === 2 && !promotion && detail.userRecommendFlag === 0">分享奖励最高达{{commissionPrice}}元</p>
-          <p class="detail_content_share_context" v-show="userInfo.memberLevel !== 2">&nbsp;</p>
-          <div class="detail_content_share_hd" v-show="!promotion">
-            <span @click="copyLink()">
-              <i class="detail_content_share_iconl icon-link"></i>
-            </span>
-            <div @click="navigate('/pages/order/list?id=' + id)">
-              <i class="detail_content_share_icons icon-share"></i>
-            </div>
-          </div>
-        </div>
-
-        <div class="detail_content_cells" v-if="(detail.itemsExtension.detailType === 1 || detail.itemsExtension.detailType === 2) && detail.currentActivity[0]">
-          <div class="weui_cells_access" v-if="detail.currentActivity.length !== 0 && userInfo.memberLevel === 2">
-            <a class="weui_cell">
-              <div class="weui_cell_ft" @click="doubleReward()">{{detail.currentActivity[0].subTitle}}</div>
-            </a>
-          </div>
-        </div>
+        
         <div class="detail_content_hd" v-if="detail.itemsExtension.detailType === 0">
           <p class="price">￥
-            <span class="price--now_i">{{price.i}}</span>
-            <span class="price--now_f">{{price.f}}</span>
+            <span class="price--now_i">{{detail.unitPriceDesc}}</span>
           </p>
-          <div class="detail_content_hd_btn" v-show="!promotion">
+          <div class="detail_content_hd_btn" v-if="!promotion">
             <p @click="copyLink()">
-              <i class="icon-link"></i>
+              <img src="/static/img/sr.png" class="icon-link" />
             </p>
-            <div>
-              <div @click="navigate('/pages/order/list?id=' + id)">
-                <i class="icon-share"></i>
-              </div>
-            </div>
           </div>
         </div>
         <div class="detail_content_hd" v-if="detail.itemsExtension.detailType === 0">
-          <p>
-            <del class="price--discount">￥{{detail.originalPriceDesc}}</del>
-          </p>
-          <p class="share" v-show="userInfo.memberLevel === 2 && !promotion && detail.userRecommendFlag === 0">分享奖励最高达{{commissionPrice}}元</p>
-        </div>
-
-        <div class="detail_content_cell" v-if="detail.itemsExtension.detailType === 0 && detail.currentActivity[0]">
-          <div class="weui_cells weui_cells_access" v-if="detail.currentActivity.length !== 0 && userInfo.memberLevel === 2">
-            <a class="weui_cell">
-              <div class="weui_cell_ft" @click="doubleReward()">{{detail.currentActivity[0].subTitle}}</div>
-            </a>
+          <div class="detail_content_hd_btn">
+            <del class="price--discount1">￥{{detail.originalPriceDesc}}</del>
+            <text class="price--discount2">拼团优惠</text>
           </div>
+            <text class="price--text">已拼{{detail.count}}个·2人拼单</text>
         </div>
       </section>
 
-      <section class="detail_inner" v-if="detail.itemsExtension.detailType === 1 || detail.itemsExtension.detailType === 2">
-        <ul class="detail_inner_hd" ref="tabnav">
-          <li class="detail_inner_hd_tab" v-for="(li, key) in menuList" :key="key" @click="tab(key)" :class="[tabSelect === key ? 'active' : '']">{{li}}</li>
-        </ul>
-        <div class="detail_inner_bd" ref="detailInnerBd" v-show="tabSelect === 0" :class="[tabnavFixed ? 'detail_inner_bd_fixed' : '']">
-          <wxParse :content="detail.itemsExtension.storyContent" />
+      <div v-if="pinDialog" class="drawer">
+      <div class="drawer_screen">
+      <div class="title1">
+          <text class="title2">正在拼单</text>
+          <img @click="cancelDialog" src="/static/img/guanbi2.png" class="gbImg" />
+      </div>
+      <scroll-view class="drawer_content" scroll-y="true">
+            <div v-if="index < 10" v-for="(item, index) of pinList" :key="index" class="pin2">
+                <img :src="item.img" class="circle2"/>
+                <div class="other2">
+                  <text class="c">{{item.name}}</text>
+                  <text class="d">剩余{{item.time}}</text>
+                </div>
+                <button class="btn2">去拼单</button>
+            </div>
+      </scroll-view>
+      <div v-if="pinList.length > 10" class="btn_ok"><text class="botext">仅显示10个正在拼单的人</text></div>
+      </div>
+      </div>
+        <div class="pinMain">
+        <div class="pinMessage">
+        <text class="pinCount">66人正在拼单,可直接参与</text>
+        <div @click="openMore" class="pinLook">查看更多</div>
         </div>
-        <div class="detail_inner_bd" ref="detailInnerBd" v-show="tabSelect === 1" :class="[tabnavFixed ? 'detail_inner_bd_fixed' : '']">
-          <wxParse :content="detail.itemsExtension.itemsContent" />
+        <div>
+          <swiper class="pinTotal" v-bind:autoplay="autoplay" v-bind:circular="true" v-bind:vertical="true" v-bind:interval="interval" v-bind:duration="duration" v-bind:display-multiple-items="2">
+            <block v-for="(item, index) in pinList" :key="index">
+              <swiper-item class="pin">
+                <img :src="item.img" class="circle"/>
+                <text class="pinName">{{item.name}}</text>
+                <div class="other">
+                  <text class="a">还差1人拼成</text>
+                  <text class="b">剩余{{item.time}}</text>
+                </div>
+                <button class="btn">去拼单</button>
+              </swiper-item>
+            </block>
+          </swiper>
         </div>
-      </section>
-
-      <p class="text-center detail_change" v-if="detail.itemsExtension.detailType === 1 || detail.itemsExtension.detailType === 2" :class="[detailChangeShow ? 'detail_change_actived' : '']" @click="detailChange">
-        <span class="detail_change_hd">{{detailChangeContext}}</span>
-      </p>
+        </div>
 
       <section class="detail_details" v-if="detail.itemsExtension.detailType === 0">
         <h3 class="detail_details_title">商品详情</h3>
@@ -124,48 +93,49 @@
         </div>
       </section>
 
-      <div class="detail_bar">
-        <div class="text-center detail_bar_tips detail_bar_tips--over" v-if="activityStatus === 1">
-          <span>{{discount}}后活动结束</span>
-          <div class="detail_bar_tips--activity" v-if="detail.discountActivity.length > 0 && detail.discountActivity[0].type === 3" @click="navigate('/pages/order/list?id=' + id)">查看详情</div>
+      <div class="bar">
+        <div class="bar-tips" v-if="activityStatus === 1">
+          <span class="bar-text">{{discount}}后商品将结束拼团</span>
         </div>
-        <div class="text-center detail_bar_tips detail_bar_tips--coming" v-if="activityStatus === 2">
-          <span>{{discount}}后活动开始</span>
-          <div class="detail_bar_tips--activity" v-if="detail.discountActivity.length > 0 && detail.discountActivity[0].type === 3" @click="navigate('/pages/order/list?id=' + id)">查看详情</div>
+        <div class="bar-tips" v-if="activityStatus === 2">
+          <span class="bar-text">{{discount}}后商品将正式开拼</span>
         </div>
-        <div class="detail_bar_content">
-              <p class="detail_bar_content_icon_context text-center">￥{{detail.originalPriceDesc}}</p>
-          <p class="detail_bar_content_btn">
-            <span>
-              <a class="bought" v-show="detail.status === 1 && detail.stockTotal > 0 && detail.itemsExtension.detailType === 0" @click="showModal(1)">发起拼单</a>
-            </span>
-            <span>
-              <a class="disabled" v-show="detail.status === 2">即将开始</a>
-            </span>
-            <span>
-              <a class="disabled" v-show="detail.stockTotal === 0 && detail.status !== 0">已售罄</a>
-            </span>
-          </p>
+        <div class="bar-bottom">
+            <div class="bar-btn">
+              <span class="bar-price">￥{{detail.unitPriceDesc}}</span>
+            </div>
+          <div v-if="detail.status === 1 && detail.stockTotal > 0 && detail.itemsExtension.detailType === 0" @click="showModal" class="bar-btn1">
+              <span class="btn-bought">发起拼单</span>
+          </div>
+          <div v-if="detail.status === 2" class="bar-btn2">
+              <span class="btn-disabled">即将开始</span>
+          </div>
+          <div v-if="detail.stockTotal === 0 && detail.status !== 0" class="bar-btn2">
+              <span class="btn-disabled">已售罄</span>
+          </div>
         </div>
       </div>
 
-      <div class="mask_bg" v-show="mask">
+      <div class="mask_bg" v-if="mask">
         <div class="mask_content">
           <div class="mask_content_hd">
             <div class="item_info">
               <img class="inline-block item_info_pic" :src="item.img" @click="scaleUp" />
               <div class="inline-block item_info_detail">
-                <p class="price">
+                <div class="price">
+                  <span>￥{{item.pricei}} - ￥{{item.pricef}}</span>
+                </div>
+                <div v-if="wawa" class="price">
                   <span>￥{{item.price}}</span>
-                </p>
+                </div>
                 <p class="stock">库存：
                   <span>{{item.rest}}</span>件</p>
-                <p v-show="detail.isSpecEnabled === 1 && (!specOneSelect.status || !specTwoSelect.status)">
-                  <span>请选择</span>
+                <p>
+                  <span>请选择: </span>
                   <span v-for="(li, index) in specName" :key="index">&nbsp;{{li}}</span>
                 </p>
-                <p v-show="detail.isSpecEnabled === 1 && specOneSelect.status && specTwoSelect.status">
-                  <span>规格：</span>
+                <p v-if="detail.isSpecEnabled === 1 && specOneSelect.status && specTwoSelect.status">
+                  <span>规格: </span>
                   <span v-for="(li, index) in select" :key="index">&nbsp;{{li}}</span>
                 </p>
               </div>
@@ -181,21 +151,26 @@
                 <li class="value inline-block fl" :class="{'sold-out' : s.rest === 0, 'active' : select[grandParentIndex] === key}" v-for="(s,key,index) in l" @click="showSth(key, grandParentIndex, ParentKey, s.rest)" :key="index">{{key}}</li>
               </ul>
             </div>
-            <div class="retinabt count item_spec">
+            <div class="count item_spec">
               <div class="item_spec_title">数量:</div>
-              <div>
-                <button type="button" name="button" class="count_reduce" :class="{ disabled: item.count === 1 }" @click="reduce">&nbsp;</button>
-                <span class="count_count text-center">{{item.count}}</span>
-                <button type="button" name="button" class="count_add" :class="{ disabled: !(specOneSelect.status && specTwoSelect.status) }" @click="add">&nbsp;</button>
-              </div>
+                <div class="item_spec_a">
+                    <div class="item_spec_b" @click="reduce" :data-item-index="index">
+                        -
+                    </div>
+                    <div class="item_spec_c">
+                    <input :value="item.count"/>
+                    </div>                           
+                    <div class="item_spec_d" @click="add" :data-item-index="index">
+                        +
+                    </div>                                        
+                </div>
             </div>
-          </div>
           <div class="mask_content_fd">
-            <a class="weui_btn weui_btn_primary" v-show="maskType === 1" @click="bought()">确定</a>
+            <button class="weui_btn" @click="bought()">确定</button>
           </div>
         </div>
       </div>
-      <toast v-show="toastShow">操作成功</toast>
+      </div>
       <user-analysis></user-analysis>
     </div>
   </div>
@@ -203,6 +178,266 @@
 
 <style lang="stylus" scoped>
 @import './styles/item.styl';
+.bar {
+    position: fixed;
+    bottom: 0;
+    z-index: 2;
+    width: 100%;
+    height: 150rpx;
+}
+.bar-tips {
+    height: 60rpx;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:rgba(244,107,106,1);
+}
+.bar-text {
+  font-size:24rpx;
+  font-weight:500;
+  color:rgba(255,255,255,1);
+  line-height:33rpx;
+}
+.bar-bottom {
+    height: 90rpx;
+    background:rgba(255,255,255,1);
+    display: flex;
+    justify-content: space-between;
+}
+.bar-btn {
+    width: 36%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.bar-price {
+  font-size:48rpx;
+  font-weight:500;
+  color:rgba(244,107,106,1);
+  line-height:67rpx;   
+}
+.bar-btn1 {
+    width: 64%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:rgba(0,0,0,1);
+}
+.btn-bought {
+  font-size:32rpx;
+  font-weight:500;
+  color:rgba(255,255,255,1);
+  line-height:45rpx;
+}
+.bar-btn2 {
+    width: 64%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:rgba(0,0,0,0.5);
+}
+.btn-disabled {
+  font-size:32rpx;
+  font-weight:500;
+  color:rgba(255,255,255,1);
+  line-height:45rpx;
+}
+.swiper {
+    height: 750rpx;
+    background: rgba(190, 202, 202, 1);
+}
+
+.swiper-image {
+    width: 100%;
+    height: 100%;
+}
+
+.pinMain {
+    height: 357rpx;
+    background: rgba(255, 255, 255, 1);
+    padding: 20rpx 32rpx 25rpx 32rpx;
+}
+
+.pinMain .pinMessage {
+    height: 80rpx;
+    display: flex;
+    justify-content: space-between;
+    line-height: 40rpx;
+    font-weight: 400;
+    color: rgba(35, 35, 35, 1);
+    font-size: 28rpx;
+    align-items: center;
+    border-bottom: 1rpx solid rgba(234, 234, 234, 1);
+}
+
+.pinMain .pinMessage .pinLook {
+    color: rgba(160, 160, 160, 1);
+}
+
+.pinMain .pinMessage .pinCount {
+    color: rgba(244, 107, 106, 1);
+}
+
+.pinMain .pinTotal {
+    height: 276rpx;
+}
+
+.pinMain .pinTotal .pin {
+    height: 138rpx;
+    display: flex;
+    justify-content: space-between;
+}
+
+.pinMain .pinTotal .pin .circle {
+    width: 88rpx;
+    height: 88rpx;
+    border-radius: 50%;
+    margin: 25rpx 0;
+}
+
+.pinMain .pinTotal .pin .pinName {
+    font-size: 32rpx;
+    font-weight: 400;
+    line-height: 32rpx;
+    margin: 52rpx 0 52rpx 10rpx;
+}
+
+.pinMain .pinTotal .pin .other {
+    display: flex;
+    flex-direction: column;
+    height: 67rpx;
+    width: 170rpx;
+    margin: 38rpx 0 33rpx 120rpx;
+}
+
+.pinMain .pinTotal .pin .other .a {
+    font-size: 26rpx;
+    font-weight: 400;
+    color: rgba(51, 51, 51, 1);
+}
+
+.pinMain .pinTotal .pin .other .b {
+    font-size: 24rpx;
+    font-weight: 400;
+    color: rgba(160, 160, 160, 1);
+}
+
+.pinMain .pinTotal .pin .btn {
+    width: 120rpx;
+    height: 60rpx;
+    font-size: 26rpx;
+    padding: 11rpx;
+    line-height: 38rpx;
+    text-align: center;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 1);
+    background: rgba(0, 0, 0, 1);
+    margin: 39rpx 0 39rpx 33rpx;
+}
+.drawer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 1000;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+.drawer_screen {
+    width: 560rpx;
+    height: 765rpx;
+    margin: 157rpx 0 0 95rpx;
+    background: rgba(255, 255, 255, 1);
+    opacity: 1;
+    border-radius :8rpx;
+    overflow: hidden;
+}
+
+.title1 {
+    height: 85rpx;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.title2 {
+    font-size: 32rpx;
+    color: rgba(0, 0, 0, 1);
+    line-height: 45rpx;
+    margin: 0 0 0 216rpx;
+}
+.gbImg {
+    width: 50rpx;
+    height: 50rpx;
+    margin: 0 28rpx 0 0;
+}
+.drawer_content {
+    border-top: 1rpx solid rgba(234, 234, 234, 1);
+    height: 620rpx;
+}
+
+.btn_ok {
+    height: 59rpx;
+    border-top: 1rpx solid rgba(234, 234, 234, 1);
+    text-align: center;
+}
+
+.botext {
+    line-height: 33rpx;
+    color: rgba(81, 81, 81, 1);
+    font-size: 24rpx;
+    margin: 13rpx 0;
+}
+
+.pin2 {
+    height: 109rpx;
+    display: flex;
+    padding: 0 28rpx 0 22rpx;
+    justify-content: space-between;
+    border-bottom: 1rpx solid rgba(234, 234, 234, 1);
+}
+
+.circle2 {
+    width: 88rpx;
+    height: 88rpx;
+    border-radius: 50%;
+    margin: 11rpx 0 10rpx 0;
+}
+
+.other2 {
+    display: flex;
+    flex-direction: column;
+    height: 64rpx;
+    width: 160rpx;
+    margin: 25rpx 0 20rpx 10rpx;
+}
+
+.c {
+    font-size: 26rpx;
+    font-weight: 400;
+    color: rgba(51, 51, 51, 1);
+    line-height: 32rpx;
+}
+
+.d {
+    font-size: 22rpx;
+    font-weight: 400;
+    color: rgba(160, 160, 160, 1);
+    line-height: 32rpx;
+}
+
+.btn2 {
+    width: 110rpx;
+    height: 40rpx;
+    font-size: 24rpx;
+    padding: 4rpx 18rpx 4rpx 19rpx;
+    line-height: 33rpx;
+    text-align: center;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 1);
+    background: rgba(0, 0, 0, 1);
+    margin: 41rpx 0 28rpx 120rpx;
+}
 </style>
 
 <script>
@@ -210,16 +445,12 @@
 import Vue from "vue";
 import VueDPlayer from "../../components/vue-player/vue-player.vue";
 import Toast from "../../components/toast/toast.vue";
-import Modal from "../../components/dialog/dialog.vue";
 import userAnalysis from "../../components/user-analysis/user-analysis";
-import loading from "../../components/loading/loading";
 import wxParse from "mpvue-wxparse";
 export default {
   components: {
     Toast,
     userAnalysis,
-    loading,
-    Modal,
     "d-player": VueDPlayer,
     wxParse
   },
@@ -231,7 +462,11 @@ export default {
   },
   data() {
     return {
-      loadingstatus: this.loadingstatus,
+      pinList: this.pinList,
+      interval: 5000,
+      duration: 1000,
+      autoplay: true,
+      pinDialog: false,
       toastShow: this.toastShow,
       detail: this.detail,
       discount: this.discount,
@@ -243,19 +478,10 @@ export default {
       specName: this.specName,
       specOneSelect: this.specOneSelect,
       specTwoSelect: this.specTwoSelect,
-      price: this.price,
       cartCount: this.cartCount,
-      userInfo: window.userInfo,
-      dialogControl: this.dialogControl,
-      dialogShow: this.dialogShow,
-      copyLinkModalShow: this.copyLinkModalShow,
-      menuList: this.menuList,
-      tabSelect: this.tabSelect,
+      //   userInfo: window.userInfo,
       video: this.video,
       scaleImg: this.scaleImg,
-      detailChangeShow: this.detailChangeShow,
-      detailChangeContext: this.detailChangeContext,
-      tabnavFixed: this.tabnavFixed,
       activityStatus: this.activityStatus,
       promotion: this.promotion,
       autoplay: true,
@@ -268,65 +494,20 @@ export default {
       const _this = this;
       if (_this.$route.name === "goodsDetail") {
         _this.detail = false;
-        _this.pageDuration(window.location.reload());
-        // if (this.mySwiper) {
-        //   this.mySwiper.destroy(true);
-        // }
-        // _this.loadingstatus = true;
-        // _this.init();
+        // _this.pageDuration(window.location.reload());
       }
     }
   },
-  computed: {
-    commissionPrice() {
-      const _this = this;
-      let price = `${_this.price.i}${_this.price.f}`;
-      // 销售价*95%*总佣金比例*20%
-      price = (
-        parseFloat(price) *
-        (_this.detail.commissionRate / 100) *
-        (_this.detail.memberDiscount / 100) *
-        (_this.detail.commissionRate1 / 100)
-      ).toFixed(2);
-      return price;
-    },
-    privilegePrice() {
-      const _this = this;
-      let price = `${_this.price.i}${_this.price.f}`;
-      let priceStr = "";
-      if (_this.detail.memberLevel < 2) {
-        price = (
-          parseFloat(price) *
-          (1 - _this.detail.memberDiscount / 100)
-        ).toFixed(2);
-        priceStr = "该商品会员购买可省约" + price + "元";
-      } else {
-        price = (
-          parseFloat(price) *
-          (_this.detail.commissionRate / 100) *
-          (_this.detail.memberPrivilegeDiscount / 100) *
-          (_this.detail.memberDiscount / 100)
-        ).toFixed(2);
-        priceStr =
-          "尊享会员" +
-          _this.detail.memberDiscount +
-          "折基础上，购买再省约" +
-          price +
-          "元";
-      }
-      return priceStr;
-    }
-  },
-  mounted() {
+  onShow() {
     const _this = this;
     _this.init();
-    _this.$router.beforeEach((to, from, next) => {
-      if (_this.$route.name === "goodsDetail") {
-        _this.pageDuration(next());
-      } else {
-        next();
-      }
-    });
+    // _this.$router.beforeEach((to, from, next) => {
+    //   if (_this.$route.name === "goodsDetail") {
+    //     _this.pageDuration(next());
+    //   } else {
+    //     next();
+    //   }
+    // });
   },
   deactivated() {
     const _this = this;
@@ -335,31 +516,107 @@ export default {
   methods: {
     //初始化数据
     init() {
-      this.detail = false;
-      this.copyLinkModalShow = false;
-      this.dialogShow = false;
+      this.pinList = [
+        {
+          img: "/static/img/kn.png",
+          name: "王花臂",
+          time: "22:23:23.9"
+        },
+        {
+          img: "/static/img/kn.png",
+          name: "王花臂2",
+          time: "22:23:23.9"
+        },
+        {
+          img: "/static/img/kn.png",
+          name: "王花臂3",
+          time: "22:23:23.9"
+        },
+        {
+          img: "/static/img/kn.png",
+          name: "王花臂4",
+          time: "22:23:23.9"
+        },
+        {
+          img: "/static/img/kn.png",
+          name: "王花臂5",
+          time: "22:23:23.9"
+        },
+        {
+          img: "/static/img/kn.png",
+          name: "王花臂6",
+          time: "22:23:23.9"
+        },
+        {
+          img: "/static/img/kn.png",
+          name: "王花臂7",
+          time: "22:23:23.9"
+        },
+        {
+          img: "/static/img/kn.png",
+          name: "王花臂8",
+          time: "22:23:23.9"
+        },
+        {
+          img: "/static/img/kn.png",
+          name: "王花臂9",
+          time: "22:23:23.9"
+        },
+        {
+          img: "/static/img/kn.png",
+          name: "王花臂10",
+          time: "22:23:23.9"
+        },
+        {
+          img: "/static/img/kn.png",
+          name: "王花臂11",
+          time: "22:23:23.9"
+        },
+        {
+          img: "/static/img/kn.png",
+          name: "王花臂12",
+          time: "22:23:23.9"
+        }
+      ];
+      this.detail = {
+        itemsExtension: {
+          detailType: 0,
+          itemsContent: ""
+        },
+        extraImageUri: [
+          "/static/img/kn.png",
+          "/static/img/kn.png",
+          "/static/img/kn.png",
+          "/static/img/kn.png"
+        ],
+        originalPriceDesc: "333",
+        unitPriceDesc: '222',
+        count: 133,
+        status: 1,
+        stockTotal: 1,
+        name: "B&O 王花臂牌二次元达人康娜抱枕",
+        title:
+          "这意味着拥有了它吃得好、睡得香、腰不疼了、腿不酸了、上29楼不费劲了"
+      };
       this.toastShow = false;
-      this.dialogControl = false;
       this.mask = false;
       this.cartCount = 0;
-      this.loadingstatus = true;
       this.scaleImg = false;
-      this.detailChangeShow = false;
-      this.detailChangeContext = "点击查看商品详情";
       this.spec = {
         name: [],
         length: 0
       };
       this.item = {
-        img: "",
-        price: "",
+        img: "/static/img/kn.png",
+        pricei: "444",
+        pricef: "666",
         id: 0,
         count: 0,
-        rest: 0,
+        rest: 33,
         specs: this.spec
       };
       this.select = [];
-      this.specName = [];
+      this.specName = ['颜色', '型号'];
       this.specOne = {};
       this.specTwo = {};
       this.specOneSelect = {
@@ -372,77 +629,18 @@ export default {
         key: "",
         status: false
       };
-      this.price = {
-        i: "",
-        f: ""
-      };
-      this.menuList = ["我的故事", "商品详情"];
-      this.tabSelect = 0;
-      this.activityStatus = 0; //0表示没有活动，1表示活动中，2表示活动未开始，3表示活动已结束
+      this.activityStatus = 1; //0表示没有活动，1表示活动中，2表示活动未开始，3表示活动已结束
       this.promotion = false;
-      //   this.checkPromotion();
-      //   this.showCartGoodsCount();
       //   this.getData();
       //   this.pageView();
     },
-    //判断是否推广
-    checkPromotion() {
+    openMore() {
       const _this = this;
-      const has = Object.prototype.hasOwnProperty;
-      if (has.call(_this.$route.query, "sourceType")) {
-        if (_this.$route.query.sourceType === "4") {
-          _this.promotion = true;
-          console.log("广点通推广");
-        } else {
-          _this.promotion = false;
-          console.log("!广点通推广");
-        }
-      } else {
-        _this.promotion = false;
-        console.log("!广点通推广");
-      }
+      _this.pinDialog = true;
     },
-    detailChange() {
+    cancelDialog() {
       const _this = this;
-      switch (true) {
-        case _this.detailChangeContext === "点击查看商品详情":
-          _this.tabSelect = 1;
-          // console.log(_this.$refs.detailInnerBd.offsetTop);
-          _this.detailChangeContext = "点击查看我的故事";
-          _this.tabnavFixed = true;
-          window.scrollTo(0, _this.detailInnerBdTop);
-          break;
-        case _this.detailChangeContext === "点击查看我的故事":
-          _this.tabSelect = 0;
-          _this.tabnavFixed = true;
-          // console.log(_this.$refs.detailInnerBd.offsetTop);
-          _this.detailChangeContext = "点击查看商品详情";
-          window.scrollTo(0, _this.detailInnerBdTop);
-          break;
-      }
-    },
-    //切换详情菜单
-    tab(index) {
-      const _this = this;
-      _this.tabSelect = index;
-      if (index === 0) {
-        _this.detailChangeContext = "点击查看商品详情";
-        let scrollTop = sessionStorage.getItem(
-          `goodsDetailTab0${_this.$route.params.id}`
-        );
-        if (scrollTop) {
-          window.scrollTo(0, scrollTop);
-        }
-      }
-      if (index === 1) {
-        _this.detailChangeContext = "点击查看我的故事";
-        let scrollTop = sessionStorage.getItem(
-          `goodsDetailTab1${_this.$route.params.id}`
-        );
-        if (scrollTop) {
-          window.scrollTo(0, scrollTop);
-        }
-      }
+      _this.pinDialog = false;
     },
     //video配置
     play() {
@@ -473,7 +671,6 @@ export default {
           url: window.location.href,
           pageCode: "2",
           pageSubCode: _this.$route.params.id,
-          sourceType: _this.$route.query.sourceType || "0",
           sourceId: _this.$route.query.sourceId || "0",
           isShared: _this.$route.query.isShared
         };
@@ -512,7 +709,6 @@ export default {
     },
     watchScroll() {
       const _this = this;
-      const tabnav = _this.$refs.tabnav.offsetTop;
       $(window).scroll(() => {
         if (_this.$route.name === "goodsDetail") {
           if (
@@ -522,32 +718,6 @@ export default {
             let scrollTop = $(window).scrollTop();
             let scrollHeight = $(document).height();
             let windowHeight = $(window).height();
-            if (scrollTop > tabnav) {
-              _this.tabnavFixed = true;
-              _this.$refs.tabnav.style.position = "fixed";
-              _this.$refs.tabnav.style.top = "0";
-            } else {
-              _this.tabnavFixed = false;
-              _this.$refs.tabnav.style.position = "static";
-            }
-            if (_this.tabSelect === 0) {
-              sessionStorage.setItem(
-                `goodsDetailTab0${_this.$route.params.id}`,
-                scrollTop
-              );
-            }
-            if (_this.tabSelect === 1) {
-              sessionStorage.setItem(
-                `goodsDetailTab1${_this.$route.params.id}`,
-                scrollTop
-              );
-            }
-            if (scrollTop + windowHeight - scrollHeight === 0) {
-              // console.log(scrollTop + windowHeight - scrollHeight);
-              _this.detailChangeShow = true;
-            } else {
-              _this.detailChangeShow = false;
-            }
           }
         }
       });
@@ -588,9 +758,6 @@ export default {
               Raven.captureMessage("wx.ready 商品详情页成功");
               console.log("wx.ready 商品详情页");
               wx.showOptionMenu();
-              // wx.hideMenuItems({
-              //   menuList: ['menuItem:copyUrl'] // 要隐藏的菜单项，只能隐藏“传播类”和“保护类”按钮，所有menu项见附录3
-              // });
               let _opts = opts || {};
               _opts.icon =
                 _opts.icon || "http://res2.caiguo.com/images/logo.jpg";
@@ -628,20 +795,6 @@ export default {
                   //mallUtils.layer.alert("分享已取消");
                 }
               });
-              //分享到QQ
-              wx.onMenuShareQQ({
-                title: _opts.title, // 分享标题
-                desc: _opts.desc, // 分享描述
-                link: _opts.link, // 分享链接
-                imgUrl: _opts.icon, // 分享图标
-                success: function() {
-                  // mallUtils.layer.alert("分享成功");
-                },
-                cancel: function() {
-                  // 用户取消分享后执行的回调函数
-                  //mallUtils.layer.alert("分享已取消");
-                }
-              });
             });
 
             wx.error(function(res) {
@@ -665,42 +818,10 @@ export default {
                 "已为您发送商品链接，请留意公众号推送消息！"
               );
             } else {
-              _this.copyLinkModalShow = true;
               window.mallUtils.funs.unTouchMove();
             }
           }
         });
-    },
-    //隐藏复制链接提示模态框
-    copyLinkModal() {
-      const _this = this;
-      _this.copyLinkModalShow = false;
-      window.mallUtils.funs.activeTouchMove();
-    },
-    //成功加入购物车&购买的弹框
-    showToast() {
-      this.toastShow = true;
-      setTimeout(() => {
-        this.toastShow = false;
-      }, 2000);
-    },
-    //客服
-    cs() {
-      this.dialogControl = true;
-      window.mallUtils.funs.unTouchMove();
-    },
-    handleDialogAction(action) {
-      this.dialogControl = false;
-      window.mallUtils.funs.activeTouchMove();
-    },
-    //双倍佣金说明
-    doubleReward() {
-      this.dialogShow = true;
-      window.mallUtils.funs.unTouchMove();
-    },
-    handleDialog(action) {
-      this.dialogShow = false;
-      window.mallUtils.funs.activeTouchMove();
     },
     //商品图片轮播初始化
     initBanner() {
@@ -740,10 +861,6 @@ export default {
               title: this.detail.name,
               desc: this.detail.title
             };
-            // if (this.promotion) {
-            //   opts.link =
-            //     `${window.location.protocol}//${window.location.hostname}/wx/goods/detail/${id}/display?sourceType=${this.$route.query.sourceType}&sourceId=${this.$route.query.sourceId}`;
-            // }
             this.setShare(opts);
             if (this.detail.discountActivity) {
               this.checkActivityStatus();
@@ -913,37 +1030,6 @@ export default {
       this.mask = false;
       window.mallUtils.funs.activeTouchMove();
     },
-    //点击模态框的加入购物车按钮
-    cart() {
-      if (this.specTwoSelect.status && this.specOneSelect.status) {
-        let item = {
-          skuId: this.item.id,
-          count: this.item.count,
-          createTime: moment().unix()
-        };
-        let skuList = this.$localStorage.get("skuList");
-        let haveSameGoods = false;
-        skuList.forEach((ele, i, a) => {
-          if (ele.skuId === item.skuId) {
-            window.mallUtils.layer.alert("该商品已经存在购物车中");
-            haveSameGoods = true;
-          }
-        });
-        if (!haveSameGoods) {
-          skuList.push(item);
-          this.showToast();
-        }
-        this.$localStorage.set("skuList", skuList);
-        this.showCartGoodsCount();
-        this.mask = false;
-        window.mallUtils.funs.activeTouchMove();
-        this.restSpecOne();
-        this.restSpecTwo();
-        this.setGoodsStatus();
-      } else {
-        window.mallUtils.layer.alert("请选择" + this.specName);
-      }
-    },
     //点击模态框的购买按钮
     bought() {
       const _this = this;
@@ -954,23 +1040,23 @@ export default {
         }, 1000);
       } else {
         if (this.specTwoSelect.status && this.specOneSelect.status) {
-          if(pindan) {
-          let item = {
-            skuId: this.item.id,
-            count: this.item.count
-          };
-          let skuList = [];
-          skuList.push(item);
-          sessionStorage.setItem("skuList", JSON.stringify(skuList));
-          this.mask = false;
-          window.mallUtils.funs.activeTouchMove();
-          this.toastShow = true;
-          setTimeout(() => {
-            this.toastShow = false;
-            this.$router.push('/pages/item/pay');
-          }, 1000);
+          if (pindan) {
+            let item = {
+              skuId: this.item.id,
+              count: this.item.count
+            };
+            let skuList = [];
+            skuList.push(item);
+            sessionStorage.setItem("skuList", JSON.stringify(skuList));
+            this.mask = false;
+            window.mallUtils.funs.activeTouchMove();
+            this.toastShow = true;
+            setTimeout(() => {
+              this.toastShow = false;
+              this.$router.push("/pages/item/pay");
+            }, 1000);
           } else {
-            this.$router.push('/pages/item/joinError');  
+            this.$router.push("/pages/item/joinError");
           }
         } else {
           window.mallUtils.layer.alert("请选择" + this.specName);
@@ -1147,12 +1233,7 @@ export default {
         this.spec.name = specName;
 
         // console.log(this.spec.name[0]);
-        // console.log(specLen);
-        // console.log(specName);
-        // console.log(aaa);
-        // console.log(bbb);
       }
-      this.loadingstatus = false;
       this.setGoodsStatus();
     },
     //预置商品选择状态
@@ -1436,16 +1517,7 @@ export default {
           }
         }
       }
-    },
-    //显示购物车商品数量
-    showCartGoodsCount() {
-      const _this = this;
-      let skuList = this.$localStorage.get("skuList");
-      _this.cartCount = 0;
-      skuList.forEach((ele, i, a) => {
-        _this.cartCount += ele.count;
-      });
     }
-  },
-}
+  }
+};
 </script>

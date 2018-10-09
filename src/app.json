@@ -1,5 +1,5 @@
 {
-  "pages": ["pages/index/index", "pages/item/paySuccess", "pages/mine/index", "pages/mine/detail", "pages/item/index", "pages/item/pay", "pages/item/payError", "pages/item/joinError"],
+  "pages": ["pages/index/index", "pages/mine/index", "pages/item/paySuccess", "pages/mine/detail", "pages/item/index", "pages/item/pay", "pages/item/payError", "pages/item/joinError"],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",

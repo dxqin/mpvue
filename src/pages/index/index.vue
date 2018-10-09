@@ -30,7 +30,7 @@
         </div>
         </div>
         <div v-show="num == 1" class="ub-box ub-col z-margin-top-6-px z-padding-all-8-px" v-for="(item, idx) in list" :key="idx">
-      <div @click="navigate('/pages/item/paySuccess')" :class="{'z-border-bottom-1-eee':isLast==false}" class="card ub-box z-padding-v-10-px">
+      <div @click="navigate('/pages/item/index')" :class="{'z-border-bottom-1-eee':isLast==false}" class="card ub-box z-padding-v-10-px">
       <img :src="item.img" class="z-img-cover">
       <div class="z-padding-h-10-px ub-flex-1 ub-box ub-col">
         <div class="ub-box ub-ver ub-between">
@@ -78,11 +78,7 @@
   </div>
         </div>
         <div class="z-width-100-percent ub-box ub-ver img-style">
-          <img src="/static/img/logo.png" class="img2">
-          <span class="text1">町盟，生活梦想家</span>
-        </div>
-        <div class="text2">
-        <span>享受生活·实现梦想·家的感觉</span>
+          <img src="/static/img/dm1.png" class="img2">
         </div>
         </div>
     </scroll-view>
@@ -417,10 +413,6 @@ export default {
   border-radius: 12px;
   padding: 5px 10px;
 }
-.swiper {
-  height: 120px;
-  width: calc(100% - 16px);
-}
 .icon-item {
   width: 20%;
   padding: 10px 13px 0 13px;
@@ -444,12 +436,11 @@ export default {
   border-bottom: 1px solid #ddd8ce;
 }
 .img-style {
-  margin-top: 80rpx;
+  margin: 40rpx 0;
 }
 .img-style .img2 {
-  margin: 40rpx 20rpx 0 0;
-  width: 80rpx;
-  height: 80rpx;
+  width: 350rpx;
+  height: 70rpx;
 }
 .img-style .text1 {
   margin: 0 60rpx 30rpx 0;

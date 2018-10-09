@@ -3,7 +3,7 @@
     <div class="main">
           <img src="/static/img/kn.png" class="img" />
     <div class="main2 ub-ver">
-          <img src="/static/img/logo.png" class="logo z-img-cover" />
+          <img src="/static/img/dm2.png" class="logo" />
         <div class="text-price">
         <text>原价:  </text>
         <text class="origin-price">￥188.00</text>
@@ -20,7 +20,7 @@
       <a class="primary" v-show="result !== '成功'" @click="payAgain()">我来发起拼单</a>
       <a class="primary" v-show="result === '成功'" @click="order()">我的拼单</a>
       <a class="primary" v-show="result === '2成功'" @click="order()">一键拼单{{time}}后结束</a>
-      <div class="default" @click="navigate('/pages/index/index')">去首页逛逛</div>
+      <div class="default" @click="navigate('/pages/index/index', 'switchTab')">去首页逛逛</div>
     </div>
     <user-analysis></user-analysis>
   </div>
@@ -127,6 +127,7 @@
 "use strict";
 import Vue from "vue";
 import userAnalysis from "../../components/user-analysis/user-analysis";
+import tools from "@/utils/mp";
 export default {
   data() {
     const _this = this;
@@ -170,6 +171,9 @@ export default {
       const _this = this;
       _this.dialogControl = true;
       window.mallUtils.funs.unTouchMove();
+    },
+    navigate(url, type) {
+      tools.navigate(url, type);
     }
   },
   components: {

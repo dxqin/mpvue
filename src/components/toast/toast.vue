@@ -16,11 +16,6 @@
 <script>
 export default {
   props: {
-    /**
-     * toast类型
-     * icon: 包含图标的提示框（默认）
-     * loading: 包含loading动画的提示框
-     */
     type: {
       type: String,
       required: false,

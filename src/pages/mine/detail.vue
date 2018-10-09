@@ -1,16 +1,9 @@
 <template>
 <div>
-  <loading :loadingstatus="loadingstatus">
-  </loading>
   <div class="detail">
     <section class="detail_status">
       <p class="order_status clearfix">
         <span class="status inline-block">{{orderDetail.statusStr}}</span>
-        <span class="custom-service inline-block fr" @click="cs()">联系客服</span>
-      </p>
-      <p class="order_num">
-        <span v-show="orderDetail.status === 1000 || localCancelOrder === true">&nbsp;</span>
-        <span v-show="orderDetail.status !== 1000 && localCancelOrder === false" class="content">{{orderDetail.orderNo}}</span>
       </p>
       <p class="order_time">
         <span class="title">订单时间:</span>
@@ -18,7 +11,7 @@
       </p>
     </section>
 
-    <section class="detail_express" v-if="orderDetail.status === 3000 || orderDetail.status === 4000">
+    <section class="detail_express" v-if="orderDetail.status === 3000">
       <div>
         <p class="detail_express_hd">
           <span>物流信息</span>
@@ -56,15 +49,11 @@
       <div class="detail_goods">
         <p class="detail_goods_header">订单{{index + 1}}:</p>
         <div class="detail_goods_content retinabb" v-for="(item, itemIndex) in li.itemList" :key="itemIndex">
-          <img class="pic" :src="item.skuImage" alt="商品图片" @click="goodsLink(item.itemId)" />
+          <img class="pic" :src="item.skuImage" @click="goodsLink(item.itemId)" />
           <div class="info">
             <div>
               <p class="info_title">{{item.name}}</p>
               <p class="info_count">{{item.attributesList}}</p>
-              <p class="info_tips" v-if="item.warehouseType === 1">
-                <span class="info_tips_abroad">海外购</span>
-                <span>本商品为海外购产品，保税免邮</span>
-              </p>
             </div>
             <div class="info_status">
               <p>
@@ -98,15 +87,11 @@
         <p class="detail_goods_header">商品信息</p>
         <div class="" v-for="item in orderDetail.itemList" :key="item.id">
           <div class="detail_goods_content retinabb">
-            <img class="pic" :src="item.skuImage" alt="商品图片" @click="goodsLink(item.itemId)" />
+            <img class="pic" :src="item.skuImage" @click="goodsLink(item.itemId)" />
             <div class="info">
               <div>
                 <p class="info_title">{{item.name}}</p>
                 <p class="info_count">{{item.attributesList}}</p>
-                <p class="info_tips" v-if="item.warehouseType === 1">
-                  <span class="info_tips_abroad">海外购</span>
-                  <span>本商品为海外购产品，保税免邮</span>
-                </p>
               </div>
               <div class="info_status">
                 <p>
@@ -215,17 +200,6 @@
       <a class="detail_pay_btn block text-center" v-if="orderDetail.status === 3000" @click="checkedOrder()">确认收货</a>
     </section>
   </div>
-
-  <!-- <modal v-show="dialogControl" type="confirm" title="" @weui-dialog-confirm="handleDialogAction('确定')" @weui-dialog-cancel="handleDialogAction('取消')">
-    <p>取消订单后，本单享受的优惠和佣金抵扣将原路退回，是否继续？</p>
-  </modal>
-  <modal v-show="dialogCheckItem" type="confirm" title="" @weui-dialog-confirm="checkedItem('确定')" @weui-dialog-cancel="checkedItem('取消')">
-    <p>是否要确认该订单？</p>
-  </modal>
-  <toast v-show="toastShow">操作成功</toast>
-  <modal v-show="customService" type="alert" title="联系客服" @weui-dialog-confirm="hideCustomService('我知道了')" :confirm-button="'我知道了'">
-    <p>点击象盟公众号左下角的小键盘按钮，切换到对话框模式，即可输入文字信息联系客服。(9:00—24:00)</p>
-  </modal> -->
 </div>
 </template>
 
@@ -313,9 +287,6 @@
 <script>
 "use strict";
 import Vue from "vue";
-import Modal from "../../components/dialog/dialog.vue";
-import Toast from "../../components/toast/toast.vue";
-import loading from "../../components/loading/loading";
 import format from "@/utils/format";
 import tools from "@/utils/mp";
 
@@ -714,28 +685,6 @@ export default {
         });
         return;
       }
-      //售后 type=after
-      if (value === 4000) {
-        _this.$router.push({
-          name: "afterSaleReason",
-          params: {
-            type: "after",
-            id: id
-          }
-        });
-        return;
-      }
-      //退货驳回&交易成功=>申请售后
-      if (value === 3004 && status === 4000) {
-        _this.$router.push({
-          name: "afterSaleReason",
-          params: {
-            type: "after",
-            id: id
-          }
-        });
-        return;
-      }
     },
     //填写&修改物流信息跳转
     editExpressInfo(value, id) {
@@ -829,10 +778,5 @@ export default {
       _this.channel = channel;
     }
   },
-  components: {
-    Modal,
-    Toast,
-    loading
-  }
 };
 </script>
