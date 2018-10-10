@@ -1,14 +1,6 @@
 <template>
   <div>
     <div class="detail" v-if="detail">
-
-      <section v-if="detail.itemsExtension.detailType === 1">
-        <img class="detail_video_icon" src="https://static.paranoidsqd.com/images/goods/play.png" v-if="detail.itemsExtension.detailType === 1 && playIcon" @click="play" />
-        <p class="detail_video dplayer-hide-controller dplayer-mobile">
-        <d-player :video="video" ref="player" :hotkey="false" @pause="pause" v-if="detail.itemsExtension.detailType === 1 && video">
-        </d-player>
-        </p>
-      </section>
       
         <section  v-if="detail.itemsExtension.detailType === 0">
           <swiper class="swiper" v-bind:indicator-dots="true" v-bind:autoplay="autoplay"
@@ -123,17 +115,14 @@
         <div class="mask_content">
           <div class="mask_content_hd">
             <div class="item_info">
-              <img class="inline-block item_info_pic" :src="item.img" @click="scaleUp" />
+              <img class="inline-block item_info_pic" :src="item.img" />
               <div class="inline-block item_info_detail">
                 <div class="price">
-                  <span>￥{{item.pricei}} - ￥{{item.pricef}}</span>
-                </div>
-                <div v-if="wawa" class="price">
                   <span>￥{{item.price}}</span>
                 </div>
                 <p class="stock">库存：
                   <span>{{item.rest}}</span>件</p>
-                <p>
+                <p v-if="detail.isSpecEnabled === 1 && (!specOneSelect.status || !specTwoSelect.status)">
                   <span>请选择: </span>
                   <span v-for="(li, index) in specName" :key="index">&nbsp;{{li}}</span>
                 </p>
@@ -148,7 +137,7 @@
             </div>
           </div>
           <div class="mask_content_bd">
-            <div class="item_spec" v-for="(li,grandParentIndex) in item.specs.name" :key="grandParentIndex">
+            <div class="item_spec" v-if="detail.isSpecEnabled === 1" v-for="(li,grandParentIndex) in item.specs.name" :key="grandParentIndex">
               <div class="item_spec_title" v-for="(l,key,index) in li" :key="index">{{key}}:</div>
               <div class="item_spec_li" v-for="(l,ParentKey,ParentIndex) in li" :key="ParentIndex">
                 <div class="value" :class="{'sold-out' : s.rest === 0, 'active' : select[grandParentIndex] === key}" v-for="(s,key,index) in l" @click="showSth(key, grandParentIndex, ParentKey, s.rest)" :key="index">{{key}}</div>
@@ -335,7 +324,7 @@
 .pinMain .pinTotal .pin .other .a {
     font-size: 26rpx;
     font-weight: 400;
-    color: rgba(51, 51, 51, 1);
+    color: rgba(244,107,106,1);
 }
 
 .pinMain .pinTotal .pin .other .b {
@@ -470,15 +459,11 @@
 "use strict";
 import Vue from "vue";
 import tools from "@/utils/mp";
-import VueDPlayer from "../../components/vue-player/vue-player.vue";
-import Toast from "../../components/toast/toast.vue";
 import userAnalysis from "../../components/user-analysis/user-analysis";
 import wxParse from "mpvue-wxparse";
 export default {
   components: {
-    Toast,
     userAnalysis,
-    "d-player": VueDPlayer,
     wxParse
   },
   localStorage: {
@@ -489,6 +474,7 @@ export default {
   },
   data() {
     return {
+      itemId: 3,
       pinList: this.pinList,
       interval: 5000,
       duration: 1000,
@@ -513,7 +499,6 @@ export default {
       promotion: this.promotion,
       autoplay: true,
       playIcon: true,
-      memberUrl: this.memberUrl
     };
   },
   watch: {
@@ -529,13 +514,7 @@ export default {
     const _this = this;
     _this.init();
     _this.getItem();
-    // _this.$router.beforeEach((to, from, next) => {
-    //   if (_this.$route.name === "goodsDetail") {
-    //     _this.pageDuration(next());
-    //   } else {
-    //     next();
-    //   }
-    // });
+    _this.itemId = _this.$root.$mp.query.id;
   },
   deactivated() {
     const _this = this;
@@ -544,13 +523,6 @@ export default {
   methods: {
     navigate(url, type) {
       tools.navigate(url, type);
-    },
-    getItem() {
-      this.count = 1;
-      let _this = this;
-      this.$http.get("/item/" + 3).then(res => {
-        _this.detail.itemsExtension.itemsContent = res.data.itemsExtension.itemsContent;
-      });
     },
     //初始化数据
     init() {
@@ -619,64 +591,37 @@ export default {
       ];
       this.detail = {
         itemsExtension: {
-          detailType: 0,
+          detailType: '',
           itemsContent: ""
         },
-        extraImageUri: [
-          "/static/img/kn.png",
-          "/static/img/kn.png",
-          "/static/img/kn.png",
-          "/static/img/kn.png"
-        ],
-        originalPriceDesc: "333",
-        unitPriceDesc: "222",
-        count: 133,
-        status: 1,
-        stockTotal: 1,
-        name: "B&O 王花臂牌二次元达人康娜抱枕",
-        title:
-          "这意味着拥有了它吃得好、睡得香、腰不疼了、腿不酸了、上29楼不费劲了"
+        extraImageUri: [],
+        originalPriceDesc: "",
+        unitPriceDesc: "",
+        count: '',
+        status: '',
+        stockTotal: '',
+        name: "",
+        title: ""
       };
       this.toastShow = false;
       this.mask = false;
       this.cartCount = 0;
       this.scaleImg = false;
       this.spec = {
-        name: [
-          {
-            颜色: {
-              黄色: "",
-              黑色: "",
-              红色: "",
-              紫色: "",
-              橙色: "",
-              白色: ""
-            }
-          },
-          {
-            规格: {
-              花臂: "",
-              花臂2: "",
-              花臂3: "",
-              花臂4: "",
-              花臂5: "",
-              花臂花臂花臂花臂: ""
-            }
-          }
-        ],
+        name: [],
         length: 0
       };
       this.item = {
-        img: "/static/img/kn.png",
-        pricei: "444",
-        pricef: "666",
-        id: 0,
-        count: 0,
-        rest: 33,
+        img: "",
+        pricei: "",
+        pricef: "",
+        id: '',
+        count: '',
+        rest: '',
         specs: this.spec
       };
       this.select = [];
-      this.specName = ["颜色", "型号"];
+      this.specName = [];
       this.specOne = {};
       this.specTwo = {};
       this.specOneSelect = {
@@ -691,8 +636,8 @@ export default {
       };
       this.activityStatus = 1; //0表示没有活动，1表示活动中，2表示活动未开始，3表示活动已结束
       this.promotion = false;
-      //   this.getData();
-      //   this.pageView();
+      this.getData();
+      this.pageView();
     },
     openMore() {
       const _this = this;
@@ -883,30 +828,15 @@ export default {
           }
         });
     },
-    //商品图片轮播初始化
-    initBanner() {
-      this.mySwiper = new Swiper(".swiper-container", {
-        autoplay: 5000,
-        loop: true,
-        // 如果需要分页器
-        pagination: ".swiper-pagination",
-        autoplayDisableOnInteraction: false
-      });
-      window.scrollTo(0, 0);
-    },
     //获取商品数据
-    getData() {
+    getData(itemId) {
       const _this = this;
-      let id = this.$route.params.id;
-      let url = Vue.OneMallUrl.item + id;
-      if (!window.userInfo.id) {
-        url = `${url}/display`;
-      }
-      Vue.OneMallHttp()
-        .GET("", url)
+      itemId = _this.itemId
+      _this.$http.get("/item/" + itemId)
         .then(res => {
           if (res.code === 0) {
-            this.detail = res.data;
+            _this.detail = res.data;
+            _this.sku();
             let inviteCode = window.userInfo.id || "0";
             let opts = {
               icon: this.detail.extraImageUri[0],
@@ -926,31 +856,7 @@ export default {
               this.checkActivityStatus();
             } else {
               this.activityStatus = 0;
-              this.itemInfoShow();
             }
-            this.sku();
-            if (this.detail.itemsExtension.detailType === 0) {
-              setTimeout(() => {
-                this.initBanner();
-              }, 200);
-            } else {
-              this.video = {
-                url: this.detail.itemsExtension.videoUrl,
-                pic: this.detail.itemsExtension.videoImgUrl
-              };
-              this.$nextTick(function() {
-                $(".dplayer-setting").css("display", "none");
-                // console.log($(".detail_inner_bd").offset());
-                this.detailInnerBdTop = $(".detail_inner_bd").offset().top;
-                this.watchScroll();
-              });
-            }
-            this.memberUrl =
-              window.location.protocol +
-              "//" +
-              window.location.hostname +
-              "/wx/member/membership?inviteCode=" +
-              window.userInfo.id;
           }
         });
     },
@@ -980,7 +886,6 @@ export default {
       } else {
         _this.activityStatus = 0;
       }
-      _this.itemInfoShow();
     },
     //对商品展示价格&数量进行处理
     itemInfoShow() {
@@ -1125,10 +1030,11 @@ export default {
     },
     //模态框的增加商品数量
     add() {
-      let item = this.item;
-      if (this.specTwoSelect.status && this.specOneSelect.status) {
+      const _this = this
+      let item = _this.item;
+      if (_this.specTwoSelect.status && _this.specOneSelect.status) {
         if (item.count < item.rest) {
-          this.item.count += 1;
+          _this.item.count += 1;
         } else {
           window.mallUtils.layer.alert("库存已达上限");
         }
