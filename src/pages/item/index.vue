@@ -148,11 +148,11 @@
             </div>
           </div>
           <div class="mask_content_bd">
-            <div class="retinabt item_spec" v-if="detail.isSpecEnabled === 1" v-for="(li,grandParentIndex) in item.specs.name" :key="grandParentIndex">
-              <p class="item_spec_title" v-for="(l,key,index) in li" :key="index">{{key}}:</p>
-              <ul class="item_spec_li clearfix" v-for="(l,ParentKey,ParentIndex) in li" :key="ParentIndex">
-                <li class="value inline-block fl" :class="{'sold-out' : s.rest === 0, 'active' : select[grandParentIndex] === key}" v-for="(s,key,index) in l" @click="showSth(key, grandParentIndex, ParentKey, s.rest)" :key="index">{{key}}</li>
-              </ul>
+            <div class="item_spec" v-for="(li,grandParentIndex) in item.specs.name" :key="grandParentIndex">
+              <div class="item_spec_title" v-for="(l,key,index) in li" :key="index">{{key}}:</div>
+              <div class="item_spec_li" v-for="(l,ParentKey,ParentIndex) in li" :key="ParentIndex">
+                <div class="value" :class="{'sold-out' : s.rest === 0, 'active' : select[grandParentIndex] === key}" v-for="(s,key,index) in l" @click="showSth(key, grandParentIndex, ParentKey, s.rest)" :key="index">{{key}}</div>
+              </div>
             </div>
             <div class="count item_spec">
               <div class="item_spec_title">数量:</div>
@@ -181,6 +181,7 @@
 
 <style lang="stylus" scoped>
 @import './styles/item.styl';
+
 .bar {
     position: fixed;
     bottom: 0;
@@ -188,70 +189,81 @@
     width: 100%;
     height: 150rpx;
 }
+
 .bar-tips {
     height: 60rpx;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    background:rgba(244,107,106,1);
+    background: rgba(244, 107, 106, 1);
 }
+
 .bar-text {
-  font-size:24rpx;
-  font-weight:500;
-  color:rgba(255,255,255,1);
-  line-height:33rpx;
+    font-size: 24rpx;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 1);
+    line-height: 33rpx;
 }
+
 .bar-bottom {
     height: 90rpx;
-    background:rgba(255,255,255,1);
+    background: rgba(255, 255, 255, 1);
     display: flex;
     justify-content: space-between;
 }
+
 .bar-btn {
     width: 36%;
     display: flex;
     align-items: center;
     justify-content: center;
 }
+
 .bar-price {
-  font-size:48rpx;
-  font-weight:500;
-  color:rgba(244,107,106,1);
-  line-height:67rpx;   
+    font-size: 48rpx;
+    font-weight: 500;
+    color: rgba(244, 107, 106, 1);
+    line-height: 67rpx;
 }
+
 .bar-price2 {
-  font-size:48rpx;
-  font-weight:500;
-  color:rgba(160,160,160,1);
-  line-height:67rpx;   
+    font-size: 48rpx;
+    font-weight: 500;
+    color: rgba(160, 160, 160, 1);
+    line-height: 67rpx;
 }
+
 .bar-btn1 {
     width: 64%;
     display: flex;
     align-items: center;
     justify-content: center;
-    background:rgba(0,0,0,1);
+    background: rgba(0, 0, 0, 1);
 }
+
 .btn-bought {
-  font-size:32rpx;
-  font-weight:500;
-  color:rgba(255,255,255,1);
-  line-height:45rpx;
+    font-size: 32rpx;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 1);
+    line-height: 45rpx;
 }
+
 .bar-btn2 {
     width: 64%;
     display: flex;
     align-items: center;
     justify-content: center;
-    background:rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
 }
+
 .btn-disabled {
-  font-size:32rpx;
-  font-weight:500;
-  color:rgba(255,255,255,1);
-  line-height:45rpx;
+    font-size: 32rpx;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 1);
+    line-height: 45rpx;
 }
+
 .swiper {
     height: 750rpx;
     background: rgba(190, 202, 202, 1);
@@ -344,6 +356,7 @@
     background: rgba(0, 0, 0, 1);
     margin: 39rpx 0 39rpx 33rpx;
 }
+
 .drawer {
     position: fixed;
     top: 0;
@@ -353,13 +366,14 @@
     right: 0;
     background-color: rgba(0, 0, 0, 0.6);
 }
+
 .drawer_screen {
     width: 560rpx;
     height: 765rpx;
     margin: 157rpx 0 0 95rpx;
     background: rgba(255, 255, 255, 1);
     opacity: 1;
-    border-radius :8rpx;
+    border-radius: 8rpx;
     overflow: hidden;
 }
 
@@ -369,17 +383,20 @@
     align-items: center;
     justify-content: space-between;
 }
+
 .title2 {
     font-size: 32rpx;
     color: rgba(0, 0, 0, 1);
     line-height: 45rpx;
     margin: 0 0 0 216rpx;
 }
+
 .gbImg {
     width: 50rpx;
     height: 50rpx;
     margin: 0 28rpx 0 0;
 }
+
 .drawer_content {
     border-top: 1rpx solid rgba(234, 234, 234, 1);
     height: 620rpx;
@@ -452,6 +469,7 @@
 <script>
 "use strict";
 import Vue from "vue";
+import tools from "@/utils/mp";
 import VueDPlayer from "../../components/vue-player/vue-player.vue";
 import Toast from "../../components/toast/toast.vue";
 import userAnalysis from "../../components/user-analysis/user-analysis";
@@ -510,6 +528,7 @@ export default {
   onShow() {
     const _this = this;
     _this.init();
+    _this.getItem();
     // _this.$router.beforeEach((to, from, next) => {
     //   if (_this.$route.name === "goodsDetail") {
     //     _this.pageDuration(next());
@@ -523,9 +542,19 @@ export default {
     _this.detail = false;
   },
   methods: {
+    navigate(url, type) {
+      tools.navigate(url, type);
+    },
+    getItem() {
+      this.count = 1;
+      let _this = this;
+      this.$http.get("/item/" + 3).then(res => {
+        _this.detail.itemsExtension.itemsContent = res.data.itemsExtension.itemsContent;
+      });
+    },
     //初始化数据
     init() {
-      this.discount = '22时22分22秒'
+      this.discount = "22时22分22秒";
       this.pinList = [
         {
           img: "/static/img/kn.png",
@@ -600,7 +629,7 @@ export default {
           "/static/img/kn.png"
         ],
         originalPriceDesc: "333",
-        unitPriceDesc: '222',
+        unitPriceDesc: "222",
         count: 133,
         status: 1,
         stockTotal: 1,
@@ -613,7 +642,28 @@ export default {
       this.cartCount = 0;
       this.scaleImg = false;
       this.spec = {
-        name: [],
+        name: [
+          {
+            颜色: {
+              黄色: "",
+              黑色: "",
+              红色: "",
+              紫色: "",
+              橙色: "",
+              白色: ""
+            }
+          },
+          {
+            规格: {
+              花臂: "",
+              花臂2: "",
+              花臂3: "",
+              花臂4: "",
+              花臂5: "",
+              花臂花臂花臂花臂: ""
+            }
+          }
+        ],
         length: 0
       };
       this.item = {
@@ -626,7 +676,7 @@ export default {
         specs: this.spec
       };
       this.select = [];
-      this.specName = ['颜色', '型号'];
+      this.specName = ["颜色", "型号"];
       this.specOne = {};
       this.specTwo = {};
       this.specOneSelect = {
@@ -1063,7 +1113,7 @@ export default {
             this.toastShow = true;
             setTimeout(() => {
               this.toastShow = false;
-              this.$router.push("/pages/item/pay");
+              this.$router.push("/pages/mine/detail");
             }, 1000);
           } else {
             this.$router.push("/pages/item/joinError");
