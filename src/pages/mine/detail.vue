@@ -5,13 +5,17 @@
       <p class="order_status clearfix">
         <span class="status inline-block">{{orderDetail.statusStr}}</span>
       </p>
+      <p class="order_num">
+        <span class="title">订单号:  </span>
+        <span class="content">{{orderDetail.orderNo}}</span>
+      </p>
       <p class="order_time">
-        <span class="title">订单时间:</span>
+        <span class="title">订单时间:  </span>
         <span class="content">{{orderDetail.timeStr}}</span>
       </p>
     </section>
 
-    <section class="detail_express" v-if="orderDetail.status === 3000">
+    <section class="detail_express">
       <div>
         <p class="detail_express_hd">
           <span>物流信息</span>
@@ -45,7 +49,7 @@
       </p>
     </section>
 
-    <section v-for="(li,index) in orderDetail.orderList" :key="li" v-if="orderDetail.status === 1000 || localCancelOrder === true">
+    <section v-for="(li,index) in orderDetail.orderList" :key="index">
       <div class="detail_goods">
         <p class="detail_goods_header">订单{{index + 1}}:</p>
         <div class="detail_goods_content retinabb" v-for="(item, itemIndex) in li.itemList" :key="itemIndex">
@@ -59,10 +63,6 @@
               <p>
                 <span class="info_status_value">￥{{item.limitDiscountPrice}}</span>
                 <span class="info_status_count">x{{item.count}}</span>
-                <span class="info_status_discount" v-if="item.privilegeName !== '' ">
-                    <del>￥{{item.price}}</del>
-                    <!-- <span>{{item.privilegeName}}</span> -->
-                </span>
               </p>
             </div>
           </div>
@@ -71,18 +71,18 @@
 
       <div class="detail_order text-right">
         <p class="detail_order_express">
-          <span class="title">运费：</span>
-          <span class="content" v-if="li.expressPrice === 0">已包邮</span>
-          <span class="content" v-if="li.expressPrice !== 0">￥{{li.expressPrice}}</span>
+          <span class="title">运费： </span>
+          <span class="value" v-if="li.expressPrice === 0">已包邮</span>
+          <span class="value" v-if="li.expressPrice !== 0">￥{{li.expressPrice}}</span>
         </p>
         <p class="detail_order_count">
-          <span class="title">总计：</span>
-          <span class="content value">￥{{li.subOrderTotalPrice}}</span>
+          <span class="title">总计： </span>
+          <span class="value">￥{{li.subOrderTotalPrice}}</span>
         </p>
       </div>
     </section>
 
-    <section v-if="orderDetail.status !== 1000 && localCancelOrder === false" class="detail_s">
+    <section v-if="wawad" class="detail_s">
       <div class="detail_goods">
         <p class="detail_goods_header">商品信息</p>
         <div class="" v-for="item in orderDetail.itemList" :key="item.id">
@@ -97,21 +97,10 @@
                 <p>
                   <span class="info_status_value">￥{{item.limitDiscountPrice}}</span>
                   <span class="info_status_count">x{{item.count}}</span>
-                  <span class="info_status_discount" v-if="item.privilegeName !== '' ">
-                      <del>￥{{item.price}}</del>
-                      <!-- <span>{{item.privilegeName}}</span> -->
-                  </span>
                 </p>
               </div>
             </div>
           </div>
-          <p class="detail_goods_info text-right" v-if="item.info && item.info.show">
-            <span :class="{ warn : item.info.warn }">{{item.info.content}}</span>
-            <span class="btn" v-if="item.btn.show" @click="editExpressInfo(item.status,item.orderDetailId)">
-                <span v-show="item.btn.content !== '联系客服'">{{item.btn.content}}</span>
-            <span v-show="item.btn.content === '联系客服'" @click="cs()">{{item.btn.content}}</span>
-            </span>
-          </p>
         </div>
       </div>
     </section>
@@ -129,75 +118,40 @@
         <span class="detail_address_hd_content" v-if="orderDetail.expressAmount === 0">已包邮</span>
         <span class="detail_address_hd_content" v-if="orderDetail.expressAmount !== 0">￥{{orderDetail.expressAmount}}</span>
       </p>
-      <p class="detail_address_bd" v-for="li in orderDetail.otherDiscount" :key="li.id" v-if="li.type === 0 && li.amount !== 0">
-        <span class="detail_address_bd_title inline-block">{{li.name}}：</span>
-        <span class="detail_address_hd_content">-￥{{li.amount}}</span>
-      </p>
-      <p class="detail_address_bd">
-        <span class="detail_address_bd_title inline-block">佣金抵扣：</span>
-        <span class="detail_address_hd_content">￥{{orderDetail.priceOther}}</span>
-      </p>
       <p class="detail_address_bd">
         <span class="detail_address_bd_title inline-block">总计：</span>
-        <span class="detail_address_hd_content">￥{{orderDetail.totalAmount}}</span>
+        <span class="detail_address_hd_content2">￥{{orderDetail.totalAmount}}</span>
       </p>
 
-    </section>
-    <div class="pay_methods" v-if="orderDetail.status === 1000">
-        <div class="pay_methods_cell">
-            <text class="pay_methods_cell_title text-defalut">您的支付方式</text>
-            <div class="pay_methods_cell_content wx" @click="payMethod(4)">
-              <div class="pay_methods_cell_content_left">
-                <img class="pay_methods_cell_content_icon_wx" src="/static/svg/wechat.svg" />
-                <div class="pay_methods_cell_content_title">
-                  <text class="defalut">微信支付</text>
-                  <text class="sub">推荐使用微信支付</text>
-                </div>
-              </div>
-
-                <img class="pay_methods_cell_content_select" src="/static/svg/unselect.svg" v-if="channel !== 4" />
-                <img class="pay_methods_cell_content_select" src="/static/svg/select.svg" v-if="channel === 4" />
-            </div>
-            <div class="pay_methods_cell_content credit" @click="payMethod(2)">
-              <div class="pay_methods_cell_content_left">
-
-                <img class="pay_methods_cell_content_icon" src="/static/svg/credit.svg" />
-                <div class="pay_methods_cell_content_title">
-                  <text class="defalut">额度支付</text>
-                  <text class="sub">需要额度还清才能开具发票</text>
-                </div>
-              </div>
-
-                <img class="pay_methods_cell_content_select" src="/static/svg/unselect.svg" v-if="channel !== 2" />
-                <img class="pay_methods_cell_content_select" src="/static/svg/select.svg" v-if="channel === 2" />
-            </div>
-        </div>
-    </div>       
-    <section class="detail_cancel text-center" v-if="orderDetail.status === 1000">
-      <a class="detail_cancel_btn block" @click="cancelOrder()">取消订单</a>
+    </section>     
+    <section class="detail_cancel">
+      <button class="detail_cancel_btn block" @click="cancelOrder()">取消订单</button>
     </section>
     <p>&nbsp;</p>
 
 
-    <section class="detail_pay" v-if="orderDetail.status === 1000 || orderDetail.status === 3000">
-      <div class="detail_pay_hd" v-if="orderDetail.status === 1000">
+    <section class="detail_pay">
+      <div class="detail_pay_hd">
         <p>
           <span class="title">合计:</span>
           <span class="value">￥{{orderDetail.totalAmount}}</span>
         </p>
-        <p class="tips">{{discount}}<br>订单将自动关闭</p>
+        <p class="tips">{{discount}}后<br>无人拼单自动关闭</p>
       </div>
-      <p class="detail_pay_hd" v-if="orderDetail.status === 3000 ">
-        <span class="tips_check">{{discount}} 后自动确认收货</span>
-      </p>
-      <a class="detail_pay_btn block text-center" v-if="orderDetail.status === 1000" @click="payNow()">
-        <div class="load3 inline-block" v-show="payStauts">
-          <div class="loader"></div>
+      <div class="detail_pay_hd" v-if="ddd">
+        <div>
+          <span class="title">合计:</span>
+          <span class="value">￥{{orderDetail.totalAmount}}</span>
         </div>
-        <span v-show="!payStauts">立即支付</span>
-        <span v-show="payStauts">支付中</span>
-      </a>
-      <a class="detail_pay_btn block text-center" v-if="orderDetail.status === 3000" @click="checkedOrder()">确认收货</a>
+      </div>
+      <div class="detail_pay_hd" v-if="ddd">
+        <span class="tips_check">{{discount}}后 自动确认收货</span>
+      </div>
+      <div class="detail_pay_btn" v-if="ddd" @click="payNow()">
+        <span>立即支付</span>
+      </div>
+      <div class="detail_pay_btn" @click="checkedOrder2()">邀请好友拼单</div>
+      <div class="detail_pay_btn" v-if="ddd" @click="checkedOrder()">确认收货</div>
     </section>
   </div>
 </div>
@@ -308,17 +262,75 @@ export default {
       channel: 4
     };
   },
-  beforeMount() {
+  onShow() {
     const _this = this;
     _this.init();
   },
-  computed: {},
   methods: {
     init() {
       const _this = this;
+      _this.discount = '22时23分13秒'
       _this.loadingstatus = true;
+      _this.orderDetail = {
+        orderNo: 22331122233,
+        statusStr: "待分享...",
+        timeStr: "2018年12月22日 12:55",
+        address: {
+          consigneeName: "王花臂",
+          consigneeMobile: "15833338888",
+          addressInfo: "仓溢东苑"
+        },
+        orderList: [
+          {
+            expressPrice: 45,
+            subOrderTotalPrice: "555",
+            itemList: [
+              {
+                skuImage: "/static/img/kn.png",
+                name: "王花臂牌康娜抱枕",
+                attributesList: "花臂 满背",
+                limitDiscountPrice: "444",
+                count: 2
+              }
+            ]
+          },
+          {
+            expressPrice: 0,
+            subOrderTotalPrice: "555",
+            itemList: [
+              {
+                skuImage: "/static/img/kn.png",
+                name: "王花臂牌康娜抱枕",
+                attributesList: "花臂",
+                limitDiscountPrice: "222",
+                count: 3
+              }
+            ]
+          }
+        ],
+        itemList: [
+          {
+            skuImage: "/static/img/kn.png",
+            name: "王花臂牌康娜抱枕",
+            attributesList: "花臂 满背",
+            limitDiscountPrice: "444",
+            count: 2
+          },
+          {
+            skuImage: "/static/img/kn.png",
+            name: "王花臂牌康娜抱枕",
+            attributesList: "花臂",
+            limitDiscountPrice: "222",
+            count: 3
+          }
+        ],
+        orderAmount: '888',
+        expressAmount: 0,
+        totalAmount: '888'
+      };
       _this.expressInfo = {
-        context: ""
+        context: '[仓前]仓溢东苑 已发出',
+        ftime: '2018-12-22 12:16:33'
       };
       _this.localCancelOrder = false;
       _this.toastShow = false;
@@ -777,6 +789,6 @@ export default {
       const _this = this;
       _this.channel = channel;
     }
-  },
+  }
 };
 </script>

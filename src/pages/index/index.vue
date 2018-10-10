@@ -315,9 +315,12 @@ export default {
   text-align: right;
 }
 .router-style {
-  margin-top: 80rpx;
+  margin-top: 48rpx;
   margin-bottom: 20rpx;
+  height: 73rpx;
+  padding: 0 15rpx;
   display: flex;
+  align-items: center;
   color: rgba(160, 160, 160, 1);
   justify-content: space-between;
 }
@@ -332,7 +335,7 @@ export default {
   font-weight: 500;
 }
 .router-style .a .a2 {
-  font-size: 16rpx;
+  font-size: 22rpx;
   font-weight: 500;
 }
 .router-style .b .b1 {
@@ -340,17 +343,15 @@ export default {
   font-weight: 500;
 }
 .router-style .b .b2 {
-  font-size: 16rpx;
+  font-size: 22rpx;
   font-weight: 500;
 }
 .router-style .c1 {
-  margin-top: 30rpx;
   font-size: 28rpx;
   color: rgba(244, 107, 106, 1);
   font-weight: 400;
 }
 .router-style .c2 {
-  margin-top: 20rpx;
   font-size: 28rpx;
   color: rgba(244, 107, 106, 1);
   font-weight: 400;

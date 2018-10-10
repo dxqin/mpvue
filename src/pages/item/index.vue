@@ -101,8 +101,11 @@
           <span class="bar-text">{{discount}}后商品将正式开拼</span>
         </div>
         <div class="bar-bottom">
-            <div class="bar-btn">
+            <div v-if="detail.status === 1 && detail.stockTotal > 0 && detail.itemsExtension.detailType === 0" class="bar-btn">
               <span class="bar-price">￥{{detail.unitPriceDesc}}</span>
+            </div>
+            <div v-if="detail.status === 2 || detail.stockTotal === 0" class="bar-btn">
+              <span class="bar-price2">￥{{detail.unitPriceDesc}}</span>
             </div>
           <div v-if="detail.status === 1 && detail.stockTotal > 0 && detail.itemsExtension.detailType === 0" @click="showModal" class="bar-btn1">
               <span class="btn-bought">发起拼单</span>
@@ -110,7 +113,7 @@
           <div v-if="detail.status === 2" class="bar-btn2">
               <span class="btn-disabled">即将开始</span>
           </div>
-          <div v-if="detail.stockTotal === 0 && detail.status !== 0" class="bar-btn2">
+          <div v-if="detail.stockTotal === 0" class="bar-btn2">
               <span class="btn-disabled">已售罄</span>
           </div>
         </div>
@@ -215,6 +218,12 @@
   font-size:48rpx;
   font-weight:500;
   color:rgba(244,107,106,1);
+  line-height:67rpx;   
+}
+.bar-price2 {
+  font-size:48rpx;
+  font-weight:500;
+  color:rgba(160,160,160,1);
   line-height:67rpx;   
 }
 .bar-btn1 {
@@ -516,6 +525,7 @@ export default {
   methods: {
     //初始化数据
     init() {
+      this.discount = '22时22分22秒'
       this.pinList = [
         {
           img: "/static/img/kn.png",
