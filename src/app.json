@@ -8,17 +8,22 @@
   },
   "tabBar": {
     "color": "#666666",
-    "selectedColor": "#ff6464",
+    "selectedColor": "#00A4A2",
     "backgroundColor": "#ffffff",
     "borderStyle": "black",
     "list": [{
       "pagePath": "pages/index/index",
-      "text": "拼团首页",
+      "text": "首页",
       "iconPath": "/static/img/index.png",
-      "selectedIconPath": "/static/img/index-a.png"
+      "selectedIconPath": "/static/img/index-o.png"
     }, {
       "pagePath": "pages/mine/index",
-      "text": "我的拼单",
+      "text": "预定",
+      "iconPath": "/static/img/mine.png",
+      "selectedIconPath": "/static/img/mine-a.png"
+    },{
+      "pagePath": "pages/mine/index",
+      "text": "惊喜",
       "iconPath": "/static/img/mine.png",
       "selectedIconPath": "/static/img/mine-a.png"
     }]
