@@ -1,5 +1,10 @@
 {
-  "pages": ["pages/index/index", "pages/mine/index", "pages/item/paySuccess", "pages/mine/detail", "pages/item/index", "pages/item/pay", "pages/item/payError", "pages/item/joinError"],
+  "pages": [
+    "pages/reserve-list/index",
+    "pages/my-account/index",
+    "pages/integral/index",
+    "pages/reserve/index", 
+    "pages/index/index", "pages/mine/index", "pages/item/paySuccess", "pages/mine/detail", "pages/item/index", "pages/item/pay", "pages/item/payError", "pages/item/joinError"],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",

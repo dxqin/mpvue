@@ -1,0 +1,13 @@
+.reserve-list-search{
+  box-sizing: border-box;
+  width: 704rpx;
+  height: 506rpx;
+  /* border: 1px solid red; */
+  border-radius: 10rpx;
+  box-shadow: 0 0 10rpx #aaa;
+}
+.search-btn{
+  width: 360rpx;
+  height: 70rpx;
+  line-height: 70rpx;
+}
