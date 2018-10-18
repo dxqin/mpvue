@@ -1,5 +1,6 @@
 {
-  "pages": ["pages/index/index", "pages/mine/index", "pages/item/paySuccess", "pages/mine/detail", "pages/item/index", "pages/item/pay", "pages/item/payError", "pages/item/joinError"],
+  "pages": [
+    "pages/reserve-list/index","pages/integral/index","pages/reserve/index","pages/index/index", "pages/order/index", "pages/mine/invite",   "pages/mine/index"],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
@@ -17,12 +18,12 @@
       "iconPath": "/static/img/index.png",
       "selectedIconPath": "/static/img/index-o.png"
     }, {
-      "pagePath": "pages/mine/index",
+      "pagePath": "pages/order/index",
       "text": "预定",
       "iconPath": "/static/img/mine.png",
       "selectedIconPath": "/static/img/mine-a.png"
     },{
-      "pagePath": "pages/mine/index",
+      "pagePath": "pages/mine/invite",
       "text": "惊喜",
       "iconPath": "/static/img/mine.png",
       "selectedIconPath": "/static/img/mine-a.png"
