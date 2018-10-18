@@ -1,0 +1,48 @@
+.order-detial{
+  width: 682rpx;
+  height: 332rpx;
+  position: absolute;
+  top: 60rpx;
+  left: 34rpx;
+  padding: 20rpx 30rpx;
+  box-sizing: border-box;
+}
+.bg-top{
+  height: 332rpx;
+}
+.bg-bottom{
+  height: calc(100vh - 332rpx);
+}
+.order-msg-input{
+  box-sizing: border-box;
+  width: 682rpx;
+  position: absolute;
+  top: 120rpx;
+  left: 34rpx;
+}
+.table-box{
+  border: 1px dashed #B4B4B4
+}
+.nike-img-box{
+  width: 72rpx;
+  height: 72rpx;
+}
+.nike-img{
+  width: 72rpx;
+  height: 72rpx;
+	border-radius: 50%;
+}
+.nike-name-box{
+	line-height: 72rpx;
+}
+.logo-img{
+	width: 128rpx; height: 104rpx;
+	border: 2rpx dashed #777
+}
+.integral-list{
+	width: 682rpx;
+	height: calc(100vh - 432rpx);
+	box-shadow: 0 0 10px #ddd;
+	bottom: 0;
+	left: 32rpx;
+}
