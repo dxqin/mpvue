@@ -1,0 +1,154 @@
+.nav{
+  height: 82rpx;
+  line-height: 82rpx;
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 40rpx;
+  /* background:pink; */
+}
+
+.nav span{
+  font-size: 24rpx;
+  color: #B2B2B2;
+}
+
+.nav .active{
+  color: #00A4A2;
+  border-bottom:1px solid #00A4A2;
+  margin-right:36rpx;
+}
+
+.banner{
+  width: 100%;
+  height: 422rpx;
+  background: pink;
+  position: relative;
+}
+
+.banner .group{
+  position: absolute;
+  top: -56rpx;
+  left: 18rpx;
+  width: 110rpx;
+  height: 90rpx;
+  background-color: #00A4A2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.banner .group img{
+  width: 86rpx;  
+  height: 74rpx;
+}
+.user{
+  width: 100%;
+  height: 148rpx;
+  display: flex;
+  justify-content: center;
+  margin-top: 52rpx;
+}
+
+.user .user-box{
+  width: 672rpx;
+  height: 100rpx;
+  display: flex;
+  padding: 24rpx 0;
+  /* background:pink; */
+  background: #FFFFFF;
+  box-shadow: 0 1px 4px 0 rgba(0,0,0,0.13);
+  border-radius: 10px;
+}
+
+.user .user-box .user-box-l{
+  width: 333rpx;
+  border-right: 3rpx solid #EEEEEE;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.user-box-l .name{
+  font-size:40rpx;
+  color: #353535;
+  display: inline-block;
+  line-height: 56rpx;
+  margin-right: 10rpx;
+  margin-bottom: 10rpx;
+}
+
+.user-box-l .gender{
+  font-size:24rpx;
+  color: #C6C6C6;
+}
+
+.user-box-l .vip{
+  display: flex;
+  line-height: 34rpx;
+}
+
+.user-box-l .vip img{
+  width: 28rpx;
+  height: 28rpx;
+  margin-right: 12rpx;
+}
+
+.user-box-l .vip span{
+  color: #00A4A2;
+  font-size:24rpx;
+}
+
+.user .user-box .user-box-r {
+  display: flex;
+  flex-direction: column;
+  width: 236rpx;
+  margin-left: 23rpx;
+}
+
+.user .user-box .user-box-r .integral{ 
+  margin-top: 12rpx;
+  font-size:28rpx;
+  line-height: 40rpx;
+  color:#353535;
+}
+
+.user .user-box .user-box-r .integral-num{
+  text-align: right; 
+  font-size:40rpx;
+  color:#00A4A2;
+  display: inline-block;
+  width: 100%;
+}
+
+.features{
+  display: flex;
+  justify-content: space-between;
+  height: 198rpx;
+  padding: 0 40rpx;
+  margin-top: 134rpx;
+}
+
+.features .fe-col{
+  width: 148rpx;
+  height: 198rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+ .features .fe-col .fe-col-icon{
+  width: 148rpx;
+  height: 148rpx;
+  margin-bottom: 16rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background:rgba(255,255,255,1);
+  box-shadow:0rpx 2rpx 8rpx 0rpx rgba(0,0,0,0.13);
+  border-radius:20rpx;
+}
+
+.features .fe-col span{
+  color: #353535;
+  font-size: 24rpx;
+}
