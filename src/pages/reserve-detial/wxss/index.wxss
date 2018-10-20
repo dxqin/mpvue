@@ -1,0 +1,73 @@
+.modal-back{
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  opacity: 0.6;
+  background: #000;
+}
+.bg-img-box{
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -2;
+}
+.modal-bg-img{
+  width: 702rpx;
+  height: 342rpx;
+  margin: 44rpx auto;
+}
+.bg-img-box{
+  width: 750rpx;
+}
+.reserve-detial-content{
+  width: 750rpx;
+  height: calc(100% - 230rpx);
+}
+.content-header{
+
+}
+.reserve-detial-content{
+  border-radius: 10rpx 10rpx 0 0;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+}
+.slide-image{
+  width: 750rpx;
+  height: 326rpx;
+}
+.swiper-box{
+  width: 750rpx;
+  height: 326rpx;
+}
+.swiper{
+  width: 750rpx;
+  height: 326rpx;
+}
+.current-box{
+  width: 100%;
+  bottom: 10rpx;
+  left: 0;
+}
+.current-item{
+  width: 80rpx;
+  height: 40rpx;
+  background: #D8D8D8;
+}
+.reserve-bottom{
+  width: 750rpx;
+  height: 120rpx;
+  bottom: 0;
+  left: 0;
+  box-shadow: 0 0 10rpx #ddd
+}
+.reserve-btn{
+  width: 106rpx;
+  height: 84rpx;
+  line-height: 84rpx;
+}
+.reserve-btn {
+  
+}

@@ -83,5 +83,11 @@ module.exports = [
         navigationBarTitleText: 'EBO HOTEL',
         enablePullDownRefresh: false
       }
+    }, {
+      path: '/pages/reserve-detial/index',
+      config: {
+        navigationBarTitleText: 'EBO HOTEL',
+        enablePullDownRefresh: false
+      }
     }
   ]

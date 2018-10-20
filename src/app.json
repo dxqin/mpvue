@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/reserve-detial/index",
     "pages/reserve-list/index",
     "pages/my-account/index",
     "pages/integral/index",

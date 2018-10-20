@@ -1,7 +1,7 @@
 .reserve-list-search{
   box-sizing: border-box;
   width: 704rpx;
-  height: 506rpx;
+  min-height: 506rpx;
   /* border: 1px solid red; */
   border-radius: 10rpx;
   box-shadow: 0 0 10rpx #aaa;
@@ -10,4 +10,103 @@
   width: 360rpx;
   height: 70rpx;
   line-height: 70rpx;
+}
+.img-box{
+  width: 702rpx;
+  height: 342rpx;
+}
+.hotel-mark{
+  width: 702rpx;
+  height: 78rpx;
+  left: 0;
+  bottom: 0;
+  background: #333;
+  opacity: 0.7;
+}
+.hotel-abstract{
+  width: 702rpx;
+  height: 88rpx;
+  line-height: 88rpx;
+}
+.hotel-mark-icon{
+  width: 52rpx;height: 52rpx;border-radius: 50%; margin-left: 10px
+}
+.hotel-index{
+  border: 1px solid #eee;
+  box-shadow: 0 0 8rpx #ddd;
+}
+.hotel-child-list{
+  width: 100%;
+  /* height: 168rpx; */
+  box-shadow: 0 0 10rpx #ddd;
+}
+.hotel-child-title{
+  width: 100%;
+  height: 168rpx;
+  /* border: 1px solid #ddd; */
+  border-radius: 8rpx;
+}
+.hotel-child-left{
+  width: 256rpx;
+  height: 168rpx;
+}
+.hotel-child-left-img{
+  width: 256rpx;
+  height: 168rpx;
+  border-radius: 8rpx 0 0 8rpx;
+}
+.hotel-child-right{
+  /* border: 1px solid #ddd; */
+  border-left: none;
+  border-radius: 0 8rpx 8rpx 0;
+  width: calc(100%);
+  height: 168rpx;
+}
+.oner-left{
+  align-content:stretch;
+  align-items:stretch;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-around;
+}
+.right-icon{
+  align-content:stretch;
+  align-items:stretch;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-around;
+}
+.icon-content{
+  width: 6px;
+  height: 6px;
+  border-top: 1px solid #D1D0D0;
+  border-right: 1px solid #D1D0D0;
+  transform: rotate(45deg);
+}
+.icon-content-active{
+  width: 6px;
+  height: 6px;
+  border-top: 1px solid #D1D0D0;
+  border-right: 1px solid #D1D0D0;
+  transform: rotate(135deg);
+  animation: headRotate 0.5s linear 1;
+  -webkit-animation: headRotate 0.5s linear 1;
+}
+@keyframes headRotate{
+  0% {transform: rotate(45deg);}
+  50% {transform: rotate(135deg);}
+  /* 100% {transform: rotate(135deg);} */
+}
+@-webkit-keyframes headRotate{
+  0% {transform: rotate(45deg);}
+  50% {transform: rotate(135deg);}
+  /* 100% {transform: rotate(135deg);} */
+}
+.hotel-child-item{
+  
+}
+.reserve-btn{
+  width: 104rpx;
+  height: 128rpx;
+  line-height: 128rpx;
 }
