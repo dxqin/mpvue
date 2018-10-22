@@ -13,14 +13,19 @@ const fly = new Fly()
 // 设置请求基地址
 // fly.config.baseURL = 'http://localhost:8888'
 // fly.config.baseURL = 'http://192.168.2.71:1443'
-fly.config.baseURL = 'https://wxtest.dingleague.com'
+fly.config.baseURL = 'http://hoteltest.rudolph-ibs.com/api/hotel'
 
 fly.interceptors.request.use((request) => {
  // 鉴权
- let token = wx.getStorageSync('token')
- if (token) {
-   request.headers.Authorization = `Bearer ${token}`
- }
+  let token = wx.getStorageSync('token');
+  let account = wx.getStorageSync('account');
+  if (token) {
+    request.headers.token = `${token}`
+  }
+  if (account) {
+    request.headers.account = `${account}`
+  }
+ 
  // console.log('flyio发请求,request为', request);
  wx.showNavigationBarLoading()
  return request

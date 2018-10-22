@@ -4,7 +4,15 @@
     <div class="reserve-list-search mt30 plr20 ptb20 pos-re">
       <p class="c3b f16 ptb20">预定选择</p>
       <div class="f14 c-app border-bottom-have">
-        <input type="text" v-model="searchAddress" class="ptb14">
+        <picker
+          :range="pickerValueArray"
+          range-key="label"
+          @change="changeHotel"
+        >
+          <view class="picker">
+            {{pickerLabelDefault || '请选择'}}
+          </view>
+        </picker>
       </div>
       <div class="flex-row jc-bet border-bottom-have ptb14">
         <div class="flex-col w50">
@@ -32,22 +40,21 @@
         <div class="flex-col w50">
           <p class="f12">房间数</p>
           <p class="f14 c-app dis-flex jc-str">
-            <input type="number" v-model="houseNums" placeholder="请选择房间数" style="width: 60rpx">
+            <input type="number" v-model="houseNums" placeholder=" " style="width: 60rpx">
             <span>间</span>
           </p>
         </div>
         <div class="flex-col w50">
           <p class="f12">人数</p>
           <p class="f14 c-app dis-flex jc-str">
-            <input type="number" v-model="personNums" placeholder="请选择人数" style="width: 60rpx">
+            <input type="number" v-model="personNums" placeholder=" " style="width: 60rpx">
             <span>人</span>
           </p>
         </div>
       </div>
-      <!-- <div style="height: 25rpx"></div> -->
       <div style="position: absolute; bottom: -35rpx; left: calc(50% - 180rpx)">
         <div class="dis-flex jc-c">
-          <div class="search-btn tc cfff f16 app-btn br10">搜索</div>
+          <div class="search-btn tc cfff f16 app-btn br10" @click="searchHotel">搜索</div>
         </div>
       </div>
     </div>
@@ -108,7 +115,7 @@
                 <div>
                   ￥495
                 </div>
-                <div>
+                <div class="ml15">
                   <p class="reserve-btn app-btn f14 tc br20">预定</p>
                 </div>
               </div>
@@ -125,7 +132,7 @@
                 <div>
                   ￥495
                 </div>
-                <div>
+                <div class="ml15">
                   <p class="reserve-btn app-btn f14 tc br20">预定</p>
                 </div>
               </div>
@@ -161,6 +168,7 @@
 </template>
 <script>
 import './wxss/index.wxss'
+import mpvuePicker from 'mpvue-picker';
 export default {
   data() {
     return {
@@ -174,16 +182,53 @@ export default {
       houseNums: 1,
       personNums: 1,
       hotelImg: '../../static/img/rec.png',
-      isactive: -1
+      isactive: -1,
+      pickerValueArray: [], // 酒店列表
+      selectId: '',
+      pickerLabelDefault: '',
+      pickerValueDefault: '',
+      mode: 'selector',
     }
   },
-  mounted(){
-  // 设置时间
-    this.getToday()
+  components: {
+    mpvuePicker
+  },
+  onLoad() {
+    this.getHotelsAll();
+    this.getToday(); // 设置时间
   },
   methods: {
     checkHotel(val = -1) {
       this.isactive = val;
+    },
+    getHotelsAll() { // 查询所有酒店
+      this.$http.get('/hotels/all', {}).then((res = {}) => {
+        console.log(res, 'res');
+        const { data = [] } = res;
+        const newData = data.map((item = {}) => {
+          var { id: value = '', name: label = '' } = item;
+          const items = {
+            value,
+            label
+          }
+          return items
+        })
+        this.pickerValueArray = newData;
+      }).catch(res => {
+        console.log(res, 'err')
+      })
+    },
+    getHotelDetial() {
+      const { pickerValueDefault: hotelId = '' } = this.$data;
+      const params = {
+        hotelId
+      }
+      this.$http.get('/hotels/detail', params).then((res = {}) => {
+        console.log(res, 'res');
+        
+      }).catch(res => {
+        console.log(res, 'err')
+      })
     },
     getToday(val, bol){
       let myDate;
@@ -242,6 +287,30 @@ export default {
       const { value } = even.target;
       this.dateEnd = value;
       this.getToday(value, true)
+    },
+    changeHotel(e) {// select选择框数据切换
+      console.log(e);
+      const { value: pickerValueDefault = '' } = e.target;
+      const { pickerValueArray = [] } = this.$data;
+      this.pickerValueDefault = pickerValueArray[pickerValueDefault].value || '';
+      const pickerLabelDefault = pickerValueArray[pickerValueDefault].label || ''
+      this.pickerLabelDefault = pickerLabelDefault
+    },
+    searchHotel() { // 点击搜索按钮
+      const { endDate, startDate, houseNums, personNums, pickerValueDefault } = this.$data;
+      if (this.$base.isNull(pickerValueDefault)) {
+        this.$base.toast('请选择酒店')
+      } else if (this.$base.isNull(startDate)) {
+        this.$base.toast('请选择入住日期')
+      } else if (this.$base.isNull(endDate)) {
+        this.$base.toast('请选择退房日期')
+      } else if (this.$base.isZero(personNums)) {
+        this.$base.toast('请填写要租住的人数')
+      } else if (this.$base.isZero(houseNums)) {
+        this.$base.toast('请填写房间数')
+      } else {
+        this.getHotelDetial()
+      }
     }
   }
 }

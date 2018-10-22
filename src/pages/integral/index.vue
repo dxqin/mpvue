@@ -8,11 +8,11 @@
           <ul>
             <li class="flex-col-xy-middle jc-bet ptb20 border-bottom-have" v-for="(item, index) in listData" :key="index">
               <p>
-                <span class="c3b f16 db">{{item.Reason}}</span>
-                <span class="cb2 f12 db">{{item.date}}</span>
+                <span class="c3b f16 db">{{item.way}}</span>
+                <span class="cb2 f12 db">{{item.time}}</span>
               </p>
               <p class="c3b f16">
-                {{item.change}}
+                {{operates[item.operate]}}{{item.points}}
               </p>
             </li>
           </ul>
@@ -50,19 +50,47 @@ export default {
     return {
       logo: 'http://pic22.nipic.com/20120621/1628220_155636709122_2.jpg',
       nikeHeader: 'http://pic22.nipic.com/20120621/1628220_155636709122_2.jpg',
+      operates: {
+        '0': '+',
+        '1': '-'
+      },
       listData: [{
-        Reason: '几分钱到',
-        date: '2818.10.10 20:00:00',
-        change: '+5'
+        Rway: '几分钱到',
+        time: '2818.10.10 20:00:00',
+        points: '5',
+        operate: 1
       }, {
-        Reason: '几分钱到',
-        date: '2818.10.10 20:00:00',
-        change: '+5'
+        way: '几分钱到',
+        time: '2818.10.10 20:00:00',
+        points: '5',
+        operate: 0
       }, {
-        Reason: '几分钱到',
-        date: '2818.10.10 20:00:00',
-        change: '+5'
+        way: '几分钱到',
+        time: '2818.10.10 20:00:00',
+        points: '5',
+        operate: 0
       }]
+    }
+  },
+  created() {
+    // this.getIntegralLIst()
+  },
+  onLoad() {
+    const _this = this;
+    this.getIntegralLIst()
+  },
+  methods: {
+    getIntegralLIst() {
+      const params = {
+        userId: 24
+      };
+      this.$http.get('/integral/record', params).then((res = {}) => {
+        const { data = [] } = res;
+        console.log(data)
+        this.listData = data;
+      }).catch(res => {
+        console.log(res, 'resErr')
+      })
     }
   }
 

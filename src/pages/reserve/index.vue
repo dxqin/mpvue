@@ -82,9 +82,8 @@ import './wxss/index.wxss'
 export default {
   data() {
     return {
-      renterName: ''
+      renterName: '',
     }
   }
-
 }
 </script>

@@ -12,7 +12,9 @@
   "dependencies": {
     "flyio": "^0.6.1",
     "moment": "^2.22.2",
+    "mptoast": "^1.1.3",
     "mpvue": "^1.0.11",
+    "mpvue-picker": "^2.0.3",
     "mpvue-wxparse": "^0.6.5",
     "v-tap": "^3.0.3",
     "vue-lazyload": "^1.2.6",
