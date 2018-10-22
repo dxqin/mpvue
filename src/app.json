@@ -23,12 +23,12 @@
       "iconPath": "/static/img/index.png",
       "selectedIconPath": "/static/img/index-o.png"
     }, {
-      "pagePath": "pages/mine/index",
+      "pagePath": "pages/order/index",
       "text": "预定",
       "iconPath": "/static/img/mine.png",
       "selectedIconPath": "/static/img/mine-a.png"
     },{
-      "pagePath": "pages/mine/index",
+      "pagePath": "pages/mine/invite",
       "text": "惊喜",
       "iconPath": "/static/img/mine.png",
       "selectedIconPath": "/static/img/mine-a.png"

@@ -2,60 +2,52 @@ module.exports = [
     {
       path: '/pages/index/index',
       config: {
-        navigationBarTitleText: '町盟',
+        navigationBarTitleText: 'EBO HOTEL',
         enablePullDownRefresh: true
       }
     },
     {
-      path: '/pages/item/index',
+      path: '/pages/mine/invite',
       config: {
-        navigationBarTitleText: '商品详情',
+        navigationBarTitleText: '我的邀请',
         enablePullDownRefresh: true
+      }
+    }, 
+    {
+      path: '/pages/order/index',
+      config: {
+        navigationBarTitleText: '订单',
+        enablePullDownRefresh: true
+      }
+    }, 
+     {
+      path: '/pages/reserve/index',
+      config: {
+        navigationBarTitleText: '订单详情',
+        enablePullDownRefresh: false
       }
     },
     {
-      path: '/pages/item/pay',
+      path: '/pages/integral/index',
       config: {
-        navigationBarTitleText: '町盟',
-        enablePullDownRefresh: true
-      }
-    },
-    {
-      path: '/pages/item/payError',
-      config: {
-        navigationBarTitleText: '町盟',
-        enablePullDownRefresh: true
-      }
-    },
-    {
-      path: '/pages/item/joinError',
-      config: {
-        navigationBarTitleText: '町盟',
-        enablePullDownRefresh: true
-      }
-    },
-    {
-      path: '/pages/item/paySuccess',
-      config: {
-        navigationBarTitleText: '町盟',
-        enablePullDownRefresh: true
+        navigationBarTitleText: '积分',
+        enablePullDownRefresh: false
       }
     },
     {
       path: '/pages/mine/index',
       config: {
-        navigationBarTitleText: '町盟',
-        enablePullDownRefresh: true
+        navigationBarTitleText: 'EBO HOTEL',
+        enablePullDownRefresh: false
       }
     },
     {
-      path: '/pages/mine/detail',
+      path: '/pages/reserve-list/index',
       config: {
-        navigationBarTitleText: '町盟',
-        enablePullDownRefresh: true
+        navigationBarTitleText: 'EBO HOTEL',
+        enablePullDownRefresh: false
       }
     },
-    // 开始
     {
       path: '/pages/reserve/index',
       config: {
