@@ -1,6 +1,5 @@
 {
-  "pages": [
-    "pages/reserve-list/index","pages/integral/index","pages/reserve/index","pages/index/index", "pages/order/index", "pages/mine/invite",   "pages/mine/index"],
+  "pages": ["pages/order/index","pages/reserve/index","pages/index/index",  "pages/mine/invite",  "pages/integral/index", "pages/mine/index", "pages/reserve-list/index"],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",

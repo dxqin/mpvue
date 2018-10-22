@@ -94,7 +94,19 @@
 .pl30{
   padding-left: 30rpx;
 }
+.pl40{
+  padding-left: 40rpx;
+}
+.pl50{
+  padding-left: 50rpx;
+}
+.pr50{
+  padding-right: 50rpx;
+}
 .pl60{
+  padding-right: 60rpx;
+}
+.pr60{
   padding-left: 60rpx;
 }
 .pr20{
@@ -106,14 +118,24 @@
 .pb20{
   padding-bottom: 20rpx;
 }
+.ptb16{
+  padding-top: 16rpx;
+  padding-bottom: 16rpx;
+}
 .pt20{
   padding-top: 20rpx;
+}
+.pt30{
+  padding-top: 30rpx;
 }
 .pt10{
   padding-top: 10rpx;
 }
 .pb10{
   padding-bottom: 10rpx;
+}
+.pb100{
+  padding-bottom: 100rpx;
 }
 .ptb60{
   padding-top: 60rpx;
@@ -131,8 +153,14 @@
   padding-top: 30rpx;
   padding-bottom: 30rpx;
 }
+.ml15{
+  margin-left: 15rpx;
+}
 .ml30{
   margin-left: 30rpx;
+}
+.mr28{
+  margin-right: 28rpx;
 }
 .mr30{
   margin-right: 30rpx;
@@ -173,6 +201,9 @@
 }
 .jc-c{
   justify-content: center;
+}
+.aic{
+  align-items: center
 }
 .border-top{
   border-top: 1px solid #ddd;
@@ -238,6 +269,14 @@
 .pl20{
   padding-left: 20rpx;
 }
+.plr6{
+  padding-left: 6rpx;
+  padding-right: 6rpx;
+}
+.plr10{
+  padding-left: 10rpx;
+  padding-right: 10rpx;
+}
 .plr15{
   padding-left: 15rpx;
   padding-right: 15rpx;
@@ -245,6 +284,10 @@
 .plr20{
   padding-left: 20rpx;
   padding-right: 20rpx;
+}
+.plr24{
+  padding-left: 24rpx;
+  padding-right: 24rpx;
 }
 .plr30{
   padding-left: 30rpx;
@@ -318,7 +361,6 @@ tl{text-align: left;}
 .list-boxs{
   width: 100%;
   padding: 20rpx 20rpx;
-
 }
 .border-ddd{
   border: 1px solid #ddd;
@@ -337,4 +379,10 @@ tl{text-align: left;}
 }
 .bsbb{
   box-sizing: border-box
+}
+.bs8dd{
+  box-shadow: 0 0 8rpx #999;
+}
+.p10{
+  padding: 10rpx;
 }

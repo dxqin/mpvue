@@ -1,24 +1,25 @@
 <template>
 <div class="list">
-  <ul class="list_tabs retinabb">
-    <li class="list_tabs_tab" @click="changeTabs(index)" :class="{ active: select === index}" v-for="(tab,index) in tabs" :key="tab">{{tab}}</li>
+  <ul class="list-tabs retinabb">
+    <li class="list-tabs-tab" @click="changeTabs(index)" :class="{ active: select === index}" v-for="(tab,index) in tabs" :key="tab">{{tab}}</li>
   </ul>
-  <scroll-view class="list_orders" :style="{'height': '1200rpx'}" :scroll-y="true" @scrolltolower="scrollLower()">
-    <div class="list_orders_item_outer" v-for="(li,index) in orderList2" :key="li">
-      <div class="list_orders_item" @click="detail(index)">
-        <p class="list_orders_item_header">{{li.dateTime}}</p>
-        <div class="list_orders_item_content">
+  <scroll-view class="list-orders" :style="{'height': '1200rpx'}" :scroll-y="true" @scrolltolower="scrollLower()">
+    <div class="list-orders-item-outer" v-for="(li,index) in orderList2" :key="li">
+      <div class="list-orders-item" @click="detail(index)">
+        <p class="list-orders-item-header">{{li.dateTime}}</p>
+        <div class="list-orders-item-content">
           <img class="pic" :src="li.skuImage" />
           <div class="info">
-            <div class="info_title">
-              <span class="info_name">{{li.name}}</span>
+            <div class="info-title">
+              <span class="info-name">{{li.name}}</span>
               <span>￥{{li.price}}</span>
             </div>
-            <div class="info_subtitle">{{li.subTitle}}</div>
-            <div class="info_num">x{{li.num}}</div>
-            <div class="info_num_price">共{{li.total}}件商品 合计：<span style="font-size:32rpx;">￥{{li.totalPrice}}</span></div>
+            <div class="info-subtitle">{{li.subTitle}}</div>
+            <div class="info-num">x{{li.num}}</div>
+            <div class="info-num-price">共{{li.total}}件商品 合计：<span style="font-size:32rpx;">￥{{li.totalPrice}}</span></div>
             <div class="product"> 
-              <v-button v-if="select == 0" class="count2">再次购买</v-button>
+              <v-button v-if="select == 0" class="count2 mr28">删除</v-button>
+              <v-button v-if="select == 0" class="count2">再次预定</v-button>
             </div>
           </div>
         </div>
