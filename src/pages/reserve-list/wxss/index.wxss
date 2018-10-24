@@ -15,6 +15,10 @@
   width: 702rpx;
   height: 342rpx;
 }
+.swiper{
+  width: 702rpx;
+  height: 342rpx;
+}
 .hotel-mark{
   width: 702rpx;
   height: 78rpx;

@@ -62,20 +62,33 @@
     <div class="search-result" style="margin-top: 184rpx">
       <div class="hotel-index br10">
         <div class="img-box pos-re br10">
-          <img :src="hotelImg" class="img-box br10" alt="">
+          <div>
+            <swiper :indicator-dots="indicatorDots"
+              class="swiper"
+              autoplay="false" interval="5000" duration="1000"
+            >
+              <block v-for="(item, index) in hotelMsg.hotelImg" :key="index">
+                <swiper-item>
+                  <image :src="item" class="img-box" />
+                </swiper-item>
+              </block>
+            </swiper>
+          </div>
           <div class="flex-row jc-bet pos-ab hotel-mark pl20 pr20 bb">
             <div class="container-middle jc-str" style="align-items: right">
-              <p class="f12 cfff">就带你名</p>
+              <p class="f12 cfff">{{hotelMsg.hotelName}}</p>
               <p class="f10 cfff">古墩路店</p>
             </div>
             <div class="flex-col-xy-middle jc-end" style="height: 78rpx">
-              <img :src="hotelImg" class="hotel-mark-icon" alt="">
-              <img :src="hotelImg" class="hotel-mark-icon" alt="">
+              <img :src="hotelImg[0]" class="hotel-mark-icon" alt="">
+              <img :src="hotelImg[0]" class="hotel-mark-icon" alt="">
             </div>
           </div>
         </div>
         <div>
-          <p class="hotel-abstract f10 c3b text-overf-ell tc pl20 pr20 bb">酒店崇尚自然生活，在忆泊静享生活，或许还能邂逅一段回忆酒店崇尚自然生活，在忆泊静享生活，或许还能邂逅一段回忆</p>
+          <p class="hotel-abstract f10 c3b text-overf-ell tc pl20 pr20 bb">
+            {{hotelMsg.hotelDetial}}
+          </p>
         </div>
       </div>
       <!-- 公寓下的套餐 -->
@@ -181,13 +194,22 @@ export default {
       dateEnd: new Date(),
       houseNums: 1,
       personNums: 1,
-      hotelImg: '../../static/img/rec.png',
+      // hotelImg: '../../static/img/rec.png',
+      hotelImg: ['../../static/img/rec.png', '../../static/img/rec.png'],
       isactive: -1,
       pickerValueArray: [], // 酒店列表
       selectId: '',
       pickerLabelDefault: '',
       pickerValueDefault: '',
       mode: 'selector',
+      hotelMsg : {
+        hotelImg: ['../../static/img/rec.png'], // 酒店图片
+        hotelDetial: '酒店崇尚自然生活，在忆泊静享生活1', // 酒店文字介绍
+        hotelName: '忆泊城市艺术酒店(古墩路店)1', //  酒店name
+        longitude: '111', // 经度
+        latitude: '222',// 纬度
+        checkHotelId: '6'// 酒店id
+      }
     }
   },
   components: {
@@ -218,12 +240,26 @@ export default {
         console.log(res, 'err')
       })
     },
-    getHotelDetial() {
+    getHotelDetial() { // 酒店详情
       const { pickerValueDefault: hotelId = '' } = this.$data;
       const params = {
         hotelId
       }
       this.$http.get('/hotels/detail', params).then((res = {}) => {
+        const { code = -1, data = {} } = res;
+        const { imgUrls = [], detail : hotelDetial = '',
+          name: hotelName = '', longitude = '', latitude = '', hotelId: checkHotelId = ''
+        } = data;
+        const { hotelMsg = {} } = this.$data;
+        this.hotelMsg = {
+          ...hotelMsg,
+          hotelImg: imgUrls,
+          hotelDetial,
+          hotelName,
+          longitude,
+          latitude,
+          checkHotelId
+        }
         console.log(res, 'res');
         
       }).catch(res => {
