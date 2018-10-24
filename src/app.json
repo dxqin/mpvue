@@ -1,11 +1,14 @@
 {
   "pages": [
+    "pages/order/index",
     "pages/reserve-detial/index",
     "pages/reserve-list/index",
     "pages/my-account/index",
     "pages/integral/index",
     "pages/reserve/index", 
-    "pages/index/index", "pages/mine/index", "pages/item/paySuccess", "pages/mine/detail", "pages/item/index", "pages/item/pay", "pages/item/payError", "pages/item/joinError"],
+    "pages/index/index", 
+    "pages/mine/index", 
+    "pages/mine/invite"],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
