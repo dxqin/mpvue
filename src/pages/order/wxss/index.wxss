@@ -11,7 +11,7 @@
   width: 100%;
   box-sizing :border-box;
   border-bottom: 2rpx solid #E6E6E6;
-  margin-bottom: 44rpx;
+  /* margin-bottom: 44rpx; */
 }
 
 .active{
@@ -30,6 +30,7 @@
   display: flex;
   justify-content: center;
   margin-bottom: 40rpx;
+  margin-top: 44rpx;
 }
 
 .list .list-orders-item{
@@ -45,7 +46,7 @@
   color : rgba(160,160,160,1);
   font-weight : 500;
   border-bottom : 1px solid #F3F3F3;
-  padding:0 28rpx;
+  margin:0 28rpx;
   display: flex;
   justify-content: space-between;
 }
