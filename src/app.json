@@ -1,14 +1,17 @@
 {
   "pages": [
+    "pages/mine/invite",
     "pages/order/index",
-    "pages/reserve-detial/index",
-    "pages/reserve-list/index",
-    "pages/my-account/index",
-    "pages/integral/index",
-    "pages/reserve/index", 
     "pages/index/index", 
-    "pages/mine/index", 
-    "pages/mine/invite"],
+    "pages/coupon/index",
+    "pages/QRcode/index",
+    "pages/reserve-list/index",
+    "pages/reserve-detial/index",
+    "pages/reserve/index",
+    "pages/integral/index",
+    "pages/my-account/index",
+    "pages/mine/index"
+  ],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",

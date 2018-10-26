@@ -57,10 +57,39 @@
   margin-bottom: 68rpx;
 }
 
-.invite .invited-txt{ 
+.invite .invite-user{
+  width:682rpx;
+  background:rgba(255,255,255,1);
+  box-shadow:0px 2rpx 8rpx 0px rgba(0,0,0,0.13);
+  border-radius:16rpx;
+  margin-bottom: 20rpx;
+}
+.invite .invite-user .invited-txt{ 
   height:40rpx;
   font-size:28rpx;  
   color:rgba(59,59,59,1);
   line-height:40rpx;
   letter-spacing:1px;
+  margin-top: 28rpx;
+  margin-bottom: 48rpx;
+  text-align: center;
+}
+.invite .invite-user .users .users-show{
+  height: 72rpx;
+  padding: 0 56rpx;
+  margin-bottom: 32rpx;
+  display: flex;
+  align-items: center;
+}
+.invite .invite-user .users .users-show .users-l{
+  height: 72rpx;
+  width: 72rpx;
+  margin-right: 26rpx;
+  background-color:rgba(255,255,255,1);
+  box-shadow:0px 2rpx 8rpx 0px rgba(0,0,0,0.14);
+  border-radius: 50%;
+}
+.invite .invite-user .users .users-show .users-r{
+  font-size:20rpx; 
+  color:rgba(59,59,59,1);
 }

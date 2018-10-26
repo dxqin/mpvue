@@ -16,7 +16,7 @@ module.exports = [
     {
       path: '/pages/order/index',
       config: {
-        navigationBarTitleText: '订单',
+        navigationBarTitleText: '所有订单',
         enablePullDownRefresh: true
       }
     }, 
@@ -54,10 +54,25 @@ module.exports = [
         navigationBarTitleText: 'EBO HOTEL',
         enablePullDownRefresh: false
       }
-    }, {
+    }, 
+    {
       path: '/pages/reserve-detial/index',
       config: {
         navigationBarTitleText: 'EBO HOTEL',
+        enablePullDownRefresh: false
+      }
+    },
+    {
+      path: '/pages/QRcode/index',
+      config: {
+        navigationBarTitleText: '我的二维码',
+        enablePullDownRefresh: false
+      }
+    },
+    {
+      path: '/pages/coupon/index',
+      config: {
+        navigationBarTitleText: '我的卡券',
         enablePullDownRefresh: false
       }
     }
