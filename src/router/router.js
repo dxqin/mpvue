@@ -75,5 +75,12 @@ module.exports = [
         navigationBarTitleText: '我的卡券',
         enablePullDownRefresh: false
       }
-    }
+    },
+    {
+      path: '/pages/user/index',
+      config: {
+        navigationBarTitleText: '个人信息',
+        enablePullDownRefresh: false
+      }
+    },
   ]
