@@ -16,12 +16,19 @@ module.exports = [
     {
       path: '/pages/order/index',
       config: {
-        navigationBarTitleText: '订单',
+        navigationBarTitleText: '所有订单',
         enablePullDownRefresh: true
       }
     },
     {
       path: '/pages/mine/index',
+      config: {
+        navigationBarTitleText: 'EBO HOTEL',
+        enablePullDownRefresh: false
+      }
+    },  
+    {
+      path: '/pages/my-account/index',
       config: {
         navigationBarTitleText: 'EBO HOTEL',
         enablePullDownRefresh: false
@@ -33,31 +40,27 @@ module.exports = [
         navigationBarTitleText: 'EBO HOTEL',
         enablePullDownRefresh: false
       }
-    },
+    }, 
     {
-      path: '/pages/reserve/index',
-      config: {
-        navigationBarTitleText: '订单详情',
-        enablePullDownRefresh: false
-      }
-    },
-    {
-      path: '/pages/integral/index',
-      config: {
-        navigationBarTitleText: '积分',
-        enablePullDownRefresh: false
-      }
-    },
-    {
-      path: '/pages/my-account/index',
+      path: '/pages/reserve-detial/index',
       config: {
         navigationBarTitleText: 'EBO HOTEL',
+        enablePullDownRefresh: false
+      }
+    },
+    {
+      path: '/pages/QRcode/index',
+      config: {
+        navigationBarTitleText: '我的二维码',
         enablePullDownRefresh: false
       }
     }, {
       path: '/pages/reserve-detial/index',
+    },
+    {
+      path: '/pages/coupon/index',
       config: {
-        navigationBarTitleText: 'EBO HOTEL',
+        navigationBarTitleText: '我的卡券',
         enablePullDownRefresh: false
       }
     }, {
@@ -70,7 +73,13 @@ module.exports = [
       path: '/pages/reserve-order/index',
       config: {
         navigationBarTitleText: '预定订单',
+      },
+    },
+    {
+      path: '/pages/user/index',
+      config: {
+        navigationBarTitleText: '个人信息',
         enablePullDownRefresh: false
       }
-    }
+    },
   ]

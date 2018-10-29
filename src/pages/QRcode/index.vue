@@ -1,46 +1,67 @@
 <template>
-  <div class="account-index w-full">
-  
+  <div class="container-middle">
+    <div class="qrcode" id="myCanvas">
+      <img class="logo" src="./../../../static/img/logo2.png" />
+      <div class="qrcode-img-s">
+        <img class="qrcode-img" :src="datas" />
+        <img class="avatar" :src="user.headImageUrl" />
+      </div>
+      <span>长按二维码扫码，可邀请好友获得红包奖励</span>
+      <span>至酒店直接扫二维码，可直接录入个人信息</span>
+    </div>
+    <button>保存并分享图片</button>
   </div>
 </template>
 <script>
 import './wxss/index.wxss'
+import { parse } from 'semver';
 export default {
   data() {
     return {
-      logo: '/static/img/group.png',
-      header: '/static/img/kn.png',
-      name: '张三张',
-      sex: '先生',
-      listData: [{
-        text: '所有订单',
-        code: 'all_order'
-      }, {
-        text: '积分',
-        code: 'integral'
-      }, {
-        text: '卡券',
-        code: 'coupon'
-      }, {
-        text: '余额',
-        code: 'balance'
-      }, {
-        text: '我的邀请',
-        code: 'invite'
-      }, {
-        text: '商业合作',
-        code: 'cooperate'
-      }]
+      datas : '',
+      user : {}
     }
   },
+  onLoad() {
+    const _this = this;
+    this.getData();
+    
+  },
   methods: {
-    navigateTo(){
-      wx.navigateTo({
-        url:'../index/index'
-      })
+    getData(){
+      let data = {
+        userId : 24
+      };
+      this.$http.get('/users/user/QRCode', data).then((res = {}) => {
+        const { data = [] } = res; 
+        this.datas = data;
+        this.getUser();
+      }).catch(res => {
+        console.log(res, 'resErr')
+      });
     },
-    navagate: function(code) {
-      console.log(code)
+    getUser(){
+      let data = {
+        userId : 24
+      };
+      this.$http.get('/users/user/detail', data).then((res = {}) => {
+        const { data = [] } = res; 
+        this.user = data;
+        this.getImg();
+      }).catch(res => {
+        console.log(res, 'resErr')
+      });
+    },
+    getImg(){
+      const data = new Uint8ClampedArray([255, 0, 0, 1])
+      wx.canvasPutImageData({
+        canvasId: 'myCanvas',
+        x: 0,
+        y: 0,
+        width: 1,
+        data: data,
+        success(res) {}
+      })
     }
   },
  }

@@ -6,12 +6,12 @@
 .list .list-tabs{
   background-color:#fff;
   display : flex;
-  justify-content : space-between;
+  justify-content : center;
   padding: 0 40rpx;
   width: 100%;
   box-sizing :border-box;
   border-bottom: 2rpx solid #E6E6E6;
-  margin-bottom: 44rpx;
+  /* margin-bottom: 44rpx; */
 }
 
 .active{
@@ -30,12 +30,13 @@
   display: flex;
   justify-content: center;
   margin-bottom: 40rpx;
+  margin-top: 44rpx;
 }
 
 .list .list-orders-item{
   width:710rpx;
   height:424rpx;
-  background:rgba(255,255,255,1);
+  background-color:rgba(255,255,255,1);
   box-shadow:0px 2rpx 8rpx 0rpx rgba(0,0,0,0.13);
 }
 
@@ -45,7 +46,9 @@
   color : rgba(160,160,160,1);
   font-weight : 500;
   border-bottom : 1px solid #F3F3F3;
-  padding-left: 28rpx;
+  margin:0 28rpx;
+  display: flex;
+  justify-content: space-between;
 }
 
 .list .list-orders-item-content{
@@ -59,10 +62,10 @@
   margin-right:24rpx;
 }
 
-.list .info .info-title{
+.list .list-orders-item-content .info-title{
   height: 40rpx;
   line-height: 40rpx;
-  margin-block-end: 2rpx;
+  margin-bottom: 2rpx;
   width: 478rpx;
   display: flex;
   justify-content: space-between;
@@ -105,13 +108,13 @@
   text-align: right;
 }
 
-.list .info .product{
+.list .list-orders-item-content .product{
   height: 50rpx;
   display: flex;
   justify-content: flex-end;
 }
 
-.list .info .product .count2{
+.list .list-orders-item-content .product .count2{
   border: 0;
   width:142rpx;
   height:60rpx;
@@ -121,4 +124,25 @@
   color: rgba(0,164,162,1);
   font-size: 24rpx;
   text-align: center;
+}
+.list .list-orders-item-content .product-btn{
+  width: 100%;
+  margin-top: 104rpx;
+}
+.list .list-orders-item-content .room-Name{
+  display: inline-block;
+  height:40rpx;
+  font-size:28rpx; 
+  color:#3B3B3B;
+  line-height:40rpx;
+  margin-bottom: 8rpx;
+  font-weight: 600;
+}
+.list .list-orders-item-content .room-time{
+  display: inline-block;
+  height:34rpx;
+  font-size:24rpx; 
+  color:rgba(59,59,59,1);
+  line-height:34rpx;
+  margin-bottom: 2rpx;
 }

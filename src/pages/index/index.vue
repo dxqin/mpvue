@@ -7,15 +7,25 @@
           <span style="margin-left:36rpx;" bindtap="navigateToMine">我的账户</span>
         </div>
         <div class="banner">
-          <img />
-          <div class="group">
+          <swiper class="banner-img" circular="true" indicator-dots="true" autoplay="true" interval="5000" duration="1000">
+            <block v-for="(item, index) in datas" :index="index" :key="key">
+              <swiper-item>
+                <image :src="item" class="banner-img" mode="aspectFill"/>
+              </swiper-item>
+            </block>
+          </swiper>
+          <div class="group" >
             <img src="/static/img/group.png" />
           </div>
         </div>
         <div class="user">
           <div class="user-box">
             <div class="user-box-l">
-              <span class="nickname"><span class="name">gunner</span><span class="gender">先生</span></span>
+              <span class="nickname">
+                <span class="name">{{user.name}}</span>
+                <span class="gender" v-if="user.sex == 0">先生</span>
+                <span class="gender" v-if="user.sex == 1">女士</span>
+                </span>
               <div class="vip">
                 <img src="/static/img/star.png" />
                 <span>VIP3 / 会员权益</span>
@@ -59,26 +69,35 @@
   export default {
     data() {
       return {
+        datas : this.datas,
+        user : this.user
       };
     },
+    onLoad() {
+      const _this = this;
+      this.getData()
+    },
     methods: {
-      // onLoad: function () {
-      //   const _this = this;
-      //   let goodsList = [{
-      //     actEndTime: "2018-09-30 21:32:59"
-      //   }];
-      //   let endTimeList = [];
-      //   // 将活动的结束时间参数提成一个单独的数组，方便操作
-      //   goodsList.forEach(o => {
-      //     endTimeList.push(o.actEndTime);
-      //   });
-      //   _this.actEndTimeList = endTimeList;
-      //   // 执行倒计时函数
-      //   _this.countDown();
-      // }, 
-      // navigate(url, type) {
-      //   tools.navigate(url, type);
-      // },
+      getData(){
+        this.$http.get('/files/homePage/all', '').then((res = {}) => {
+          const { data = [] } = res;
+          console.log(data)
+          this.datas = data;
+        }).catch(res => {
+          console.log(res, 'resErr')
+        });
+      },
+      getUser(){
+        let data = {
+          userId : 24
+        };
+        this.$http.get('/users/user/detail', data).then((res = {}) => {
+          const { data = [] } = res; 
+          this.user = data;
+        }).catch(res => {
+          console.log(res, 'resErr')
+        });
+      },
       navigateToMine:function(){
         console.log("../mine/index--")
         wx.navigateTo({

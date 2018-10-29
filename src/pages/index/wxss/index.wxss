@@ -21,8 +21,13 @@
 .banner{
   width: 100%;
   height: 422rpx;
-  background: pink;
+  /* background: pink; */
   position: relative;
+}
+
+.banner .banner-img{
+  width: 100%;
+  height: 422rpx;
 }
 
 .banner .group{
