@@ -1,9 +1,12 @@
+var moment = require('moment')
+
 function formatNumber (n) {
   const str = n.toString()
   return str[1] ? str : `0${str}`
 }
 
 export function formatTime (date) {
+
   const year = date.getFullYear()
   const month = date.getMonth() + 1
   const day = date.getDate()
@@ -16,6 +19,37 @@ export function formatTime (date) {
   const t2 = [hour, minute, second].map(formatNumber).join(':')
 
   return `${t1} ${t2}`
+  
+}
+
+export function formatDay (date) {
+  const year = date.getFullYear()
+  const month = date.getMonth() + 1
+  const day = date.getDate()
+
+  const t1 = [year, month, day].map(formatNumber).join('-')
+
+  return `${t1}`
+}
+
+export function formatNextDay (date) {
+  const today = date.getTime();
+  console.log(date, 'date', today)
+  const nextDateTime = + today + 1000*60*60*24;
+  const nextDate = new Date(nextDateTime)
+  const year = nextDate.getFullYear()
+  const month = nextDate.getMonth() + 1
+  const day = nextDate.getDate()
+
+  const t1 = [year, month, day].map(formatNumber).join('-')
+
+  return `${t1}`
+}
+
+export function formatDate (value, style) {
+  var innerValue
+  innerValue = value || 0
+  return moment(innerValue * 1000).format(style)
 }
 
 const isPhone = (value) => {
@@ -58,12 +92,26 @@ const setTitle = (title) => { // 设置title
   })
 }
 
+const checkDate = (val) => {
+  const weekArr = ['七', '一', '二', '三', '四', '五', '六', '七']
+  const date = new Date(val);
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const week = date.getDay();
+  const checkDates = `${month}月${day}日周${weekArr[week]}`
+  return checkDates
+}
+
 export default {
   formatNumber,
   formatTime,
+  formatDate,
+  formatDay,
+  formatNextDay,
   isPhone,
   isNull,
   toast,
   setTitle,
-  isZero
+  isZero,
+  checkDate
 }

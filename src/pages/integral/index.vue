@@ -3,8 +3,8 @@
     <div class="reserve-bg w-full h-full pos-re">
       <div class="bg-top bg-app"></div>
       <div class="bg-bottom pos-re">
-        <div class="f14 integral-list pos-ab p2030 bsbb">
-          <p class="integral-title cb2">积分记录</p>
+        <div class="f14 integral-list  p2030 bsbb">
+          <p class="integral-title cb2 br10">积分记录</p>
           <ul>
             <li class="flex-col-xy-middle jc-bet ptb20 border-bottom-have" v-for="(item, index) in listData" :key="index">
               <p>
@@ -15,6 +15,7 @@
                 {{operates[item.operate]}}{{item.points}}
               </p>
             </li>
+            <p class="tc f14 cb2 ptb10" v-show="listData.length <= 0">暂无数据</p>
           </ul>
         </div>
       </div>
@@ -22,18 +23,23 @@
         <!-- 头像 -->
         <div class="flex-row jc-str">
           <div class="nike-img-box dib">
-            <img class="nike-img" :src="nikeHeader"  alt="">
+            <img class="nike-img" :src="userDetial.headImageUrl || 'nikeHeader'"  alt="">
           </div>
           <div class="dib nike-name-box">
-            <span class="c35 f14 nike-name-item plr15">Gunner</span>
-            <span class="ca3 f10 nike-name-item">先生</span>
+            <span class="c35 f14 nike-name-item plr15">{{userDetial.name || '未知'}}</span>
+            <span class="ca3 f10 nike-name-item">{{sexArr[userDetial.sex || 0]}}</span>
           </div>
         </div>
         <!-- 积分数 -->
         <div class="flex-row jc-bet mt60">
           <div class="c-app">
             <p class="f26">135</p>
-            <p class="f12">可用积分</p>
+            <p class="f12">
+              <span>可用积分</span>
+              <span class="icon-content">
+                <img :src="icon" class="icon-img" alt="">
+              </span>
+            </p>
           </div>
           <div>
             <img class="logo-img" :src="logo" alt="">
@@ -48,48 +54,84 @@ import './wxss/index.wxss'
 export default {
   data() {
     return {
-      logo: 'http://pic22.nipic.com/20120621/1628220_155636709122_2.jpg',
+      logo: '../../static/img/logo2.png',
       nikeHeader: 'http://pic22.nipic.com/20120621/1628220_155636709122_2.jpg',
       operates: {
         '0': '+',
         '1': '-'
       },
-      listData: [{
-        Rway: '几分钱到',
-        time: '2818.10.10 20:00:00',
-        points: '5',
-        operate: 1
-      }, {
-        way: '几分钱到',
-        time: '2818.10.10 20:00:00',
-        points: '5',
-        operate: 0
-      }, {
-        way: '几分钱到',
-        time: '2818.10.10 20:00:00',
-        points: '5',
-        operate: 0
-      }]
+      icon: '../../static/img/nextIcon.png',
+      sexArr: ['男', '女', '未知'],
+      userDetial: {
+        "name": "一杆梅子酒",  //用户名称
+        "level": 1,  //用户vip等级
+        "integral": 0, //用户剩余积分数
+        "headImageUrl": "https://rudolph.com/2.jpeg", // 用户头像url
+        "sex": 0,  //用户性别；0:男；1:女
+        "birthday": null //用户生日（未填则为null）
+      },
+      listData: [],
+      page: 1,
+      size: 10,
+      isLast: false,
+      isCanCatch: false,
     }
   },
   created() {
     // this.getIntegralLIst()
   },
+  onReachBottom() {
+    const { isCanCatch, isLast } = this.$data;
+    if ( isCanCatch && !isLast ) this.getIntegralList()
+  },
   onLoad() {
     const _this = this;
-    this.getIntegralLIst()
+    this.getIntegralList();
+    this.getUserDetial()
   },
   methods: {
-    getIntegralLIst() {
+    ddd() {
+      console.log(222)
+    },
+    getIntegralList() {// 获取积分列表
+      this.isCanCatch = false;
+      const userId = wx.getStorageSync('userId') || '24';
+      let { page, size, listData } = this.$data;
       const params = {
-        userId: 24
+        userId,
+        page,
+        size,
       };
       this.$http.get('/integral/record', params).then((res = {}) => {
         const { data = [] } = res;
-        console.log(data)
-        this.listData = data;
+        this.isCanCatch = true;
+        if (Array.isArray(data) && data.length > 0) {
+          listData.push(data);
+          page++;
+          this.page = page;
+          this.listData = listData;
+        } else {
+          this.isLast = true
+        }
       }).catch(res => {
-        console.log(res, 'resErr')
+        this.listData = listData;
+        this.page = page;
+        this.isCanCatch = true;
+      })
+    },
+    getUserDetial() {
+      const userId = wx.getStorageSync('userId') || '24';
+      const params = {
+        userId
+      }
+      this.$http.get('/users/user/detail', params).then((res = {}) => {
+        console.log(res, 'resdetail'); 
+        const { code = -1 } = res;
+        if (code == 0) {
+          this.userDetial = res.data
+        }
+      }).catch((err = {}) => {
+        console.log(err, 'errdetail')
       })
     }
   }

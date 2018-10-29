@@ -59,7 +59,7 @@
       </div>
     </div>
     <!-- 搜索结果 -->
-    <div class="search-result" style="margin-top: 184rpx">
+    <div class="search-result" style="margin-top: 184rpx" v-show="hotelMsg.checkHotelId">
       <div class="hotel-index br10">
         <div class="img-box pos-re br10">
           <div>
@@ -93,83 +93,47 @@
       </div>
       <!-- 公寓下的套餐 -->
       <div>
-        <div class="hotel-child-list bb br10 mt40 pos-re">
-          <div class="hotel-child-title flex-row jc-bet" @click="checkHotel(0)">
+        <div class="hotel-child-list bb br10 mt40" v-for="(item, index) in hotelDetialList" :key="index">
+          <!-- 房源的总述 -->
+          <div class="hotel-child-title flex-row jc-bet"  @click="checkHotel(item.roomTypeId)">
             <div class="hotel-child-left bb">
-              <img class="hotel-child-left-img" :src="hotelImg" alt="">
+              <img class="hotel-child-left-img" :src="item.hotelImg || hotelImgs" alt="">
             </div>
             <div class="hotel-child-right p10 bb dis-flex jc-ar">
               <div class="oner-left">
-                <p class="flex-row jc-bet">
-                  <span class="c3b f14">云舍大床房</span>
-                  <span class="c3b f18">¥500</span>
+                <p class="flex-row jc-bet" style="align-items: center">
+                  <span class="c3b f14">{{item.roomTypeName}}</span>
+                  <span class="c3b f18">¥{{item.basePrice}}</span>
                 </p>
-                <p class="f10 c-app">
+                <!-- <p class="f10 c-app">
                   <span>含早</span>
-                </p>
-                <p class="f10 c3b">一张1.5m双人床/24㎡/2-3楼/有窗</p>
+                </p> -->
+                <p class="f10 c3b">{{item.bedStatus || '床型未知'}}/{{item.area || '面积未知'}}/{{item.floor || '楼层未知'}}/{{item.window == 1? '有窗' : '无窗'}}</p>
               </div>
               <div class="right-icon tc">
-                <div :class="isactive === 0 ? 'icon-content-active' : 'icon-content'">
+                <div :class="isactive === item.roomTypeId ? 'icon-content-active' : 'icon-content'">
                 </div>
               </div>
             </div>
           </div>
-          <div class="hotel-child-item plr20 pb100">
-            <div class="hotel-child-item-child pl10 bcbb border-bottom-have dis-flex jc-bet plr6 ptb16">
+          <!-- 房源的子套餐 -->
+          <div class="hotel-child-item plr20 pb100" :class="isactive === item.roomTypeId ? 'icon-child-active' : 'icon-child'">
+            <div class="hotel-child-item-child pl10 bcbb border-bottom-have dis-flex jc-bet plr6 ptb16"
+              v-for="(items, indexs) in item.roomPrices" :key="index"
+            >
               <div class="child-left pl10">
-                <p><span class="f14 cc2">活动1</span><span class="f10 c3b">详情</span></p>
-                <p class=" f12 c3b">大床</p>
+                <p><span class="f14 cc2">{{items.roomPriceName}}</span><span class="f10 c3b">详情</span></p>
+                <p class=" f12 c3b">{{items.bedType}}</p>
                 <p class="f10 c-app">
-                  <span class="mr10">有免费wifi</span>
+                  <span class="mr10">{{items.valueAddedService}}</span>
                 </p>
               </div>
               <div class="c3b f20  dis-flex jc-bet aic">
                 <div>
-                  ￥495
+                  ￥{{items.price}}
                 </div>
                 <div class="ml15">
-                  <p class="reserve-btn app-btn f14 tc br20">预定</p>
-                </div>
-              </div>
-            </div>
-            <div class="hotel-child-item-child pl10 bcbb border-bottom-have dis-flex jc-bet plr6 ptb16">
-              <div class="child-left pl10">
-                <p><span class="f14 cc2">活动1</span><span class="f10 c3b">详情</span></p>
-                <p class=" f12 c3b">大床</p>
-                <p class="f10 c-app">
-                  <span class="mr10">有免费wifi</span>
-                </p>
-              </div>
-              <div class="c3b f20  dis-flex jc-bet aic">
-                <div>
-                  ￥495
-                </div>
-                <div class="ml15">
-                  <p class="reserve-btn app-btn f14 tc br20">预定</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="hotel-child-list bb br10 mt40">
-          <div class="hotel-child-title flex-row jc-bet"  @click="checkHotel(1)">
-            <div class="hotel-child-left bb">
-              <img class="hotel-child-left-img" :src="hotelImg" alt="">
-            </div>
-            <div class="hotel-child-right p10 bb dis-flex jc-ar">
-              <div class="oner-left">
-                <p class="flex-row jc-bet">
-                  <span class="c3b f14">云舍大床房</span>
-                  <span class="c3b f18">¥500</span>
-                </p>
-                <p class="f10 c-app">
-                  <span>含早</span>
-                </p>
-                <p class="f10 c3b">一张1.5m双人床/24㎡/2-3楼/有窗</p>
-              </div>
-              <div class="right-icon tc">
-                <div :class="isactive === 1 ? 'icon-content-active' : 'icon-content'">
+                  <p class="reserve-btn app-btn f14 tc br20" @click="toReserve(items.roomPriceId, item.basePrice, items)">预定</p>
                 </div>
               </div>
             </div>
@@ -194,7 +158,7 @@ export default {
       dateEnd: new Date(),
       houseNums: 1,
       personNums: 1,
-      // hotelImg: '../../static/img/rec.png',
+      hotelImgs: '../../static/img/rec.png',
       hotelImg: ['../../static/img/rec.png', '../../static/img/rec.png'],
       isactive: -1,
       pickerValueArray: [], // 酒店列表
@@ -208,8 +172,9 @@ export default {
         hotelName: '忆泊城市艺术酒店(古墩路店)1', //  酒店name
         longitude: '111', // 经度
         latitude: '222',// 纬度
-        checkHotelId: '6'// 酒店id
-      }
+        checkHotelId: 0// 酒店id
+      },
+      hotelDetialList: []
     }
   },
   components: {
@@ -218,6 +183,8 @@ export default {
   onLoad() {
     this.getHotelsAll();
     this.getToday(); // 设置时间
+    this.dateStart = this.$base.formatDay(new Date());
+    this.dateEnd = this.$base.formatNextDay(new Date());
   },
   methods: {
     checkHotel(val = -1) {
@@ -228,7 +195,8 @@ export default {
         console.log(res, 'res');
         const { data = [] } = res;
         const newData = data.map((item = {}) => {
-          var { id: value = '', name: label = '' } = item;
+          var { id: value = '', headHotelName = '', hotelName = '' } = item;
+          const label = `${headHotelName}(${hotelName})`
           const items = {
             value,
             label
@@ -240,26 +208,67 @@ export default {
         console.log(res, 'err')
       })
     },
+    toReserve(id = '', price = 1, item ) { //  点击预定跳转
+      const { 
+        pickerLabelDefault = '', // 酒店名
+        dateStart = '', // 入住日
+        dateEnd = '', //  离店日
+
+       } = this.$data;
+      console.log(item, 'item', pickerLabelDefault, dateStart, dateEnd )
+      const newItem = {
+        ...item,
+        id: id,
+        pickerLabelDefault: pickerLabelDefault,
+        dateStart: dateStart,
+        dateEnd: dateEnd
+      }
+      wx.navigateTo({
+        url: `../reserve-detial/index?item=${JSON.stringify(newItem)}`
+      })
+    },
     getHotelDetial() { // 酒店详情
+      const { pickerValueDefault: hotelId = '', dateStart = '', dateEnd = '' } = this.$data;
+      const params = {
+        hotelId,
+        checkInTime: dateStart,
+        checkOutTime: dateEnd
+      }
+      this.$http.post('/roomTypes/accord/roomType', params).then((res = {}) => {
+        console.log(res, 'res2');
+        const { data = [] } = res;
+        this.hotelDetialList = data;
+      }).catch(err => {
+        console.log(err, 'err')
+      })
+    },
+    checkHotelDetial () {
       const { pickerValueDefault: hotelId = '' } = this.$data;
       const params = {
         hotelId
       }
       this.$http.get('/hotels/detail', params).then((res = {}) => {
-        const { code = -1, data = {} } = res;
-        const { imgUrls = [], detail : hotelDetial = '',
-          name: hotelName = '', longitude = '', latitude = '', hotelId: checkHotelId = ''
-        } = data;
-        const { hotelMsg = {} } = this.$data;
-        this.hotelMsg = {
-          ...hotelMsg,
-          hotelImg: imgUrls,
-          hotelDetial,
-          hotelName,
-          longitude,
-          latitude,
-          checkHotelId
+        const { code = -1, data = {}, msg = '' } = res;
+        if (code == 0) {
+          const { imgUrls = [], detail : hotelDetial = '',
+            name: hotelName = '', longitude = '', latitude = '', hotelId: checkHotelId = ''
+          } = data;
+          const { hotelMsg = {} } = this.$data;
+          this.hotelMsg = {
+            ...hotelMsg,
+            hotelImg: imgUrls,
+            hotelDetial,
+            hotelName,
+            longitude,
+            latitude,
+            checkHotelId
+          }
+        } else {
+          console.log(msg, 'msg')
+          this.hotelMsg = {}
+          this.$base.toast(msg);
         }
+        
         console.log(res, 'res');
         
       }).catch(res => {
@@ -278,7 +287,8 @@ export default {
       } else {
         myDate = new Date();
         this.pickerStart = myDate;
-        this.pickerEnd = myDate;
+        // this.pickerEnd = myDate;
+        this.pickerEnd = this.$base.formatNextDay(new Date())
       }
       let nextDate = myDate;
       if (!bol) {
@@ -317,6 +327,8 @@ export default {
       this.dateStart = value;
       this.pickerStart = value;
       this.pickerEnd = value;
+      console.log(value)
+      // this.pickerEnd = this.$base.formatNextDay(value)
       this.getToday(value)
     },
     bindDateChangeEnd(even) {
@@ -330,7 +342,8 @@ export default {
       const { pickerValueArray = [] } = this.$data;
       this.pickerValueDefault = pickerValueArray[pickerValueDefault].value || '';
       const pickerLabelDefault = pickerValueArray[pickerValueDefault].label || ''
-      this.pickerLabelDefault = pickerLabelDefault
+      this.pickerLabelDefault = pickerLabelDefault;
+      this.checkHotelDetial();
     },
     searchHotel() { // 点击搜索按钮
       const { endDate, startDate, houseNums, personNums, pickerValueDefault } = this.$data;

@@ -71,6 +71,7 @@
   align-items:stretch;
   display:flex;
   flex-direction:column;
+  max-width: 300rpx;
   justify-content:space-around;
 }
 .right-icon{
@@ -113,4 +114,14 @@
   width: 104rpx;
   height: 128rpx;
   line-height: 128rpx;
+}
+.icon-child-active{
+  display: block;
+  height: 100%; 
+  transition: height 1s; 
+}
+.icon-child{
+  display: none;
+  height: 0;
+  transition: height 1s; 
 }
