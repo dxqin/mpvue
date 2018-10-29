@@ -91,9 +91,9 @@
         <p class="f12">{{ newOptions.pickerLabelDefault || '暂无数据'}}</p>
         <p class="f16 c3b">{{ newOptions.roomPriceName || '暂无数据'}}</p>
         <p class="f12">
-          <span>{{ newOptions.dateStart }}</span>
-          <span class="tc plr15 bc7 br14 ml10 mr10" style="">1晚</span>
-          <span>{{ newOptions.dateEnd }}</span>
+          <span>{{ dateStart }}</span>
+          <span class="tc plr15 bc7 br14 ml10 mr10" style="">{{dateAcount}}晚</span>
+          <span>{{ dateEnd }}</span>
         </p>
         <p class="f12"> <span>{{newOptions.bedType}}</span> <span>{{newOptions.roomPriceName}}</span></p>
       </div>
@@ -135,7 +135,10 @@ export default {
       dataOptions: {},
       price: 0,
       payPrice: 0,
-      countPrice: 0 
+      countPrice: 0,
+      dateAcount: 0,
+      dateStart: '',
+      dateEnd: ''
     }
   },
   onLoad(options) {
@@ -147,6 +150,11 @@ export default {
     this.newOptions = newOptions;
     this.price = newOptions.price;
     this.dataOptions = JSON.parse(newDetial);
+    const dateAcount = this.$base.daysAcount(newOptions.dateStart, newOptions.dateEnd)
+    console.log(dateAcount, 'dateAcount')
+    this.dateAcount = dateAcount;
+    this.dateStart = this.$base.checkDate(newOptions.dateStart);
+    this.dateEnd = this.$base.checkDate(newOptions.dateEnd)
     this.checkedData();
     this.checkDiscount()
   },

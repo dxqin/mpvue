@@ -102,6 +102,15 @@ const checkDate = (val) => {
   return checkDates
 }
 
+const daysAcount = (start, end) => {
+  const startDate = new Date(start).getTime();
+  const endDate = new Date(end).getTime();
+  const acountSeconds = endDate - startDate;
+  const acountDay = parseInt(Math.abs(acountSeconds / (3600 * 24)/1000))
+  console.log(acountDay, 'acountDay')
+  return acountDay
+}
+
 export default {
   formatNumber,
   formatTime,
@@ -113,5 +122,6 @@ export default {
   toast,
   setTitle,
   isZero,
-  checkDate
+  checkDate,
+  daysAcount
 }
