@@ -19,20 +19,6 @@ module.exports = [
         navigationBarTitleText: '所有订单',
         enablePullDownRefresh: true
       }
-    }, 
-     {
-      path: '/pages/reserve/index',
-      config: {
-        navigationBarTitleText: '订单详情',
-        enablePullDownRefresh: false
-      }
-    },
-    {
-      path: '/pages/integral/index',
-      config: {
-        navigationBarTitleText: '积分',
-        enablePullDownRefresh: false
-      }
     },
     {
       path: '/pages/mine/index',
@@ -68,6 +54,8 @@ module.exports = [
         navigationBarTitleText: '我的二维码',
         enablePullDownRefresh: false
       }
+    }, {
+      path: '/pages/reserve-detial/index',
     },
     {
       path: '/pages/coupon/index',
@@ -75,6 +63,17 @@ module.exports = [
         navigationBarTitleText: '我的卡券',
         enablePullDownRefresh: false
       }
+    }, {
+      path: '/pages/register/index',
+      config: {
+        navigationBarTitleText: '会员登录',
+        enablePullDownRefresh: false
+      }
+    }, {
+      path: '/pages/reserve-order/index',
+      config: {
+        navigationBarTitleText: '预定订单',
+      },
     },
     {
       path: '/pages/user/index',

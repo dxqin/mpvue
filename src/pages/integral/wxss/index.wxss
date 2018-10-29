@@ -1,17 +1,28 @@
 .order-detial{
   width: 682rpx;
   height: 332rpx;
-  position: absolute;
+  position: fixed;
   top: 60rpx;
   left: 34rpx;
   padding: 20rpx 30rpx;
   box-sizing: border-box;
+  box-shadow: 0 0 10rpx #ddd;
+  z-index: 3;
 }
 .bg-top{
   height: 332rpx;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2;
 }
 .bg-bottom{
-  height: calc(100vh - 332rpx);
+  width: 682rpx;
+  min-height: calc(100vh - 458rpx);
+  top: 438rpx;
+  left: 34rpx;
+  /* overflow-y: auto; */
 }
 .order-msg-input{
   box-sizing: border-box;
@@ -21,7 +32,7 @@
   left: 34rpx;
 }
 .table-box{
-  border: 1px dashed #B4B4B4
+  /* border: 1px dashed #B4B4B4 */
 }
 .nike-img-box{
   width: 72rpx;
@@ -37,12 +48,26 @@
 }
 .logo-img{
 	width: 128rpx; height: 104rpx;
-	border: 2rpx dashed #777
+	/* border: 2rpx dashed #777 */
 }
 .integral-list{
 	width: 682rpx;
-	height: calc(100vh - 432rpx);
+	/*  */
 	box-shadow: 0 0 10px #ddd;
-	bottom: 0;
-	left: 32rpx;
 }
+.icon-content{
+  margin-left: 5px;
+}
+.icon-img{
+  width: 8px;
+  height: 8px;
+}
+/* .icon-content{
+  width: 10px;
+  height:10px;
+  margin-left: 6px;
+  background: #00A4A2;
+  border-top: 5px solid #00A4A2;
+  border-right: 5px solid #00A4A2;
+  transform: rotate(45deg);
+} */

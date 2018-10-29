@@ -206,13 +206,13 @@
   align-items: center
 }
 .border-top{
-  border-top: 1px solid #ddd;
+  border-top: 1px solid #F3F3F3;
 }
 .border-bottom:not(:last-child){
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #F3F3F3;
 }
 .border-bottom-have{
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #F3F3F3;
 }
 .fb{font-weight: 700}
 .f20{

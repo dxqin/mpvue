@@ -8,6 +8,18 @@ import tools from "./mp"
 
 var Fly = require('flyio/dist/npm/wx')
 
+const authNone = [
+  '/sms/register/sms',
+  '/users/user/register',
+  '/sms/login/sms',
+  '/users/vip/codeLogin',
+  '/hotels/all',
+  '/hotels/detail',
+  '/roomTypes/accord/roomType',
+  '/roomTypes/detail/roomType',
+  '/files/homePage/all',
+]
+
 const fly = new Fly()
 
 // 设置请求基地址
@@ -16,14 +28,20 @@ const fly = new Fly()
 fly.config.baseURL = 'http://hoteltest.rudolph-ibs.com/api/hotel'
 
 fly.interceptors.request.use((request) => {
+  
+  const { url } = request;
  // 鉴权
-  let token = wx.getStorageSync('token');
+  let token = wx.getStorageSync('hoteltestToken');
   let account = wx.getStorageSync('account');
-  if (token) {
+  if (token && account) {
     request.headers.token = `${token}`
-  }
-  if (account) {
     request.headers.account = `${account}`
+  } else {
+    if (!authNone.includes(url)) {
+      wx.navigateTo({
+        url: '../register/index'
+      })
+    }
   }
  
  // console.log('flyio发请求,request为', request);

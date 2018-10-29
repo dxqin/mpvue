@@ -5,76 +5,59 @@
       <div class="bg-bottom pos-re">
         <div class="order-msg-input f14 table-box">
           <div class="list-boxs c-app flex-row">
-            <div class="">
-              <span class="dib" style="width: 8px;height: 8px;border-radius: 50%; background: #00A4A2;"></span>
-            </div>
-            <div class="app-right pl20">
-              <span>预订成功后讲立即锁定房源</span>
-            </div>
+            <p class="f14 c3b pl30">订单信息</p>
           </div>
           <div class="cb4">
             <div class="flex-row jc-ar list-boxs border-top ptb20">
               <div class="app-label pl30">
-                房间数
-              </div>
-              <div class="app-right pl30">
-                <span class="c333"> <font>1</font> 间</span>
-                <span class="cddd">每间最多住两人</span>
-              </div>
-            </div>
-            <div class="flex-row jc-ar list-boxs border-top ptb20">
-              <div class="app-label pl30">
                 入住人
               </div>
-              <div class="app-right pl30">
-               <input type="text" v-model="renterName" placeholder="每间需填一人姓名">
+              <div class="app-right pl30 c3b">
+                {{renterDetial.name || '暂无数据'}}
               </div>
             </div>
             <div class="flex-row jc-ar list-boxs border-top ptb20">
               <div class="app-label pl30">
                 手机
               </div>
-              <div class="app-right pl30">
-               <input type="text" v-model="renterPhone" placeholder="用于接受预订信息">
+              <div class="app-right pl30 c3b">
+                {{renterDetial.mobile || '暂无数据'}}
               </div>
             </div>
             <div class="flex-row jc-ar list-boxs border-top ptb20">
               <div class="app-label pl30">
-                优惠
+                订单号
               </div>
-              <div class="app-right pl30">
-               <span class="c333">积分已抵扣¥ <font>30</font></span>
+              <div class="app-right pl30 c3b">
+                {{renterDetial.orderNumber || '暂无数据'}}
+              </div>
+            </div>
+            <div class="flex-row jc-ar list-boxs border-top ptb20">
+              <div class="app-label pl30">
+                下单时间
+              </div>
+              <div class="app-right pl30 c3b">
+                {{renterDetial.orderCreateTime || '暂无数据'}}
               </div>
             </div>
           </div>
         </div>
       </div>
       <div class="order-detial bgfff br10 c777 table-box">
-        <p class="f12">忆泊城市艺术酒店(古墩路店)</p>
-        <p class="f16 c3b">云舍大床房</p>
+        <div class="f12 dis-flex jc-bet">
+          <span>{{hotelName || '暂无数据'}}<font class="icon-content dib"></font> </span>
+          <span class="f14">￥{{price || '---'}}</span>
+        </div>
+        <p class="f16 c3b">{{roomTypeName || '暂无数据'}}</p>
         <p class="f12">
-          <span>8月7日今天</span>
-          <span class="tc plr15 bc7 br14 ml10 mr10" style="">1晚</span>
-          <span>8月8日周四</span>
+          <span>{{checkInTime || '暂无数据'}}</span>
+          <span class="tc plr15 bc7 br14 ml10 mr10" style="">{{time || '-'}}晚</span>
+          <span>{{checkOutTime || '暂无数据'}}</span>
         </p>
-        <p class="f12"> <span>大床</span> <span>全部房间wifi、有线宽带免费双份早饭</span> <span>双份早饭</span></p>
+        <p class="f12"> <span>{{valueAddedService || ''}}</span></p>
       </div>
     </div>
-    <div class="order-ensure w-full">
-      <div class="flex-row f18">
-        <div class="order-left pl30">
-          <div style="line-height: 56rpx">
-            到店支付： <span class="c-app">￥ <font>100</font> </span> 元
-          </div>
-          <div class="f12 c999">
-            已减￥<span>22</span>
-          </div>
-        </div>
-        <div class="send-order cfff bg-app tc">
-          提交订单
-        </div>
-      </div>
-    </div>
+    
   </div>
 </template>
 <script>
@@ -83,7 +66,56 @@ export default {
   data() {
     return {
       renterName: '',
+      orderNumber: '',
+      renterDetial: {
+        name: '',
+        mobile: '',
+        orderNumber: '',
+        orderCreateTime: '',
+      },
+      hotelName: '',
+      roomTypeName: '',
+      price: '',
+      checkInTime: '',
+      checkOutTime: '',
+      time: '',
+      valueAddedService: ''
     }
+  },
+  onLoad(options = {}) {
+    const { orderNumber = '201810211438013565' } = options;
+    this.orderNumber = orderNumber;
+    this.fetchDetial();
+  },
+  methods: {
+    fetchDetial() {
+      const { orderNumber = '', renterDetial } = this.$data;
+      const params = {orderNumber}
+      this.$http.get('/orderForms/orderForm/detail', params).then((res = {}) => {
+        console.log(res, 'res');
+        const {
+          name = '', mobile = '', orderNumber = '', orderCreateTime = '', hotelName = '', roomTypeName = '',
+          checkInTime = '', checkOutTime = '', time = '', valueAddedService = '', price = ''
+        } = res;
+        const newRenterDetial = {
+          ...renterDetial,
+          name: name,
+          mobile: mobile,
+          orderNumber: orderNumber,
+          orderCreateTime: orderCreateTime
+        };
+        this.renterDetial = newRenterDetial;
+        this.hotelName = hotelName;
+        this.checkInTime = this.$base.checkDate(checkInTime || new Date());
+        this.checkOutTime = this.$base.checkDate(checkOutTime || new Date());
+        this.time = time;
+        this.price = price;
+        this.valueAddedService = valueAddedService;
+      }).catch((err = {}) => {
+        console.log(err, 'err')
+      })
+    },
+    
   }
 }
 </script>

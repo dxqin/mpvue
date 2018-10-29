@@ -1,0 +1,69 @@
+.register{
+
+}
+.index-bg{
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+.bg-head{
+  width: 750rpx;
+  height: 336rpx;
+  background: #00A4A2;
+}
+.index-content{
+  border-radius: 10rpx 10rpx 0 0;
+  width: 714rpx;
+  position: absolute;
+  top: 200rpx;
+  left: 18rpx;
+}
+.login-index{
+  width: 100%;
+}
+.login-form{
+  width: 100%;
+  height: 234rpx;
+  box-shadow: 0 0 10rpx #999;
+}
+.register-form{
+  width: 100%;
+  box-shadow: 0 0 10rpx #999;
+}
+.weui-cell_input{
+  height: 118rpx;
+}
+.weui-celles{
+  padding:10px 15px;
+  position:relative;
+  display:-webkit-box;
+  display:-webkit-flex;
+  display:flex;
+  -webkit-box-align:center;
+  -webkit-align-items:center;
+  align-items:center;
+}
+.weui-input{
+  color: #b2b2b2!important;
+}
+.register-submit,
+.login-submit{
+  height: 100rpx;
+  line-height: 100rpx;
+}
+.sex-picker{
+  width: 200px
+}
+.to-register-text{
+  /* width: 200rpx; */
+  text-align: center
+}
+.icon-content{
+  width: 9px;
+  height: 9px;
+  margin-left: 6px;
+  border-top: 1px solid #D1D0D0;
+  border-right: 1px solid #D1D0D0;
+  transform: rotate(45deg);
+}

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App'
 import http from "@/utils/http"
 import base from '@/utils/index'
+import wxasync  from '@/utils/wxasync'
 import format from '@/utils/format'
 import './css/common.css'
 import './wxss/app.wxss'
@@ -17,4 +18,5 @@ app.$mount()
 Vue.prototype.$http = http
 Vue.prototype.$moment = moment
 Vue.prototype.$base = base
+Vue.prototype.$wxasync = wxasync
 Vue.prototype.$format = format

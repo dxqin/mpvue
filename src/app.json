@@ -27,17 +27,17 @@
     "backgroundColor": "#ffffff",
     "borderStyle": "black",
     "list": [{
-      "pagePath": "pages/index/index",
+      "pagePath": "pages/my-account/index",
       "text": "首页",
       "iconPath": "/static/img/index.png",
       "selectedIconPath": "/static/img/index-o.png"
     }, {
-      "pagePath": "pages/order/index",
+      "pagePath": "pages/reserve-list/index",
       "text": "预定",
       "iconPath": "/static/img/mine.png",
       "selectedIconPath": "/static/img/mine-a.png"
     },{
-      "pagePath": "pages/mine/invite",
+      "pagePath": "pages/integral/index",
       "text": "惊喜",
       "iconPath": "/static/img/mine.png",
       "selectedIconPath": "/static/img/mine-a.png"
