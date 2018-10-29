@@ -83,4 +83,11 @@ module.exports = [
         enablePullDownRefresh: false
       }
     },
+    {
+      path: '/pages/user/update',
+      config: {
+        navigationBarTitleText: '修改昵称',
+        enablePullDownRefresh: false
+      }
+    },
   ]

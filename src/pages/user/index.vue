@@ -7,7 +7,7 @@
           <img class="avatar" :src="user.headImageUrl" @click="chooseimage" />
         </span>
       </li>
-      <li class="content-list f14 flex-row jc-bet">
+      <li class="content-list f14 flex-row jc-bet" @click="toUpdate">
         <span>姓名</span>
         <span class="weui-cell__ft_in-access c3b">{{user.name}}</span>
       </li>
@@ -42,9 +42,9 @@ export default {
     this.getData()
   },
   methods: {
-    navigateTo(){
+    toUpdate(){
       wx.navigateTo({
-        url:'../index/index'
+        url:'../index/update'
       })
     },
     navagate: function(code) {

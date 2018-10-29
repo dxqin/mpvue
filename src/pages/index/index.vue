@@ -4,7 +4,7 @@
       <div style="background:#fff">
         <div class="nav">
           <span class="active" style="">EBO VIP</span>
-          <span style="margin-left:36rpx;" bindtap="navigateToMine">我的账户</span>
+          <span style="margin-left:36rpx;" @click="navigateToMine()">我的账户</span>
         </div>
         <div class="banner">
           <swiper class="banner-img" circular="true" indicator-dots="true" autoplay="true" interval="5000" duration="1000">
@@ -19,7 +19,7 @@
           </div>
         </div>
         <div class="user">
-          <div class="user-box">
+          <div class="user-box" v-if="user">
             <div class="user-box-l">
               <span class="nickname">
                 <span class="name">{{user.name}}</span>
@@ -28,12 +28,12 @@
                 </span>
               <div class="vip">
                 <img src="/static/img/star.png" />
-                <span>VIP3 / 会员权益</span>
+                <span>VIP{{user.level}} / 会员权益</span>
                 </div>
             </div>
             <div class="user-box-r">
               <span class="integral">我的积分：</span>
-              <span class="integral-num">231</span>
+              <span class="integral-num">{{user.integral}}</span>
             </div>
           </div> 
         </div>
@@ -75,7 +75,8 @@
     },
     onLoad() {
       const _this = this;
-      this.getData()
+      this.getData();
+      this.getUser();
     },
     methods: {
       getData(){
@@ -98,7 +99,7 @@
           console.log(res, 'resErr')
         });
       },
-      navigateToMine:function(){
+      navigateToMine(){
         console.log("../mine/index--")
         wx.navigateTo({
           url:'../mine/index'

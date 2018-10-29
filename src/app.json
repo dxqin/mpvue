@@ -1,8 +1,11 @@
 {
   "pages": [
-    "pages/mine/invite",
     "pages/order/index",
-    "pages/index/index", 
+    "pages/user/update",
+    
+    "pages/user/index",
+    "pages/mine/invite",
+    "pages/index/index",
     "pages/coupon/index",
     "pages/QRcode/index",
     "pages/reserve-list/index",
