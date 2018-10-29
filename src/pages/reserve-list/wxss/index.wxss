@@ -40,7 +40,8 @@
   box-shadow: 0 0 8rpx #ddd;
 }
 .hotel-child-list{
-  width: 100%;
+  /* width: 100%; */
+  width: 706rpx;
   /* height: 168rpx; */
   box-shadow: 0 0 10rpx #ddd;
 }

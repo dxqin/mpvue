@@ -76,8 +76,8 @@
           </div>
           <div class="flex-row jc-bet pos-ab hotel-mark pl20 pr20 bb">
             <div class="container-middle jc-str" style="align-items: right">
-              <p class="f12 cfff">{{hotelMsg.hotelName}}</p>
-              <p class="f10 cfff">古墩路店</p>
+              <p class="f12 cfff">{{hotelMsg.headHotelName}}</p>
+              <p class="f10 cfff">{{hotelMsg.hotelName}}</p>
             </div>
             <div class="flex-col-xy-middle jc-end" style="height: 78rpx">
               <img :src="hotelImg[0]" class="hotel-mark-icon" alt="">
@@ -97,7 +97,8 @@
           <!-- 房源的总述 -->
           <div class="hotel-child-title flex-row jc-bet"  @click="checkHotel(item.roomTypeId)">
             <div class="hotel-child-left bb">
-              <img class="hotel-child-left-img" :src="item.hotelImg || hotelImgs" alt="">
+              <img class="hotel-child-left-img" :src="item.imgUrls[0] || hotelImgs" alt="">
+              <!-- {{item.imgUrls}} -->
             </div>
             <div class="hotel-child-right p10 bb dis-flex jc-ar">
               <div class="oner-left">
@@ -169,7 +170,8 @@ export default {
       hotelMsg : {
         hotelImg: ['../../static/img/rec.png'], // 酒店图片
         hotelDetial: '酒店崇尚自然生活，在忆泊静享生活1', // 酒店文字介绍
-        hotelName: '忆泊城市艺术酒店(古墩路店)1', //  酒店name
+        headHotelName: '忆泊城市艺术酒店1', //  酒店name
+        hotelName: '(古墩路店)',  
         longitude: '111', // 经度
         latitude: '222',// 纬度
         checkHotelId: 0// 酒店id
@@ -250,9 +252,10 @@ export default {
       this.$http.get('/hotels/detail', params).then((res = {}) => {
         const { code = -1, data = {}, msg = '' } = res;
         if (code == 0) {
-          const { imgUrls = [], detail : hotelDetial = '',
-            name: hotelName = '', longitude = '', latitude = '', hotelId: checkHotelId = ''
+          const { imgUrls = [], detail : hotelDetial = '', headHotelName = '',
+            hotelName = '', longitude = '', latitude = '', hotelId: checkHotelId = ''
           } = data;
+          console.log(data, 'data')
           const { hotelMsg = {} } = this.$data;
           this.hotelMsg = {
             ...hotelMsg,
@@ -261,7 +264,8 @@ export default {
             hotelName,
             longitude,
             latitude,
-            checkHotelId
+            checkHotelId,
+            headHotelName
           }
         } else {
           console.log(msg, 'msg')
@@ -275,63 +279,92 @@ export default {
         console.log(res, 'err')
       })
     },
-    getToday(val, bol){
-      let myDate;
-      if (val) {
-        if (!bol) {
-          myDate = new Date(val);
-        } else {
-          console.log(this.dateStart)
-          myDate = new Date(this.dateStart);
+    getToday(val, bol = false, endDateGetTime = 0, nextDateGetTime = 0){
+      if (bol) {// 如果是结束日期触发的
+        const endDate = this.$base.checkDate(val)
+        this.endDate = endDate
+      } else {
+        let myDate;
+        myDate = val || new Date();
+        const nextDate = new Date(myDate).getTime() + 1000*60*60*24;
+        const startDate = this.$base.checkDate(myDate);
+        const endDate = this.$base.checkDate(nextDate);
+        if (endDateGetTime <= nextDateGetTime) {
+          this.endDate = endDate;
         }
-      } else {
-        myDate = new Date();
-        this.pickerStart = myDate;
-        // this.pickerEnd = myDate;
-        this.pickerEnd = this.$base.formatNextDay(new Date())
+        this.startDate = startDate;
+        if (!val) {
+          this.pickerStart = myDate;
+        }
+        this.pickerEnd = new Date(nextDate);
       }
-      let nextDate = myDate;
-      if (!bol) {
-        nextDate = +myDate + 1000*60*60*24;
-        nextDate = new Date(nextDate)
-      } else {
-        nextDate = new Date(val)
-      }
-      console.log(myDate, nextDate)
-      let myMonth = myDate.getMonth() + 1;
-      let nextMonth = nextDate.getMonth() + 1;
-      const weekArr = new Array("日", "一", "二", "三", "四", "五", "六");  
-      if (myMonth < 10) {
-        myMonth = '0'+ myMonth;  //补齐
-      }
-      if (nextMonth < 10) {
-        nextMonth = '0'+ nextMonth;  //补齐
-      }
-      let mydate = myDate.getDate();
-      let nextdate = nextDate.getDate();
-      if (myDate.getDate()<10) {
-          mydate = '0'+ myDate.getDate();  //补齐
-      }
-      if (nextDate.getDate()<10) {
-          nextdate = '0'+ nextdate.getDate();  //补齐
-      }
-      const myWeek = myDate.getDay()
-      const nextWeek = nextDate.getDay()
-      const today = `${myMonth}月${ mydate }日 (周${weekArr[myWeek]})`;
-      const nextday = `${nextMonth}月${ nextdate }日 (周${weekArr[nextWeek]})`;
-      this.startDate = today
-      this.endDate = nextday
+      // let myDate;
+      // if (val) {
+      //   if (!bol) {
+      //     myDate = new Date(val);
+      //   } else {
+      //     console.log(this.dateStart)
+      //     myDate = new Date(this.dateStart);
+      //   }
+      // } else {
+      //   myDate = new Date();
+      //   this.pickerStart = myDate;
+      //   // this.pickerEnd = myDate;
+      //   this.pickerEnd = this.$base.formatNextDay(new Date())
+      //   console.log(myDate, this.$base.formatNextDay(new Date()), '===========================')
+      // }
+      // let nextDate = myDate;
+      // if (!bol) {
+      //   nextDate = +myDate + 1000*60*60*24;
+      //   nextDate = new Date(nextDate)
+      // } else {
+      //   nextDate = new Date(val)
+      // }
+      // console.log(myDate, nextDate)
+      // let myMonth = myDate.getMonth() + 1;
+      // let nextMonth = nextDate.getMonth() + 1;
+      // const weekArr = new Array("日", "一", "二", "三", "四", "五", "六");  
+      // if (myMonth < 10) {
+      //   myMonth = '0'+ myMonth;  //补齐
+      // }
+      // if (nextMonth < 10) {
+      //   nextMonth = '0'+ nextMonth;  //补齐
+      // }
+      // let mydate = myDate.getDate();
+      // let nextdate = nextDate.getDate();
+      // if (myDate.getDate() < 10) {
+      //     mydate = '0'+ myDate.getDate();  //补齐
+      // }
+      // if (nextDate.getDate()<10) {
+      //     nextdate = '0'+ nextdate.getDate();  //补齐
+      // }
+      // const myWeek = myDate.getDay()
+      // const nextWeek = nextDate.getDay()
+      // const today = `${myMonth}月${ mydate }日 (周${weekArr[myWeek]})`;
+      // const nextday = `${nextMonth}月${ nextdate }日 (周${weekArr[nextWeek]})`;
+      // this.startDate = today
+      // this.endDate = nextday
     },
-    bindDateChangeStart(even) {
+    bindDateChangeStart(even) { // 开始日期
+      console.log(even, 'evne')
       const { value } = even.target;
+      const { dateEnd } = this.$data;// 拿取结束日期，如果结束日期小于当前选择的下一个日期的事件戳，那么结束日期要修改
+      console.log(dateEnd, 'dateEnd')
+      const endDateGetTime = new Date(dateEnd).getTime();// 结束日期的时间戳
+      const nextDateGetTime = new Date(value).getTime() + 1000*60*60*24;// 下一日的时间戳
+      console.log(endDateGetTime, nextDateGetTime,(endDateGetTime - nextDateGetTime), '========================', (endDateGetTime < nextDateGetTime))
+      if ((endDateGetTime - nextDateGetTime) < 0) {
+        console.log((endDateGetTime < nextDateGetTime))
+        console.log('1111111111111111111111')
+        this.dateEnd = this.$base.formatDay(new Date(nextDateGetTime))
+      }
       this.dateStart = value;
-      this.pickerStart = value;
+      // this.pickerStart = value;
       this.pickerEnd = value;
-      console.log(value)
-      // this.pickerEnd = this.$base.formatNextDay(value)
-      this.getToday(value)
+      console.log(value, this.pickerEnd);
+      this.getToday(value, false, endDateGetTime, nextDateGetTime)
     },
-    bindDateChangeEnd(even) {
+    bindDateChangeEnd(even) { // 结束日期
       const { value } = even.target;
       this.dateEnd = value;
       this.getToday(value, true)

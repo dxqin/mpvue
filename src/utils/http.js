@@ -4,6 +4,7 @@
  */
 
 import user from "./user";
+import base from './index'
 import tools from "./mp"
 
 var Fly = require('flyio/dist/npm/wx')
@@ -29,6 +30,7 @@ fly.config.baseURL = 'http://hoteltest.rudolph-ibs.com/api/hotel'
 
 fly.interceptors.request.use((request) => {
   
+  wx.showLoading()
   const { url } = request;
  // 鉴权
   let token = wx.getStorageSync('hoteltestToken');
@@ -52,6 +54,7 @@ fly.interceptors.request.use((request) => {
 fly.interceptors.response.use(
  (response, promise) => {
    wx.hideNavigationBarLoading()
+   wx.hideLoading()
    // console.log(response);
    let res = response.data
    //处理登录失效
@@ -65,6 +68,7 @@ fly.interceptors.response.use(
  },
  (err, promise) => {
    wx.hideNavigationBarLoading()
+   wx.hideLoading()
    console.log(err);
    wx.showToast({
      title: err.message,
