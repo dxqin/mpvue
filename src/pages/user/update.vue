@@ -25,14 +25,22 @@ export default {
   },
   methods: {
     getUser(){
-      let data = {
-        userId : 24
-      };
-      this.$http.get('/users/user/detail', data).then((res = {}) => {
-        const { data = [] } = res; 
-        this.userName = data.name;
-      }).catch(res => {
-        console.log(res, 'resErr')
+      this.$wxasync.getStorage('hoteltestUserId').then(res => {
+        const { data:hoteltestUserId = '' } = res;
+        const params = {
+          userId: hoteltestUserId
+        }
+        this.$http.get('/users/user/detail', params).then((res = {}) => {
+          const { data = [] } = res; 
+          this.userName = data.name;
+        }).catch(res => {
+          console.log(res, 'resErr')
+        });
+      }).catch(err => {
+        this.$base.toast('用户信息失效，请重新登录')
+        wx.navigateTo({
+          url: `../../pages/register/index`
+        })
       });
     },
     onUpdate(){
@@ -42,17 +50,25 @@ export default {
         _this.$base.toast('昵称由4-20个中英文、数字、“_”、“-”组成的字符');
         return;
       }
-      let data = {
-        name : _this.userName,
-        userId : 24
-      }
-      this.$http.post('/users/user/modify', data).then((res = {}) => {
-         _this.$base.toast('修改成功');
-         wx.navigateTo({
-          url:'../user/index'
+      this.$wxasync.getStorage('hoteltestUserId').then(res => {
+        const { data:hoteltestUserId = '' } = res;
+        const params = {
+          userId: hoteltestUserId,
+          name : _this.userName,
+        }
+         this.$http.post('/users/user/modify', params).then((res = {}) => {
+          _this.$base.toast('修改成功');
+          wx.navigateTo({
+            url:'../user/index'
+          });
+        }).catch(res => {
+          console.log(res, 'resErr')
         });
-      }).catch(res => {
-        console.log(res, 'resErr')
+      }).catch(err => {
+        this.$base.toast('用户信息失效，请重新登录')
+        wx.navigateTo({
+          url: `../../pages/register/index`
+        })
       });
     }
   }

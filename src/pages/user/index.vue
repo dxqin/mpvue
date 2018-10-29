@@ -13,8 +13,14 @@
       </li>
       <li class="content-list f14 flex-row jc-bet">
         <span>性别</span>
-        <span class="weui-cell__ft_in-access c3b" v-if="user.sex == 0">男</span>
-        <span class="weui-cell__ft_in-access c3b" v-if="user.sex == 1">女</span>
+         <picker class="weui-cell__ft_in-access c3b"
+            :range="sexArr"
+            range-key="label"
+            @change="changeSex">
+          <span class="c3b">
+            {{sexArr[user.sex].label}}
+          </span>
+         </picker>
       </li>
       <li class="content-list f14 flex-row jc-bet">
         <span>出生日期</span>
@@ -29,6 +35,15 @@ export default {
   data() {
     return {
       user : this.user,
+      sexArr: [
+        {
+          value: 0,
+          label: '男'
+        }, {
+          value: 1,
+          label: '女'
+        }
+      ],
     }
   },
   onLoad() {
@@ -36,8 +51,8 @@ export default {
     _this.user = {
       headImageUrl : '',
       sex : 0,
-      name : '',
-      birthday : ''
+      name : '1',
+      birthday : '1'
     }
     this.getData()
   },
@@ -47,18 +62,43 @@ export default {
         url:'../index/update'
       })
     },
-    navagate: function(code) {
-      console.log(code)
+    changeSex(e) {
+      const { sexValue } = e.target;
+      this.$wxasync.getStorage('hoteltestUserId').then(res => {
+        const { data:hoteltestUserId = '' } = res;
+        const params = {
+          userId: hoteltestUserId,
+          sex : sexValue
+        }
+         this.$http.post('/users/user/modify', params).then((res = {}) => {
+          _this.$base.toast('修改成功');
+        }).catch(res => {
+          console.log(res, 'resErr')
+        });
+      }).catch(err => {
+        this.$base.toast('用户信息失效，请重新登录')
+        wx.navigateTo({
+          url: `../../pages/register/index`
+        })
+      });
     },
     getData(){
-      let data = {
-        userId : 24
-      };
-      this.$http.get('/users/user/detail', data).then((res = {}) => {
-        const { data = [] } = res; 
-        this.user = data;
-      }).catch(res => {
-        console.log(res, 'resErr')
+      this.$wxasync.getStorage('hoteltestUserId').then(res => {
+        const { data:hoteltestUserId = '' } = res;
+        const params = {
+          userId: hoteltestUserId
+        }
+        this.$http.get('/users/user/detail', params).then((res = {}) => {
+          const { data = [] } = res; 
+          this.user = data;
+        }).catch(res => {
+          console.log(res, 'resErr')
+        });
+      }).catch(err => {
+        this.$base.toast('用户信息失效，请重新登录')
+        wx.navigateTo({
+          url: `../../pages/register/index`
+        })
       });
     },
     chooseimage: function () {  

@@ -89,17 +89,25 @@ export default {
       }, 2000);
     },
     getList() {
-      const params = {
-        userId: 24,
-        page : 1,
-        size : 5
-      };
-      this.$http.get('/orderForms/orderForm/all', params).then((res = {}) => {
-        const { data = [] } = res;
-        this.orderList = data;
-      }).catch(res => {
-        console.log(res, 'resErr')
-      })
+      this.$wxasync.getStorage('hoteltestUserId').then(res => {
+        const { data:hoteltestUserId = '' } = res;
+        const params = {
+          userId: hoteltestUserId,
+          page : 1,
+          size : 5
+        }
+        this.$http.get('/orderForms/orderForm/all', params).then((res = {}) => {
+          const { data = [] } = res;
+          this.orderList = data;
+        }).catch(res => {
+          console.log(res, 'resErr')
+        })
+      }).catch(err => {
+        this.$base.toast('用户信息失效，请重新登录')
+        wx.navigateTo({
+          url: `../../pages/register/index`
+        })
+      });
     },
     //删除订单
     onDelete(number){

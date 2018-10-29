@@ -38,19 +38,19 @@
           </div> 
         </div>
         <div class="features">
-           <div class="fe-col">
+           <div class="fe-col" @click="navigateToCheckIn()">
              <div class="fe-col-icon">
                <img style="width:80rpx;height:80rpx;" src="/static/img/apt.png" />
              </div>
              <span>智能入住</span>
            </div>
-           <div class="fe-col">
+           <div class="fe-col" @click="navigateToCoupon()">
              <div class="fe-col-icon">
                <img style="width:88rpx;height:52rpx;" src="/static/img/coupon.png" />
              </div>
              <span>我的卡券</span>
            </div>
-           <div class="fe-col">
+           <div class="fe-col" @click="navigateToQrcode()">
              <div class="fe-col-icon">
                <img style="width:68rpx;height:68rpx;" src="/static/img/QRcode.png" />
              </div>
@@ -82,27 +82,48 @@
       getData(){
         this.$http.get('/files/homePage/all', '').then((res = {}) => {
           const { data = [] } = res;
-          console.log(data)
           this.datas = data;
         }).catch(res => {
           console.log(res, 'resErr')
         });
       },
       getUser(){
-        let data = {
-          userId : 24
-        };
-        this.$http.get('/users/user/detail', data).then((res = {}) => {
-          const { data = [] } = res; 
-          this.user = data;
-        }).catch(res => {
-          console.log(res, 'resErr')
+        this.$wxasync.getStorage('hoteltestUserId').then(res => {
+          const { data:hoteltestUserId = '' } = res;
+          const params = {
+            userId: hoteltestUserId
+          }
+          this.$http.get('/users/user/detail', params).then((res = {}) => {
+            const { data = [] } = res; 
+            this.user = data;
+          }).catch(res => {
+            console.log(res, 'resErr')
+          });
+        }).catch(err => {
+          this.$base.toast('用户信息失效，请重新登录')
+          wx.navigateTo({
+            url: `../../pages/register/index`
+          })
         });
       },
       navigateToMine(){
-        console.log("../mine/index--")
         wx.navigateTo({
           url:'../mine/index'
+        })
+      },
+      navigateToCheckIn(){
+        wx.navigateTo({
+          url:'../check-in/index'
+        })
+      },
+      navigateToCoupon(){
+        wx.navigateTo({
+          url:'../coupon/index'
+        })
+      },
+      navigateToQrcode(){
+        wx.navigateTo({
+          url:'../QRcode/index'
         })
       },
     },

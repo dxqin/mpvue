@@ -29,27 +29,43 @@ export default {
   },
   methods: {
     getData(){
-      let data = {
-        userId : 24
-      };
-      this.$http.get('/users/user/QRCode', data).then((res = {}) => {
-        const { data = [] } = res; 
-        this.datas = data;
-        this.getUser();
-      }).catch(res => {
-        console.log(res, 'resErr')
+      this.$wxasync.getStorage('hoteltestUserId').then(res => {
+        const { data:hoteltestUserId = '' } = res;
+        const params = {
+          userId: hoteltestUserId
+        }
+        this.$http.get('/users/user/QRCode', params).then((res = {}) => {
+          const { data = [] } = res; 
+          this.datas = data;
+          this.getUser();
+        }).catch(res => {
+          console.log(res, 'resErr')
+        });
+      }).catch(err => {
+        this.$base.toast('用户信息失效，请重新登录')
+        wx.navigateTo({
+          url: `../../pages/register/index`
+        })
       });
     },
     getUser(){
-      let data = {
-        userId : 24
-      };
-      this.$http.get('/users/user/detail', data).then((res = {}) => {
-        const { data = [] } = res; 
-        this.user = data;
-        this.getImg();
-      }).catch(res => {
-        console.log(res, 'resErr')
+      this.$wxasync.getStorage('hoteltestUserId').then(res => {
+        const { data:hoteltestUserId = '' } = res;
+        const params = {
+          userId: hoteltestUserId
+        }
+        this.$http.get('/users/user/detail', params).then((res = {}) => {
+          const { data = [] } = res; 
+          this.user = data;
+          this.getImg();
+        }).catch(res => {
+          console.log(res, 'resErr')
+        });
+      }).catch(err => {
+        this.$base.toast('用户信息失效，请重新登录')
+        wx.navigateTo({
+          url: `../../pages/register/index`
+        })
       });
     },
     getImg(){
