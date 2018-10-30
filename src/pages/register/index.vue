@@ -167,8 +167,8 @@ export default {
           this.$wxasync.setStorage('account', mobel);
           this.$wxasync.setStorage('hoteltestUserId', id);
           this.$base.toast(msg);
-          wx.redirectTo({
-            url: '../../pages/reserve-list/index'
+          wx.switchTab({
+            url: '../../pages/index/index'
           })
         }).catch((err = {}) => {
           console.log(err, 'err')
