@@ -24,7 +24,6 @@ export function showToast (params) {
 }
 
 export default {
-  navigate,
-  showModal,
+   showModal,
   showToast
 }

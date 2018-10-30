@@ -54,8 +54,6 @@ module.exports = [
         navigationBarTitleText: '我的二维码',
         enablePullDownRefresh: false
       }
-    }, {
-      path: '/pages/reserve-detial/index',
     },
     {
       path: '/pages/coupon/index',

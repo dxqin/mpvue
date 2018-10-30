@@ -166,7 +166,10 @@ export default {
           this.$wxasync.setStorage('hoteltestExpireTime', expireTime);
           this.$wxasync.setStorage('account', mobel);
           this.$wxasync.setStorage('hoteltestUserId', id);
-          this.$base.toast(msg)
+          this.$base.toast(msg);
+          wx.redirectTo({
+            url: '../../pages/reserve-list/index'
+          })
         }).catch((err = {}) => {
           console.log(err, 'err')
         })
