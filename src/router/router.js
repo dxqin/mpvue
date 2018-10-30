@@ -7,7 +7,7 @@ module.exports = [
       }
     },
     {
-      path: '/pages/mine/invite',
+      path: '/pages/invite/index',
       config: {
         navigationBarTitleText: '我的邀请',
         enablePullDownRefresh: true
@@ -19,14 +19,7 @@ module.exports = [
         navigationBarTitleText: '所有订单',
         enablePullDownRefresh: true
       }
-    },
-    {
-      path: '/pages/mine/index',
-      config: {
-        navigationBarTitleText: 'EBO HOTEL',
-        enablePullDownRefresh: false
-      }
-    },  
+    }, 
     {
       path: '/pages/my-account/index',
       config: {

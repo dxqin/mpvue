@@ -108,7 +108,7 @@
       },
       navigateToMine(){
         wx.navigateTo({
-          url:'../mine/index'
+          url:'../my-account/index'
         })
       },
       navigateToCheckIn(){
