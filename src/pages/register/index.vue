@@ -106,7 +106,9 @@ export default {
       isRegister: false,
       registerMobel: '',
       registerName: '',
-      registerCode: ''
+      registerCode: '',
+      canSendLoginCode: true,
+      canSendReCode: true
     }
   },
   methods: {
@@ -121,9 +123,11 @@ export default {
       this.isRegister  = val;
     },
     handleSendCode() { // 登陆短信验证码
-      const { mobel } = this.$data;
+      const { mobel, canSendLoginCode } = this.$data;
       if (!this.$base.isPhone(mobel)) {
         this.$base.toast('请输入正确的手机号')
+      } else if (!canSendLoginCode) {
+        console.log('111')
       } else {
         const params = {
           mobile: mobel
@@ -133,6 +137,7 @@ export default {
           const { code = -1, msg = '操作失败' } = res;
           this.$base.toast(msg)
           if (code == 0) {
+            this.canSendLoginCode = false
             let time = 60;
             var interval = setInterval(() => {
               this.codeText = `${time}s`
@@ -140,6 +145,7 @@ export default {
             }, 1000)
             setTimeout(() => {
               clearInterval(interval);
+              this.canSendLoginCode = true
               this.codeText = `发送验证码`
             }, 60000)
           }
@@ -167,9 +173,10 @@ export default {
           this.$wxasync.setStorage('account', mobel);
           this.$wxasync.setStorage('hoteltestUserId', id);
           this.$base.toast(msg);
-          wx.switchTab({
-            url: '../../pages/index/index'
-          })
+          // wx.switchTab({
+          //   url: '../../pages/index/index'
+          // })
+          wx.navigateBack()
         }).catch((err = {}) => {
           console.log(err, 'err')
         })
@@ -177,10 +184,10 @@ export default {
     },
     getRegisterCode () { // 获取注册验证码
       console.log(1111)
-      const { registerMobel } = this.$data;
+      const { registerMobel, canSendReCode } = this.$data;
       if (!this.$base.isPhone(registerMobel)) {
         this.$base.toast('请输入正确的手机号')
-      } else {
+      } else if (canSendReCode) {
         const params = {
           mobileNumber: registerMobel
         }
@@ -189,6 +196,7 @@ export default {
           const { code = -1, msg = '操作失败' } = res;
           this.$base.toast(msg)
           if (code == 0) {
+            this.canSendReCode = false
             let time = 60;
             var interval = setInterval(() => {
               this.registerCodeText = `${time}s`
@@ -196,6 +204,7 @@ export default {
             }, 1000)
             setTimeout(() => {
               clearInterval(interval);
+              this.canSendReCode = true
               this.registerCodeText = `发送验证码`
             }, 60000)
           }

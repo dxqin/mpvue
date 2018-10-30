@@ -14,7 +14,7 @@
     </div>
     <div class="accpunt-admin flex-row jc-bet">
       <div class="admin-left">
-        <div v-if="isNull">
+        <div v-if="!isNull">
           <p class="flex-row jc-str">
             <span class="c333 f20 pr20 text-overf-ell" style="max-width: 400rpx; display: inline-block">{{name}}</span>
             <span class="cc6 f12" style="line-height: 66rpx;">{{sexArr[sex]}}</span>
