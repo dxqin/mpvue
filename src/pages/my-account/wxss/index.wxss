@@ -9,10 +9,19 @@
   height: 148rpx;
   /* line-height: 148rpx; */
 }
-.index-logo{
+.logo-show{
   width: 110rpx;
   height: 90rpx;
+  background-color: #00A4A2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin-top: 28rpx;
+}
+.index-logo{
+  width: 86rpx;  
+  height: 74rpx;
+  
 }
 .header-right{
   box-sizing: border-box;

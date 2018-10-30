@@ -1,11 +1,11 @@
 <template>
   <div class="account-index w-full">
     <div class="index-header flex-row jc-bet">
-      <div>
+      <div class="logo-show">
         <img :src="logo" class="index-logo" alt="">
       </div>
       <div class="header-right">
-        <span class="f12 cb2 my-account-nav">EBO VIP</span>
+        <span class="f12 cb2 my-account-nav" @click="navigateToIndex()">EBO VIP</span>
         <div class="dib my-account-text">
           <div class="c-app f12">我的账户</div>
           <div class="my-account-border"></div>
@@ -45,7 +45,7 @@ import './wxss/index.wxss'
 export default {
   data() {
     return {
-      logo: 'http://pic22.nipic.com/20120621/1628220_155636709122_2.jpg',
+      logo: '/static/img/group.png',
       header: 'http://pic22.nipic.com/20120621/1628220_155636709122_2.jpg',
       name: '张三张',
       sex: 0,
@@ -77,9 +77,11 @@ export default {
     }
   },
   methods: {
-    // navagate: function(code) {
-    //   console.log(code)
-    // },
+    navigateToIndex(){
+      wx.switchTab({
+        url: '../../pages/index/index'
+      })
+    },
     lookMain() {
       wx.navigateTo({
         url: '../../pages/user/index'

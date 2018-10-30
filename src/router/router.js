@@ -101,4 +101,11 @@ module.exports = [
         enablePullDownRefresh: false
       }
     },
+    {
+      path: '/pages/surprise/index',
+      config: {
+        navigationBarTitleText: '惊喜',
+        enablePullDownRefresh: false
+      }
+    },
   ]
