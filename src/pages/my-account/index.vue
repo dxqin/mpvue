@@ -60,16 +60,20 @@ export default {
       }, {
         text: '卡券',
         code: 'coupon'
-      }, {
-        text: '余额',
-        code: 'balance'
-      }, {
+      }
+      // , {
+      //   text: '余额',
+      //   code: 'balance'
+      // }
+      , {
         text: '我的邀请',
         code: 'invite'
-      }, {
-        text: '商业合作',
-        code: 'cooperate'
-      }]
+      }
+      // , {
+      //   text: '商业合作',
+      //   code: 'cooperate'
+      // }
+      ]
     }
   },
   methods: {
@@ -87,15 +91,9 @@ export default {
       })
     },
     navagate(url) {
-      if (url == 'invite') {
-        wx.navigateTo({
-          url: `../../pages/mine/invite`
-        })
-      } else {
-        wx.navigateTo({
-          url: `../../pages/${url}/index`
-        })
-      }
+      wx.navigateTo({
+        url: `../../pages/${url}/index`
+      })
     },
     userDetial() {
       // const hoteltestUserId = this.$wxasync.getStorage('hoteltestUserId')
