@@ -23,7 +23,7 @@
 <script>
 "use strict";
 import Vue from "vue";  
-import './wxss/invite.wxss'
+import './wxss/index.wxss'
 export default {
   data() {
     const _this = this;
