@@ -4,7 +4,7 @@
       <div style="background:#fff">
         <div class="nav">
           <span class="active" style="">EBO VIP</span>
-          <span style="margin-left:36rpx;" bindtap="navigateToMine">我的账户</span>
+          <span style="margin-left:36rpx;" @click="navigateToMine()">我的账户</span>
         </div>
         <div class="banner">
           <swiper class="banner-img" circular="true" indicator-dots="true" autoplay="true" interval="5000" duration="1000">
@@ -19,7 +19,7 @@
           </div>
         </div>
         <div class="user">
-          <div class="user-box">
+          <div class="user-box" v-if="user">
             <div class="user-box-l">
               <span class="nickname">
                 <span class="name">{{user.name}}</span>
@@ -28,29 +28,29 @@
                 </span>
               <div class="vip">
                 <img src="/static/img/star.png" />
-                <span>VIP3 / 会员权益</span>
+                <span>VIP{{user.level}} / 会员权益</span>
                 </div>
             </div>
             <div class="user-box-r">
               <span class="integral">我的积分：</span>
-              <span class="integral-num">231</span>
+              <span class="integral-num">{{user.integral}}</span>
             </div>
           </div> 
         </div>
         <div class="features">
-           <div class="fe-col">
+           <div class="fe-col" @click="navigateToCheckIn()">
              <div class="fe-col-icon">
                <img style="width:80rpx;height:80rpx;" src="/static/img/apt.png" />
              </div>
              <span>智能入住</span>
            </div>
-           <div class="fe-col">
+           <div class="fe-col" @click="navigateToCoupon()">
              <div class="fe-col-icon">
                <img style="width:88rpx;height:52rpx;" src="/static/img/coupon.png" />
              </div>
              <span>我的卡券</span>
            </div>
-           <div class="fe-col">
+           <div class="fe-col" @click="navigateToQrcode()">
              <div class="fe-col-icon">
                <img style="width:68rpx;height:68rpx;" src="/static/img/QRcode.png" />
              </div>
@@ -75,33 +75,55 @@
     },
     onLoad() {
       const _this = this;
-      this.getData()
+      this.getData();
+      this.getUser();
     },
     methods: {
       getData(){
         this.$http.get('/files/homePage/all', '').then((res = {}) => {
           const { data = [] } = res;
-          console.log(data)
           this.datas = data;
         }).catch(res => {
           console.log(res, 'resErr')
         });
       },
       getUser(){
-        let data = {
-          userId : 24
-        };
-        this.$http.get('/users/user/detail', data).then((res = {}) => {
-          const { data = [] } = res; 
-          this.user = data;
-        }).catch(res => {
-          console.log(res, 'resErr')
+        this.$wxasync.getStorage('hoteltestUserId').then(res => {
+          const { data:hoteltestUserId = '' } = res;
+          const params = {
+            userId: hoteltestUserId
+          }
+          this.$http.get('/users/user/detail', params).then((res = {}) => {
+            const { data = [] } = res; 
+            this.user = data;
+          }).catch(res => {
+            console.log(res, 'resErr')
+          });
+        }).catch(err => {
+          this.$base.toast('用户信息失效，请重新登录')
+          wx.navigateTo({
+            url: `../../pages/register/index`
+          })
         });
       },
-      navigateToMine:function(){
-        console.log("../mine/index--")
+      navigateToMine(){
         wx.navigateTo({
           url:'../mine/index'
+        })
+      },
+      navigateToCheckIn(){
+        wx.navigateTo({
+          url:'../check-in/index'
+        })
+      },
+      navigateToCoupon(){
+        wx.navigateTo({
+          url:'../coupon/index'
+        })
+      },
+      navigateToQrcode(){
+        wx.navigateTo({
+          url:'../QRcode/index'
         })
       },
     },

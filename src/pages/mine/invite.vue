@@ -55,14 +55,22 @@ export default {
       }
     },
     getList(){
-      let data = {
-        userId : 24
-      }
-      this.$http.get('/users/user/invite', data).then((res = {}) => {
-        const { data = [] } = res;
-        this.datas = data;
-      }).catch(res => {
-        console.log(res, 'resErr')
+      this.$wxasync.getStorage('hoteltestUserId').then(res => {
+        const { data:hoteltestUserId = '' } = res;
+        const params = {
+          userId: hoteltestUserId
+        }
+        this.$http.get('/users/user/invite', params).then((res = {}) => {
+          const { data = [] } = res;
+          this.datas = data;
+        }).catch(res => {
+          console.log(res, 'resErr')
+        });
+      }).catch(err => {
+        this.$base.toast('用户信息失效，请重新登录')
+        wx.navigateTo({
+          url: `../../pages/register/index`
+        })
       });
     }
   }

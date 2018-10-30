@@ -3,7 +3,7 @@
   <ul class="list-tabs retinabb">
     <li class="list-tabs-tab" @click="changeTabs(index)" :class="{ active: select === index}" v-for="(tab,index) in tabs" :key="tab">{{tab}}</li>
   </ul>
-  <scroll-view class="list-orders" :style="{'height': '1200rpx'}" :scroll-y="true" @scrolltolower="scrollLower()">
+  <scroll-view class="list-orders":scroll-y="true" @scrolltolower="scrollLower()">
     <div class="list-orders-item-outer" v-for="(li,index) in orderList" :key="li">
       <div class="list-orders-item" @click="detail(index)">
         <p class="list-orders-item-header">
@@ -36,8 +36,9 @@
           <span class="room-time">{{li.checkInTime}}~{{li.checkOutTime}}</span>
           <span class="room-time">共{{li.time}}晚</span>
            <div class="product product-btn"> 
-            <v-button v-if="select == 0" class="count2 mr28">删除</v-button>
-            <v-button v-if="select == 0" class="count2">再次预定</v-button>
+            <v-button  class="count2 mr28" @click="onDelete(li.orderNumber)">删除</v-button>
+            <v-button v-if="li.orderStatus != 0" class="count2" catchtap="onOrder(li.hotelId)">再次预定</v-button>
+            <v-button v-if="li.orderStatus == 0" class="count2" @click="onCancel(li.orderNumber)">取消订单</v-button>
           </div>
         </div>
       </div>
@@ -55,15 +56,15 @@
 import Vue from "vue";
 import Toast from "../../components/toast/toast.vue";
 import countDown from "../../components/count-down/countDown";
-import format from "../../utils/format";
 import './wxss/index.wxss'
+import { parse } from 'semver';
 export default {
   data() {
     const _this = this;
     return {
       // dialogControl: _this.dialogControl,
-      // toastShow: _this.toastShow,
-      // toastShowAll: _this.toastShowAll,
+      toastShow: _this.toastShow,
+      toastShowAll: _this.toastShowAll,
       orderList: _this.orderList,
       statusArr: ['预定中', '预定成功', '预定取消','已入住','已完成'],
       tabs: _this.tabs,
@@ -73,148 +74,98 @@ export default {
    onLoad() {
     const _this = this;
     _this.select = 0;
+    _this.toastShow = false;
+    _this.toastShowAll = false;
+    _this.currentPage = 1;
     _this.tabs = ["全部"];
     this.getList()
   },
   methods: {
+     showToast() {
+      const _this = this;
+      _this.toastShowAll = true;
+      setTimeout(() => {
+        _this.toastShowAll = false;
+      }, 2000);
+    },
     getList() {
-      const params = {
-        userId: 24,
-        page : 1,
-        size : 5
-      };
-      this.$http.get('/orderForms/orderForm/all', params).then((res = {}) => {
-        const { data = [] } = res;
-        this.orderList = data;
+      this.$wxasync.getStorage('hoteltestUserId').then(res => {
+        const { data:hoteltestUserId = '' } = res;
+        const params = {
+          userId: hoteltestUserId,
+          page : 1,
+          size : 5
+        }
+        this.$http.get('/orderForms/orderForm/all', params).then((res = {}) => {
+          const { data = [] } = res;
+          this.orderList = data;
+        }).catch(res => {
+          console.log(res, 'resErr')
+        })
+      }).catch(err => {
+        this.$base.toast('用户信息失效，请重新登录')
+        wx.navigateTo({
+          url: `../../pages/register/index`
+        })
+      });
+    },
+    //删除订单
+    onDelete(number){
+      const _this = this;
+       let params = {
+        orderNumber : number
+      }
+      _this.$http.get('/orderForms/orderForm/delete', params).then((res = {}) => {
+        _this.$base.toast('删除成功')
       }).catch(res => {
         console.log(res, 'resErr')
       })
+    },
+    //取消订单
+    onCancel(number){
+      const _this = this;
+      let params = {
+        orderNumber : number
+      }
+      this.$http.get('/orderForms/orderForm/cancel', params).then((res = {}) => {
+        _this.$base.toast('取消成功');
+      }).catch(res => {
+        console.log(res, 'resErr')
+      })
+    },
+    //再次预定
+    onOrder(id){
+      let _this = this;
+      let inTime = _this.getDates(0);
+      let outTime = _this.getDates(1);
+      let params = {
+        hotelId : id,
+        checkInTime : inTime,
+        checkOutTime : outTime //离店时间
+      };
+      // console.log(params);
+       wx.navigateTo({
+        url: `../reserve-list/index?item=${JSON.stringify(params)}` 
+      });
+    },
+     detail(index) {
+      const _this = this;
+      wx.navigateTo({
+        url: "../reserve-detial/index"
+      });
+    },
+    getDates(AddDayCount){
+      let dd = new Date(); 
+      dd.setDate(dd.getDate()+AddDayCount);//获取AddDayCount天后的日期 
+      let y = dd.getFullYear(); 
+      let m = dd.getMonth()+1;//获取当前月份的日期 
+      m =  m < 10 ? '0' + m : '' + m;
+      let d = dd.getDate(); 
+      d =  d < 10 ? '0' + d : '' + d;
+      return y + "-"+ m + "-" + d; 
     }
   },
-  // methods: {
-  //   init() {
-  //     const _this = this;
-  //     _this.type = 0;
-  //     _this.toastShow = false;
-  //     _this.toastShowAll = false;
-  //     _this.currentPage = 1;
-  //     _this.tabs = ["全部", "待付款", "待发货", "已发货"];
-  //     _this.select = 0;
-  //     //   _this.firstGetList();
-  //   },
-  //   showToast() {
-  //     const _this = this;
-  //     _this.toastShowAll = true;
-  //     setTimeout(() => {
-  //       _this.toastShowAll = false;
-  //     }, 2000);
-  //   },
-  //   // processOrderList(orderList) {
-  //   //   orderList.forEach((order) => {
-  //   //     order.dateTime = format.formatDate(order.createTime, 'YYYY/MM/DD')
-  //   //   })
-  //   //   return orderList
-  //   // },
-  //   firstGetList() {
-  //     const _this = this;
-  //     _this.orderList2 = [];
-  //     let orderType = _this.$root.$mp.query.type;
-  //     if (orderType) {
-  //       _this.type = Number(orderType);
-  //       _this.select = Number(orderType);
-  //     }
-  //     let params = {
-  //       status: _this.type,
-  //       pageLimit: 6,
-  //       page: _this.currentPage
-  //     };
-  //     _this.$http.get("/order/list", params).then(res => {
-  //       if (res.code === 0) {
-  //         _this.orderList = res.data;
-  //         // _this.orderList.data = res.data.data
-  //         res.data.data.forEach(order => {
-  //           order.createTime = format.formatDate(
-  //             order.createTime,
-  //             "YYYY/MM/DD"
-  //           );
-  //           _this.orderList2.push(order);
-  //         });
-  //         //_this.scroll();
-  //       }
-  //     });
-  //   },
-  //   // getList() {
-  //   //   const _this = this;
-  //   //   let params = {
-  //   //     status: _this.type,
-  //   //     pageLimit: 6,
-  //   //     page: _this.currentPage
-  //   //   }
-  //   //   _this.$http.get('/order/list', params).then((res) => {
-  //   //     if (res.code === 0) {
-  //   //       _this.orderList = res.data;
-  //   //       _this.orderList.data = _this.processOrderList(res.data.data);
-  //   //       //_this.scroll();
-  //   //     }
-  //   //   })
-  //   // },
-  //   changeTabs(type) {
-  //     const _this = this;
-  //     _this.type = type;
-  //     _this.select = type;
-  //     _this.currentPage = 1;
-  //   //   _this.firstGetList();
-  //   },
-  //   detail(index) {
-  //     const _this = this;
-  //     // console.log(index);
-  //     let order = _this.orderList2[index];
-  //     if (order.status === 1000) {
-  //       wx.navigateTo({
-  //         url: "/pages/mine/detail?id=" + order.orderNo + "&type=multiple"
-  //       });
-  //     } else {
-  //       wx.navigateTo({
-  //         url: "/pages/mine/detail?id=" + order.orderNo + "&type=single"
-  //       });
-  //     }
-  //   },
-  //   formatDate(value, style) {
-  //     let date = format.formatDate(value, style);
-  //     return date;
-  //   },
-  //   scrollLower() {
-  //     const _this = this;
-  //     console.log(_this.currentPage);
-  //     _this.showToast();
-  //     if (
-  //       _this.orderList.count / (_this.orderList.perPage * _this.currentPage) >
-  //       1
-  //     ) {
-  //       // _this.toastShow = true;
-  //       _this.currentPage += 1;
-  //       let params = {
-  //         status: _this.type,
-  //         pageLimit: 6,
-  //         page: _this.currentPage
-  //       };
-  //       _this.$http.get("/order/list", params).then(res => {
-  //         if (res.code === 0) {
-  //           // _this.toastShow = false;
-  //           res.data.data.forEach(order => {
-  //             order.createTime = format.formatDate(
-  //               order.createTime,
-  //               "YYYY/MM/DD"
-  //             );
-  //             _this.orderList2.push(order);
-  //           });
-  //         }
-  //       });
-  //     } else {
-  //       _this.showToast();
-  //     }
-  //   }
-  // },
+  
   components: {
     Toast,
     countDown

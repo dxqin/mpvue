@@ -80,4 +80,32 @@ module.exports = [
         enablePullDownRefresh: false
       }
     },
+    {
+      path: '/pages/user/update',
+      config: {
+        navigationBarTitleText: '修改昵称',
+        enablePullDownRefresh: false
+      }
+    },
+    {
+      path: '/pages/reserve/index',
+      config: {
+        navigationBarTitleText: '预定订单',
+        enablePullDownRefresh: false
+      }
+    },
+    {
+      path: '/pages/integral/index',
+      config: {
+        navigationBarTitleText: '积分',
+        enablePullDownRefresh: false
+      }
+    },
+    {
+      path: '/pages/check-in/index',
+      config: {
+        navigationBarTitleText: '智能入住',
+        enablePullDownRefresh: false
+      }
+    },
   ]

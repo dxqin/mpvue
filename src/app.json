@@ -1,16 +1,20 @@
 {
   "pages": [
-    "pages/mine/invite",
+    "pages/index/index",
     "pages/order/index",
-    "pages/index/index", 
+    "pages/mine/index",
+    "pages/reserve/index",
+    "pages/mine/invite",
     "pages/coupon/index",
     "pages/QRcode/index",
     "pages/reserve-list/index",
     "pages/reserve-detial/index",
-    "pages/reserve/index",
+    "pages/register/index",
     "pages/integral/index",
     "pages/my-account/index",
-    "pages/mine/index"
+    "pages/check-in/index",
+    "pages/user/index",
+    "pages/user/update"
   ],
   "window": {
     "backgroundTextStyle": "light",
