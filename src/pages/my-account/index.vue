@@ -16,7 +16,7 @@
       <div class="admin-left">
         <p class="flex-row jc-str">
           <span class="c333 f20 pr20 text-overf-ell" style="max-width: 400rpx; display: inline-block">{{name}}</span>
-          <span class="cc6 f12" style="line-height: 66rpx;">{{sex}}</span>
+          <span class="cc6 f12" style="line-height: 66rpx;">{{sexArr[sex]}}</span>
         </p>
         <p class="c-app f12 pt20">查看及修改个人资料</p>
       </div>
@@ -40,7 +40,8 @@ export default {
       logo: 'http://pic22.nipic.com/20120621/1628220_155636709122_2.jpg',
       header: 'http://pic22.nipic.com/20120621/1628220_155636709122_2.jpg',
       name: '张三张',
-      sex: '先生',
+      sex: 0,
+      sexArr: ['男', '女'],
       listData: [{
         text: '所有订单',
         code: 'all_order'
@@ -65,9 +66,33 @@ export default {
   methods: {
     navagate: function(code) {
       console.log(code)
+    }, ///users/user/detail
+    userDetial() {
+      // const hoteltestUserId = this.$wxasync.getStorage('hoteltestUserId')
+      this.$wxasync.getStorage('hoteltestUserId').then((res = {}) => {
+        const { data:hoteltestUserId = '' } = res;
+        const params = {
+          userId: hoteltestUserId
+        }
+        this.$http.get('/users/user/detail', params).then((res = {}) => {
+          const { data = {} } = res;
+          const { headImageUrl = '', name = '', sex = 0 } = res
+          this.header = headImageUrl;
+          this.name = name;
+          this.sex = sex;
+        }).catch(res => {
+          console.log(res, 'resErr')
+        });
+      }).catch((res = {}) => {
+        wx.navigateTo({
+          url: `../../pages/register/index`
+        })
+      })
     }
   },
-
+  onLoad() {
+    this.userDetial()
+  }
 
 }
 </script>
