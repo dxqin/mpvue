@@ -5,7 +5,7 @@
   </ul>
   <scroll-view class="list-orders":scroll-y="true" @scrolltolower="scrollLower()">
     <div class="list-orders-item-outer" v-for="(li,index) in orderList" :key="li">
-      <div class="list-orders-item" @click="detail(index)">
+      <div class="list-orders-item" @click="detail(li.orderNumber)">
         <p class="list-orders-item-header">
           <span v-if="li.orderType == 1">系列商品</span>
           <span v-if="li.orderType == 0">酒店</span>
@@ -37,8 +37,8 @@
           <span class="room-time">共{{li.time}}晚</span>
            <div class="product product-btn"> 
             <v-button  class="count2 mr28" @click="onDelete(li.orderNumber)">删除</v-button>
-            <v-button v-if="li.orderStatus != 0" class="count2" catchtap="onOrder(li.hotelId)">再次预定</v-button>
-            <v-button v-if="li.orderStatus == 0" class="count2" @click="onCancel(li.orderNumber)">取消订单</v-button>
+            <v-button v-if="li.orderStatus != 0" class="count2" @click.stop="onOrder(li.hotelId)">再次预定</v-button>
+            <v-button v-if="li.orderStatus == 0" class="count2" @click.stop="onCancel(li.orderNumber)">取消订单</v-button>
           </div>
         </div>
       </div>
@@ -68,7 +68,11 @@ export default {
       orderList: _this.orderList,
       statusArr: ['预定中', '预定成功', '预定取消','已入住','已完成'],
       tabs: _this.tabs,
-      select: _this.select
+      select: _this.select,
+      page : 1,
+      size : 10,
+      isLast: false,
+      isCanCatch: false,
     };
   }, 
    onLoad() {
@@ -89,17 +93,30 @@ export default {
       }, 2000);
     },
     getList() {
+      // console.log("page="+this.page)
+      const { isLast = false, isCanCatch = false, page = 1, size = 10, orderList } = this.$data;
       this.$wxasync.getStorage('hoteltestUserId').then(res => {
         const { data:hoteltestUserId = '' } = res;
         const params = {
           userId: hoteltestUserId,
-          page : 1,
-          size : 5
+          page,
+          size,
         }
         this.$http.get('/orderForms/orderForm/all', params).then((res = {}) => {
+          this.isCanCatch = true;
           const { data = [] } = res;
-          this.orderList = data;
+          if (Array.isArray(data) && data.length > 0) {
+            this.isLast = false
+            this.orderList = orderList.concat(data);
+            this.page = parseInt(page, 10) + 1;
+          } else {
+            this.isLast = true;
+            this.page = parseInt(page, 10)
+          }
         }).catch(res => {
+          this.isCanCatch = true;
+           this.isLast = false;
+           this.page = parseInt(page, 10)
           console.log(res, 'resErr')
         })
       }).catch(err => {
@@ -148,10 +165,10 @@ export default {
         url: `../reserve-list/index?item=${JSON.stringify(params)}` 
       });
     },
-     detail(index) {
+     detail(orderNumber) {
       const _this = this;
       wx.navigateTo({
-        url: "../reserve-detial/index"
+        url: `../reserve/index?orderNumber=${orderNumber}`
       });
     },
     getDates(AddDayCount){
@@ -165,7 +182,11 @@ export default {
       return y + "-"+ m + "-" + d; 
     }
   },
-  
+  onReachBottom() {
+    const  { isLast, isCanCatch } = this.$data;
+    if ( !isLast && isCanCatch ) this.getList();
+    else this.$base.toast('已加载全部');
+  },
   components: {
     Toast,
     countDown

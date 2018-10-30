@@ -14,7 +14,7 @@
               </swiper-item>
             </block>
           </swiper>
-          <div class="group" >
+          <div class="group">
             <img src="/static/img/group.png" />
           </div>
         </div>
@@ -108,7 +108,7 @@
       },
       navigateToMine(){
         wx.navigateTo({
-          url:'../my-account/index'
+          url:'../../pages/my-account/index'
         })
       },
       navigateToCheckIn(){

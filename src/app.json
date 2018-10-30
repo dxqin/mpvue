@@ -1,17 +1,17 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/order/index",
-    "pages/mine/index",
-    "pages/reserve/index",
-    "pages/mine/invite",
-    "pages/coupon/index",
-    "pages/QRcode/index",
     "pages/reserve-list/index",
+    "pages/surprise/index",
+    "pages/QRcode/index",
+    "pages/invite/index",
+    "pages/my-account/index",
+    "pages/order/index",
+    "pages/reserve/index",
+    "pages/coupon/index",
     "pages/reserve-detial/index",
     "pages/register/index",
     "pages/integral/index",
-    "pages/my-account/index",
     "pages/check-in/index",
     "pages/user/index",
     "pages/user/update"
@@ -28,20 +28,20 @@
     "backgroundColor": "#ffffff",
     "borderStyle": "black",
     "list": [{
-      "pagePath": "pages/my-account/index",
+      "pagePath": "pages/index/index",
       "text": "首页",
       "iconPath": "/static/img/index.png",
       "selectedIconPath": "/static/img/index-o.png"
     }, {
       "pagePath": "pages/reserve-list/index",
       "text": "预定",
-      "iconPath": "/static/img/mine.png",
-      "selectedIconPath": "/static/img/mine-a.png"
+      "iconPath": "/static/img/booking.png",
+      "selectedIconPath": "/static/img/booking-o.png"
     },{
-      "pagePath": "pages/integral/index",
+      "pagePath": "pages/surprise/index",
       "text": "惊喜",
-      "iconPath": "/static/img/mine.png",
-      "selectedIconPath": "/static/img/mine-a.png"
+      "iconPath": "/static/img/surprise.png",
+      "selectedIconPath": "/static/img/surprise-o.png"
     }]
   }
 }
