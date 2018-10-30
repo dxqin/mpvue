@@ -24,7 +24,13 @@
       </li>
       <li class="content-list f14 flex-row jc-bet">
         <span>出生日期</span>
-        <span class="weui-cell__ft_in-access c3b">{{user.birthday}}</span>
+        <picker mode="date"
+          :value="endDate"
+          :start="pickerEnd" end="2217-09-01" @change="birthdayChange($event)">
+            <div class="index_picker">
+              <span class="weui-cell__ft_in-access c3b">{{user.birthday}}</span>
+            </div>
+        </picker>
       </li>
     </ul>
   </div>
@@ -51,27 +57,51 @@ export default {
     _this.user = {
       headImageUrl : '',
       sex : 0,
-      name : '1',
-      birthday : '1'
+      name : '',
+      birthday : ''
     }
-    this.getData()
+    this.getData();
   },
   methods: {
     toUpdate(){
       wx.navigateTo({
-        url:'../index/update'
+        url:'../user/update'
       })
     },
     changeSex(e) {
-      const { sexValue } = e.target;
+      const _this = this;
+      const sexValue = e.target.value;
       this.$wxasync.getStorage('hoteltestUserId').then(res => {
         const { data:hoteltestUserId = '' } = res;
         const params = {
           userId: hoteltestUserId,
-          sex : sexValue
+          sex : Number(sexValue)
+        };
+         this.$http.post('/users/user/modify', params).then((res = {}) => {
+          _this.$base.toast('修改成功');
+          _this.getData();
+        }).catch(res => {
+          console.log(res, 'resErr')
+        });
+      }).catch(err => {
+        this.$base.toast('用户信息失效，请重新登录')
+        wx.navigateTo({
+          url: `../../pages/register/index`
+        })
+      });
+    },
+    birthdayChange(even) { 
+      const _this = this;
+      const bvalue = even.target.value;
+      this.$wxasync.getStorage('hoteltestUserId').then(res => {
+        const { data:hoteltestUserId = '' } = res;
+        const params = {
+          userId: hoteltestUserId,
+          birthday : bvalue
         }
          this.$http.post('/users/user/modify', params).then((res = {}) => {
           _this.$base.toast('修改成功');
+           _this.getData();
         }).catch(res => {
           console.log(res, 'resErr')
         });
@@ -120,7 +150,7 @@ export default {
             formData: {
             },
             success (res){
-              console.log("上传成功");
+              _this.$base.toast('上传成功');
             }
           });
         }
