@@ -37,7 +37,7 @@ module.exports = [
     {
       path: '/pages/reserve-detial/index',
       config: {
-        navigationBarTitleText: 'EBO HOTEL',
+        navigationBarTitleText: '预定详情',
         enablePullDownRefresh: false
       }
     },
@@ -83,7 +83,7 @@ module.exports = [
     {
       path: '/pages/reserve/index',
       config: {
-        navigationBarTitleText: '预定订单',
+        navigationBarTitleText: '预定详情',
         enablePullDownRefresh: false
       }
     },

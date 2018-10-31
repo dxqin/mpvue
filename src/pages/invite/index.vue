@@ -37,11 +37,15 @@ export default {
     this.getList();
   },
   onShareAppMessage(e) {
+    const _this = this;
+    _this.userId = wx.getStorageSync('hoteltestUserId');
+    console.log(_this.userId)
     return {
-      title: '忆泊大酒店',
-      path: '../index/index?userId=26' ,// 路径，传递参数到指定页面。
+      title: `忆泊大酒店/pages/index/index?userId=26`,
+      path: '/pages/index/index?userId=26' ,// 路径，传递参数到指定页面。
       imageUrl : 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2929067511,4026656966&fm=26&gp=0.jpg',
       success(e){
+        console.log(_this, e, '========================')
         console.log("分享成功")
       },
       fail(e){
@@ -53,6 +57,7 @@ export default {
     getList(){
       this.$wxasync.getStorage('hoteltestUserId').then(res => {
         const { data:hoteltestUserId = '' } = res;
+        this.userId = hoteltestUserId;
         const params = {
           userId: hoteltestUserId
         }
