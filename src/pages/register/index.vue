@@ -231,6 +231,7 @@ export default {
           console.log(res, 'res');
           const { code = -1, msg = '操作失败' } = res;
           this.$base.toast(msg)
+          if (code == 0) this.isRegister = false
         }).catch((err = {}) => {
           console.log(err, 'err')
         })
