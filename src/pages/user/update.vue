@@ -31,7 +31,7 @@ export default {
           userId: hoteltestUserId
         }
         this.$http.get('/users/user/detail', params).then((res = {}) => {
-          const { data = [] } = res; 
+          const { data = {} } = res; 
           this.userName = data.name;
         }).catch(res => {
           console.log(res, 'resErr')
@@ -50,8 +50,8 @@ export default {
         _this.$base.toast('昵称由4-20个中英文、数字、“_”、“-”组成的字符');
         return;
       }
-      this.$wxasync.getStorage('hoteltestUserId').then(res => {
-        const { data:hoteltestUserId = '' } = res;
+      this.$wxasync.getStorage('hoteltestUserId').then(response => {
+        const { data:hoteltestUserId = '' } = response;
         const params = {
           userId: hoteltestUserId,
           name : _this.userName,

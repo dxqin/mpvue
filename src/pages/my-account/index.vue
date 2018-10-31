@@ -107,7 +107,7 @@ export default {
         this.$http.get('/users/user/detail', params).then((res = {}) => {
           const { data = {}, code = 0 } = res;
           if (code == 0) {
-            const { headImageUrl = '', name = '', sex = 0 } = res
+            const { headImageUrl = '', name = '', sex = 0 } = data;
             this.header = headImageUrl;
             this.name = name;
             this.sex = sex;

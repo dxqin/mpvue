@@ -17,7 +17,7 @@
             :range="sexArr"
             range-key="label"
             @change="changeSex">
-          <span class="c3b">
+          <span class="c3b"  style="display:inline-block;width:200rpx;text-align:right;">
             {{sexArr[user.sex].label}}
           </span>
          </picker>
@@ -71,8 +71,8 @@ export default {
     changeSex(e) {
       const _this = this;
       const sexValue = e.target.value;
-      this.$wxasync.getStorage('hoteltestUserId').then(res => {
-        const { data:hoteltestUserId = '' } = res;
+      this.$wxasync.getStorage('hoteltestUserId').then(response => {
+        const { data:hoteltestUserId = '' } = response;
         const params = {
           userId: hoteltestUserId,
           sex : Number(sexValue)
@@ -113,14 +113,17 @@ export default {
       });
     },
     getData(){
-      this.$wxasync.getStorage('hoteltestUserId').then(res => {
-        const { data:hoteltestUserId = '' } = res;
+      this.$wxasync.getStorage('hoteltestUserId').then(response => {
+        const { data:hoteltestUserId = '' } = response;
         const params = {
           userId: hoteltestUserId
         }
         this.$http.get('/users/user/detail', params).then((res = {}) => {
-          const { data = [] } = res; 
+          const { data = {} } = res; 
           this.user = data;
+          if(this.user.birthday == null){
+            this.user.birthday = '';
+          }
         }).catch(res => {
           console.log(res, 'resErr')
         });

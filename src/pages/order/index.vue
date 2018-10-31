@@ -4,6 +4,7 @@
     <li class="list-tabs-tab" @click="changeTabs(index)" :class="{ active: select === index}" v-for="(tab,index) in tabs" :key="tab">{{tab}}</li>
   </ul>
   <scroll-view class="list-orders":scroll-y="true" @scrolltolower="scrollLower()">
+    <p class="list-orders-item-outer f14 cb2" v-show="orderList.length <= 0">暂无数据</p>
     <div class="list-orders-item-outer" v-for="(li,index) in orderList" :key="li">
       <div class="list-orders-item" @click="detail(li.orderNumber)">
         <p class="list-orders-item-header">
@@ -104,7 +105,7 @@ export default {
         }
         this.$http.get('/orderForms/orderForm/all', params).then((res = {}) => {
           this.isCanCatch = true;
-          const { data = [] } = res;
+          const { data = [] } = res.data;
           if (Array.isArray(data) && data.length > 0) {
             this.isLast = false
             this.orderList = orderList.concat(data);

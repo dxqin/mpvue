@@ -18,14 +18,13 @@ import { parse } from 'semver';
 export default {
   data() {
     return {
-      datas : '',
+      datas : {},
       user : {}
     }
   },
   onLoad() {
     const _this = this;
     this.getData();
-    
   },
   methods: {
     getData(){
@@ -35,8 +34,7 @@ export default {
           userId: hoteltestUserId
         }
         this.$http.get('/users/user/QRCode', params).then((res = {}) => {
-          const { data = [] } = res; 
-          this.datas = data;
+          this.datas = res.data;
           this.getUser();
         }).catch(res => {
           console.log(res, 'resErr')
@@ -49,14 +47,13 @@ export default {
       });
     },
     getUser(){
-      this.$wxasync.getStorage('hoteltestUserId').then(res => {
-        const { data:hoteltestUserId = '' } = res;
+      this.$wxasync.getStorage('hoteltestUserId').then(response => {
+        const { data:hoteltestUserId = '' } = response;
         const params = {
           userId: hoteltestUserId
         }
         this.$http.get('/users/user/detail', params).then((res = {}) => {
-          const { data = [] } = res; 
-          this.user = data;
+          this.user = res.data;
           this.getImg();
         }).catch(res => {
           console.log(res, 'resErr')

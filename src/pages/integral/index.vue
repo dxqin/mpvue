@@ -33,7 +33,7 @@
         <!-- 积分数 -->
         <div class="flex-row jc-bet mt60">
           <div class="c-app">
-            <p class="f26">135</p>
+            <p class="f26">{{userDetial.integral || '0'}}</p>
             <p class="f12">
               <span>可用积分</span>
               <span class="icon-content">
@@ -95,7 +95,7 @@ export default {
     },
     getIntegralList() {// 获取积分列表
       this.isCanCatch = false;
-      const userId = wx.getStorageSync('userId') || '24';
+      const userId = wx.getStorageSync('hoteltestUserId') || '24';
       let { page, size, listData } = this.$data;
       const params = {
         userId,
@@ -120,19 +120,32 @@ export default {
       })
     },
     getUserDetial() {
-      const userId = wx.getStorageSync('userId') || '24';
-      const params = {
-        userId
-      }
-      this.$http.get('/users/user/detail', params).then((res = {}) => {
-        console.log(res, 'resdetail'); 
-        const { code = -1 } = res;
-        if (code == 0) {
-          this.userDetial = res.data
+      const { userDetial } = this.$data;
+      this.$wxasync.getStorage('hoteltestUserId').then(res => {
+        const { data:hoteltestUserId = '' } = res;
+        const params = {
+          userId: hoteltestUserId
         }
-      }).catch((err = {}) => {
-        console.log(err, 'errdetail')
-      })
+        this.$http.get('/users/user/detail', params).then((res = {}) => {
+          console.log(res, 'resdetail'); 
+          const { code = -1, data = {} } = res;
+          if (code == 0) {
+            let newUserDetial = {
+              ...userDetial,
+              name : data.name,  //用户名称
+              integral: data.integral, //用户剩余积分数
+              headImageUrl: data.headImageUrl, // 用户头像url
+              sex: data.sex,  //用户性别；0:男；1:女
+            }
+            this.userDetial = newUserDetial;
+          }
+        }).catch((err = {}) => {
+          this.$base.toast('用户信息失效，请重新登录')
+          wx.navigateTo({
+            url: `../../pages/register/index`
+          })
+        })
+      });
     }
   }
 

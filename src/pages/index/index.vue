@@ -94,7 +94,7 @@
             userId: hoteltestUserId
           }
           this.$http.get('/users/user/detail', params).then((res = {}) => {
-            const { data = [] } = res; 
+            const { data = {} } = res; 
             this.user = data;
           }).catch(res => {
             console.log(res, 'resErr')

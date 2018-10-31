@@ -96,9 +96,6 @@ export default {
         }, {
           value: '1',
           label: '女'
-        }, {
-          value: '2',
-          label: '保密'
         }
       ],
       sexVal: '0',
