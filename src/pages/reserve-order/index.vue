@@ -138,14 +138,27 @@ export default {
       countPrice: 0,
       dateAcount: 0,
       dateStart: '',
-      dateEnd: ''
+      dateEnd: '',
+      unoccupied: 1,
     }
   },
   onLoad(options) {
     const { newDetial = '' } = options;
     const newOptions = JSON.parse(newDetial)
-    const { roomTypeId = '' } = newOptions;
-    console.log(newOptions, 'newOptions')
+    const { roomTypeId = '', unoccupied = 1 } = newOptions;
+    if (unoccupied < 1) {
+      this.$base.toast('该房型暂无空房，请重新选择');
+      wx.switchTab({
+        url: '../reserve-list/index'
+      })
+      return
+    }
+    console.log(newOptions, 'newOptions');
+    let arr = ['1', '2', '3', '4', '5'];
+    arr = arr.slice(0, unoccupied);
+    this.aptNums = arr;
+    this.aptNum = arr;
+    this.unoccupied = unoccupied;
     this.roomTypeId = roomTypeId;
     this.newOptions = newOptions;
     this.price = newOptions.price;
@@ -218,6 +231,8 @@ export default {
               wx.switchTab({
                 url: '../../pages/index/index'
               })
+            } else {
+              this.$base.toast(res.msg || '操作失败')
             }
           }).catch((err = {}) => {
             console.log(err, 'err1111')
@@ -233,20 +248,27 @@ export default {
     },
     checkDiscount() {// 获取优惠券
       const { roomPriceId = '', price } = this.$data;
-      const userId = this.$wxasync.getStorage('hoteltestUserId') || ''
-      const params = {
-        userId,
-        roomPriceId
-      }
-      this.$http.get('/orderForms/calculate/discount', params).then((res = {}) => {
-        console.log(res, 'res');
-        const { couponPrice = 0, discountPrice = 0 } = res;
-        this.couponPrice = couponPrice;
-        this.discountPrice = discountPrice;
-        console.log()
-        this.payPrice = price - couponPrice - discountPrice;
+      this.$wxasync.getStorage('hoteltestUserId').then((res = {}) => {
+        console.log(res, 'res--------');
+        const { data: userId = 0 } = res;
+        const params = {
+          userId,
+          roomPriceId
+        }
+        this.$http.get('/orderForms/calculate/discount', params).then((res = {}) => {
+          console.log(res, 'res');
+          const { couponPrice = 0, discountPrice = 0 } = res;
+          this.couponPrice = couponPrice;
+          this.discountPrice = discountPrice;
+          console.log()
+          this.payPrice = price - couponPrice - discountPrice;
+        }).catch((err = {}) => {
+          console.log(err, 'err')
+        })
       }).catch((err = {}) => {
-        console.log(err, 'err')
+        wx.navigateTo({
+          url: '../register/index'
+        })
       })
     }
   }

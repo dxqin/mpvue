@@ -62,10 +62,11 @@
     <div class="search-result" style="margin-top: 184rpx" v-show="hotelMsg.checkHotelId">
       <div class="hotel-index br10">
         <div class="img-box pos-re br10">
-          <div>
+          <div >
             <swiper :indicator-dots="indicatorDots"
               class="swiper"
               autoplay="false" interval="5000" duration="1000"
+              v-show="type == 'family'"
             >
               <block v-for="(item, index) in hotelMsg.hotelImg" :key="index">
                 <swiper-item>
@@ -73,6 +74,10 @@
                 </swiper-item>
               </block>
             </swiper>
+            <map id="map" v-show="type == 'local'" :longitude="hotelMsg.latitude" :latitude="hotelMsg.longitude" style="width: 702rpx; height: 342rpx"></map>
+            <div id="map" v-show="type == 'detial'" class="tc f16 c3b"  style="width: 702rpx; height: 342rpx; align-items: center">
+              <p>{{hotelMsg.hotelDetial}}</p>
+            </div>
           </div>
           <div class="flex-row jc-bet pos-ab hotel-mark pl20 pr20 bb">
             <div class="container-middle jc-str" style="align-items: right">
@@ -80,8 +85,12 @@
               <p class="f10 cfff">{{hotelMsg.hotelName}}</p>
             </div>
             <div class="flex-col-xy-middle jc-end" style="height: 78rpx">
-              <img :src="hotelImg[0]" class="hotel-mark-icon" alt="">
-              <img :src="hotelImg[0]" class="hotel-mark-icon" alt="">
+              <p class="ml15 tc bsbb mark-box" @click="changeShow('detial')">
+                <img :src="hotelImg[0]" class="hotel-mark-icon" alt="">
+              </p>
+              <p class="ml15 tc bsbb mark-box" @click="changeShow('local')">
+                <img :src="hotelImg[1]" class="hotel-mark-icon" alt="">
+              </p>
             </div>
           </div>
         </div>
@@ -134,7 +143,7 @@
                   ￥{{items.price}}
                 </div>
                 <div class="ml15">
-                  <p class="reserve-btn app-btn f14 tc br20" @click="toReserve(items.roomPriceId, item.basePrice, items)">预定</p>
+                  <p class="reserve-btn app-btn f14 tc br20" @click="toReserve(items.roomPriceId, item.unoccupied, items)">预定</p>
                 </div>
               </div>
             </div>
@@ -160,7 +169,7 @@ export default {
       houseNums: 1,
       personNums: 1,
       hotelImgs: '../../static/img/rec.png',
-      hotelImg: ['../../static/img/rec.png', '../../static/img/rec.png'],
+      hotelImg: ['../../static/img/detialIcon.png', '../../static/img/location.png'],
       isactive: -1,
       pickerValueArray: [], // 酒店列表
       selectId: '',
@@ -176,7 +185,8 @@ export default {
         latitude: '222',// 纬度
         checkHotelId: 0// 酒店id
       },
-      hotelDetialList: []
+      hotelDetialList: [],
+      type: "family"
     }
   },
   components: {
@@ -191,6 +201,13 @@ export default {
   methods: {
     checkHotel(val = -1) {
       this.isactive = val;
+    },
+    changeShow(type = '') {
+      this.type = type;
+      if (type == 'local') {
+      } else if (type == 'detial') {
+
+      }
     },
     getHotelsAll() { // 查询所有酒店
       this.$http.get('/hotels/all', {}).then((res = {}) => {
@@ -210,7 +227,7 @@ export default {
         console.log(res, 'err')
       })
     },
-    toReserve(id = '', price = 1, item ) { //  点击预定跳转
+    toReserve(id = '', unoccupied = 1, item ) { //  点击预定跳转
       const { 
         pickerLabelDefault = '', // 酒店名
         dateStart = '', // 入住日
@@ -223,7 +240,8 @@ export default {
         id: id,
         pickerLabelDefault: pickerLabelDefault,
         dateStart: dateStart,
-        dateEnd: dateEnd
+        dateEnd: dateEnd,
+        unoccupied
       }
       wx.navigateTo({
         url: `../reserve-detial/index?item=${JSON.stringify(newItem)}`
