@@ -73,6 +73,13 @@
         <div class="register-submit app-btn mt30 f16 tc br10" @click="registerSubmit">
           注册
         </div>
+        <div class="to-register mt60 cb2 f14 tc" @click="changeType(false)">
+          <div class="to-register-text tc" style="align-items: center">
+            <div class="dib">返回登录</div>
+            <div class="icon-content dib">
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     
@@ -228,10 +235,17 @@ export default {
           sex: sexVal
         }
         this.$http.post('/users/user/register', params).then((res = {}) => {
-          console.log(res, 'res');
-          const { code = -1, msg = '操作失败' } = res;
-          this.$base.toast(msg)
-          if (code == 0) this.isRegister = false
+          const { code = -1, msg = '操作失败', data: { id = '', token = '', expireTime = 0 } } = res;
+          this.$wxasync.setStorage('hoteltestToken', token);
+          this.$wxasync.setStorage('hoteltestExpireTime', expireTime);
+          this.$wxasync.setStorage('account', registerMobel);
+          this.$wxasync.setStorage('hoteltestUserId', id);
+          this.$base.toast(msg);
+          if (code == 0) {
+            wx.navigateTo({
+              url: '../../pages/my-account/index'
+            })
+          }
         }).catch((err = {}) => {
           console.log(err, 'err')
         })

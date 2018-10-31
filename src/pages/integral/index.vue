@@ -107,6 +107,9 @@ export default {
         this.isCanCatch = true;
         if (Array.isArray(data) && data.length > 0) {
           listData.push(data);
+          data.forEach((item) => {
+            listData.push(item);
+          })
           page++;
           this.page = page;
           this.listData = listData;

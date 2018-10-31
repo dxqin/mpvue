@@ -12,7 +12,7 @@
       <div class="users">
         <!-- <p class="f12 cb2" style="text-align:center;margin-bottom:20rpx;" v-if="datas.length <= 0">暂无数据</p> -->
         <div class="users-show" v-for="(item,index) in datas" :key="index">
-          <div class="users-l"></div>
+          <img class="users-l" :src="item.headImageUrl" />
           <span class="users-r">{{item.userName}}</span>
         </div>
       </div>
@@ -39,13 +39,12 @@ export default {
   onShareAppMessage(e) {
     const _this = this;
     _this.userId = wx.getStorageSync('hoteltestUserId');
-    console.log(_this.userId)
+    // console.log(_this.userId)
     return {
-      title: `忆泊大酒店/pages/index/index?userId=26`,
-      path: '/pages/index/index?userId=26' ,// 路径，传递参数到指定页面。
+      title: `忆泊大酒店`,
+      path: '/pages/index/index?userId='+_this.userId ,// 路径，传递参数到指定页面。
       imageUrl : 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2929067511,4026656966&fm=26&gp=0.jpg',
       success(e){
-        console.log(_this, e, '========================')
         console.log("分享成功")
       },
       fail(e){
