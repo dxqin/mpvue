@@ -146,6 +146,7 @@ export default {
     const { newDetial = '' } = options;
     const newOptions = JSON.parse(newDetial)
     const { roomTypeId = '', unoccupied = 1 } = newOptions;
+    
     if (unoccupied < 1) {
       this.$base.toast('该房型暂无空房，请重新选择');
       wx.switchTab({
@@ -247,13 +248,13 @@ export default {
       }
     },
     checkDiscount() {// 获取优惠券
-      const { roomPriceId = '', price } = this.$data;
+      const { roomTypeId = '', price } = this.$data;
       this.$wxasync.getStorage('hoteltestUserId').then((res = {}) => {
         console.log(res, 'res--------');
         const { data: userId = 0 } = res;
         const params = {
           userId,
-          roomPriceId
+          roomPriceId: roomTypeId
         }
         this.$http.get('/orderForms/calculate/discount', params).then((res = {}) => {
           console.log(res, 'res');

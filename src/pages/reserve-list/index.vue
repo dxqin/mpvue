@@ -192,7 +192,9 @@ export default {
   components: {
     mpvuePicker
   },
-  onLoad() {
+  onLoad(options) {
+    const { item = '' } = options;
+    console.log(item, 'item')
     this.getHotelsAll();
     this.getToday(); // 设置时间
     this.dateStart = this.$base.formatDay(new Date());

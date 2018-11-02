@@ -105,7 +105,7 @@ export default {
         }
         this.$http.get('/orderForms/orderForm/all', params).then((res = {}) => {
           this.isCanCatch = true;
-          const { data = [] } = res.data;
+          const { data = [] } = res;
           if (Array.isArray(data) && data.length > 0) {
             this.isLast = false
             this.orderList = orderList.concat(data);
