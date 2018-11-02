@@ -1,6 +1,6 @@
 <template>
   <div class="account-index w-full">
-    <ul class="account-content mt44">
+    <ul class="account-content">
       <li class="content-list content-list-f f14 flex-row jc-bet">
         <span>头像</span>
         <span class="weui-cell__ft_in-access c3b">
@@ -17,7 +17,7 @@
             :range="sexArr"
             range-key="label"
             @change="changeSex">
-          <span class="c3b"  style="display:inline-block;width:200rpx;text-align:right;">
+          <span class="c3b" style="display:inline-block;width:200rpx;text-align:right;">
             {{sexArr[user.sex].label}}
           </span>
          </picker>
@@ -25,8 +25,8 @@
       <li class="content-list f14 flex-row jc-bet">
         <span>出生日期</span>
         <picker mode="date"
-          :value="endDate"
-          :start="pickerEnd" end="2217-09-01" @change="birthdayChange($event)">
+          :value="user.birthday"
+          start="1900-01-01" end="2217-09-01" @change="birthdayChange($event)">
             <div class="index_picker">
               <span class="weui-cell__ft_in-access c3b">{{user.birthday}}</span>
             </div>
@@ -48,7 +48,10 @@ export default {
         }, {
           value: 1,
           label: '女'
-        }
+        },{
+          value: 2,
+          label: ''
+        },
       ],
     }
   },
@@ -56,7 +59,7 @@ export default {
     const _this = this;
     _this.user = {
       headImageUrl : '',
-      sex : 0,
+      sex : 2,
       name : '',
       birthday : ''
     }
@@ -136,28 +139,37 @@ export default {
     },
     chooseimage: function () {  
       let _this = this;  
-      wx.chooseImage({  
-        count: 1, // 默认9  
-        sizeType: ['original', 'compressed'], 
-        sourceType: ['album', 'camera'],
-        success: function (res) {
-          _this.user.headImageUrl = res.tempFilePaths[0];
-          wx.uploadFile({
-            url: 'http://hoteltest.rudolph-ibs.com/api/hotel/files/headImg/upload', 
-            filePath: res.tempFilePaths[0],
-            name: 'headImg',
-            header: {
-              'token' : '3b0dd146c76d44c393f335426e606c13',
-              'account': '13065730192'
-            },
-            formData: {
-            },
-            success (res){
-              _this.$base.toast('上传成功');
-            }
-          });
-        }
-      })  
+      _this.token = wx.getStorageSync('hoteltestToken');
+      _this.account = wx.getStorageSync('account');
+      if(!_this.token){
+         this.$base.toast('用户信息失效，请重新登录');
+         wx.navigateTo({
+          url: `../../pages/register/index`
+        });
+      }else{
+        wx.chooseImage({  
+          count: 1, // 默认9  
+          sizeType: ['original', 'compressed'], 
+          sourceType: ['album', 'camera'],
+          success: function (res) {
+            _this.user.headImageUrl = res.tempFilePaths[0];
+            wx.uploadFile({
+              url: 'https://hoteltest.rudolph-ibs.com/api/hotel/files/headImg/upload', 
+              filePath: res.tempFilePaths[0],
+              name: 'headImg',
+              header: {
+                'token' : _this.token,
+                'account': _this.account
+              },
+              formData: {
+              },
+              success (res){
+                _this.$base.toast('上传成功');
+              }
+            });
+          }
+        });
+      } 
     },
   },
  }

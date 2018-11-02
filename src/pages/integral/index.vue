@@ -90,9 +90,6 @@ export default {
     this.getUserDetial()
   },
   methods: {
-    ddd() {
-      console.log(222)
-    },
     getIntegralList() {// 获取积分列表
       this.isCanCatch = false;
       const userId = wx.getStorageSync('hoteltestUserId') || '24';
@@ -106,7 +103,6 @@ export default {
         const { data = [] } = res;
         this.isCanCatch = true;
         if (Array.isArray(data) && data.length > 0) {
-          listData.push(data);
           data.forEach((item) => {
             listData.push(item);
           })
@@ -130,7 +126,6 @@ export default {
           userId: hoteltestUserId
         }
         this.$http.get('/users/user/detail', params).then((res = {}) => {
-          console.log(res, 'resdetail'); 
           const { code = -1, data = {} } = res;
           if (code == 0) {
             let newUserDetial = {

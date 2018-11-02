@@ -58,9 +58,7 @@ export default {
         }
          this.$http.post('/users/user/modify', params).then((res = {}) => {
           _this.$base.toast('修改成功');
-          wx.navigateTo({
-            url:'../user/index'
-          });
+          wx.navigateBack();
         }).catch(res => {
           console.log(res, 'resErr')
         });

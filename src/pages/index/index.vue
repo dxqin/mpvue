@@ -59,6 +59,21 @@
         </div>
       </div>
     </scroll-view>
+    <!-- <div class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <img src="../../../static/img/group.png" />
+        </div>
+        <div class="modal-body">
+          <img />
+          <sapn class="f16 c-app">订单正在提交中</sapn>
+          <sapn class="f14 c3b mt20">预定结果稍后以短信形式通知到您</sapn>
+        </div>
+        <div class="modal-footer">
+          <p class="modal-footer-txt cb4 f12">6秒后自动跳转</p>
+        </div>
+      </div>
+    </div> -->
   </div>
 </template>
 <script>
@@ -73,18 +88,30 @@
         user : this.user
       };
     },
+    onShow(){
+      this.getUser();
+    },
     onLoad() {
-      const _this = this;
+      this.getUrl();
       this.getData();
       this.getUser();
     },
     methods: {
+      getUrl(){
+        // let pages = getCurrentPages();//获取加载的页面
+        // let currentPage = pages[pages.length-1];
+        // let options = currentPage.options;
+        // for(let key in options){
+        //   console.log(options[key]);
+        // // this.$wxasync.setStorage('hoteltestUserId', id);
+        // }
+      },
       getData(){
         this.$http.get('/files/homePage/all', '').then((res = {}) => {
           const { data = [] } = res;
           this.datas = data;
         }).catch(res => {
-          console.log(res, 'resErr')
+          console.log(res, 'resErr');
         });
       },
       getUser(){
@@ -103,28 +130,28 @@
           this.$base.toast('用户信息失效，请重新登录')
           wx.navigateTo({
             url: `../../pages/register/index`
-          })
+          });
         });
       },
       navigateToMine(){
         wx.navigateTo({
           url:'../../pages/my-account/index'
-        })
+        });
       },
       navigateToCheckIn(){
         wx.navigateTo({
           url:'../check-in/index'
-        })
+        });
       },
       navigateToCoupon(){
         wx.navigateTo({
           url:'../coupon/index'
-        })
+        });
       },
       navigateToQrcode(){
         wx.navigateTo({
           url:'../QRcode/index'
-        })
+        });
       },
     },
   };

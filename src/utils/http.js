@@ -19,6 +19,7 @@ const authNone = [
   '/roomTypes/accord/roomType',
   '/roomTypes/detail/roomType',
   '/files/homePage/all',
+  '/users/vip/tokenLogin',
 ]
 
 const fly = new Fly()
@@ -26,13 +27,15 @@ const fly = new Fly()
 // 设置请求基地址
 // fly.config.baseURL = 'http://localhost:8888'
 // fly.config.baseURL = 'http://192.168.2.71:1443'
-fly.config.baseURL = 'http://hoteltest.rudolph-ibs.com/api/hotel'
+fly.config.baseURL = 'https://hoteltest.rudolph-ibs.com/api/hotel'
 
 fly.interceptors.request.use((request) => {
   
   wx.showLoading()
   const { url } = request;
  // 鉴权
+  // let token = '3b0dd146c76d44c393f335426e606c13';
+  // let account = '13065730191';
   let token = wx.getStorageSync('hoteltestToken');
   let account = wx.getStorageSync('account');
   if (token && account) {
@@ -40,7 +43,7 @@ fly.interceptors.request.use((request) => {
     request.headers.account = `${account}`
   } else {
     if (!authNone.includes(url)) {
-      wx.navigateTo({
+      wx.reLaunch({
         url: '../register/index'
       })
     }

@@ -92,11 +92,12 @@ export default {
       const { orderNumber = '', renterDetial } = this.$data;
       const params = {orderNumber}
       this.$http.get('/orderForms/orderForm/detail', params).then((res = {}) => {
-        console.log(res, 'res');
+        // console.log(res, 'res');
+        const { data = {} } = res;
         const {
           name = '', mobile = '', orderNumber = '', orderCreateTime = '', hotelName = '', roomTypeName = '',
           checkInTime = '', checkOutTime = '', time = '', valueAddedService = '', price = ''
-        } = res;
+        } = data;
         const newRenterDetial = {
           ...renterDetial,
           name: name,
@@ -106,6 +107,7 @@ export default {
         };
         this.renterDetial = newRenterDetial;
         this.hotelName = hotelName;
+        this.roomTypeName = roomTypeName;
         this.checkInTime = this.$base.checkDate(checkInTime || new Date());
         this.checkOutTime = this.$base.checkDate(checkOutTime || new Date());
         this.time = time;

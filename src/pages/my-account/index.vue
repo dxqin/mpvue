@@ -46,8 +46,8 @@ export default {
   data() {
     return {
       logo: '/static/img/group.png',
-      header: 'http://pic22.nipic.com/20120621/1628220_155636709122_2.jpg',
-      name: '张三张',
+      header: '',
+      name: '',
       sex: 0,
       sexArr: ['男', '女'],
       isNull: false,
@@ -126,8 +126,8 @@ export default {
       })
     }
   },
-  onLoad() {
-    this.userDetial()
+  onShow() {
+    this.userDetial() 
   }
 
 }

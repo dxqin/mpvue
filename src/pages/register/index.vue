@@ -2,7 +2,7 @@
   <div class="register w-full h-full pos-re">
     <div class="index-bg bg-fff w-full h-full">
       <div class="bg-head">
-
+        <img src="../../../static/img/group.png" />
       </div>
     </div>
     <div class="index-content bgfff">
@@ -242,9 +242,10 @@ export default {
           this.$wxasync.setStorage('hoteltestUserId', id);
           this.$base.toast(msg);
           if (code == 0) {
-            wx.navigateTo({
-              url: '../../pages/my-account/index'
-            })
+             wx.navigateBack();
+            // wx.navigateTo({
+            //   url: '../../pages/my-account/index'
+            // })
           }
         }).catch((err = {}) => {
           console.log(err, 'err')

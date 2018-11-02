@@ -192,11 +192,25 @@ export default {
   components: {
     mpvuePicker
   },
-  onLoad() {
-    this.getHotelsAll();
+  onLoad(options) {
+    // console.log(options, 'op')
+    // if (options && JSON.stringify(options) !== '{}') {
+    //   const { item } = options;
+    //   const newItem = JSON.parse(item);
+    //   const { hotelId } = newItem;
+    // }
+    this.pickerValueDefault = 6;
+    const val = {
+      target:{
+        value: 6
+      }
+    }
+    
+    this.getHotelsAll(val);
     this.getToday(); // 设置时间
     this.dateStart = this.$base.formatDay(new Date());
     this.dateEnd = this.$base.formatNextDay(new Date());
+    
   },
   methods: {
     checkHotel(val = -1) {
@@ -209,9 +223,9 @@ export default {
 
       }
     },
-    getHotelsAll() { // 查询所有酒店
+    getHotelsAll(val) { // 查询所有酒店
       this.$http.get('/hotels/all', {}).then((res = {}) => {
-        console.log(res, 'res');
+        console.log(res, 'resgetHotelsAll');
         const { data = [] } = res;
         const newData = data.map((item = {}) => {
           var { id: value = '', headHotelName = '', hotelName = '' } = item;
@@ -223,6 +237,7 @@ export default {
           return items
         })
         this.pickerValueArray = newData;
+        this.changeHotel(val, true)
       }).catch(res => {
         console.log(res, 'err')
       })
@@ -234,7 +249,7 @@ export default {
         dateEnd = '', //  离店日
 
        } = this.$data;
-      console.log(item, 'item', pickerLabelDefault, dateStart, dateEnd )
+      // console.log(item, 'item', pickerLabelDefault, dateStart, dateEnd )
       const newItem = {
         ...item,
         id: id,
@@ -255,7 +270,7 @@ export default {
         checkOutTime: dateEnd
       }
       this.$http.post('/roomTypes/accord/roomType', params).then((res = {}) => {
-        console.log(res, 'res2');
+        // console.log(res, 'res2');
         const { data = [] } = res;
         this.hotelDetialList = data;
       }).catch(err => {
@@ -273,7 +288,7 @@ export default {
           const { imgUrls = [], detail : hotelDetial = '', headHotelName = '',
             hotelName = '', longitude = '', latitude = '', hotelId: checkHotelId = ''
           } = data;
-          console.log(data, 'data')
+          // console.log(data, 'data')
           const { hotelMsg = {} } = this.$data;
           this.hotelMsg = {
             ...hotelMsg,
@@ -286,12 +301,12 @@ export default {
             headHotelName
           }
         } else {
-          console.log(msg, 'msg')
+          // console.log(msg, 'msg')
           this.hotelMsg = {}
           this.$base.toast(msg);
         }
         
-        console.log(res, 'res');
+        // console.log(res, 'res');
         
       }).catch(res => {
         console.log(res, 'err')
@@ -316,70 +331,19 @@ export default {
         }
         this.pickerEnd = new Date(nextDate);
       }
-      // let myDate;
-      // if (val) {
-      //   if (!bol) {
-      //     myDate = new Date(val);
-      //   } else {
-      //     console.log(this.dateStart)
-      //     myDate = new Date(this.dateStart);
-      //   }
-      // } else {
-      //   myDate = new Date();
-      //   this.pickerStart = myDate;
-      //   // this.pickerEnd = myDate;
-      //   this.pickerEnd = this.$base.formatNextDay(new Date())
-      //   console.log(myDate, this.$base.formatNextDay(new Date()), '===========================')
-      // }
-      // let nextDate = myDate;
-      // if (!bol) {
-      //   nextDate = +myDate + 1000*60*60*24;
-      //   nextDate = new Date(nextDate)
-      // } else {
-      //   nextDate = new Date(val)
-      // }
-      // console.log(myDate, nextDate)
-      // let myMonth = myDate.getMonth() + 1;
-      // let nextMonth = nextDate.getMonth() + 1;
-      // const weekArr = new Array("日", "一", "二", "三", "四", "五", "六");  
-      // if (myMonth < 10) {
-      //   myMonth = '0'+ myMonth;  //补齐
-      // }
-      // if (nextMonth < 10) {
-      //   nextMonth = '0'+ nextMonth;  //补齐
-      // }
-      // let mydate = myDate.getDate();
-      // let nextdate = nextDate.getDate();
-      // if (myDate.getDate() < 10) {
-      //     mydate = '0'+ myDate.getDate();  //补齐
-      // }
-      // if (nextDate.getDate()<10) {
-      //     nextdate = '0'+ nextdate.getDate();  //补齐
-      // }
-      // const myWeek = myDate.getDay()
-      // const nextWeek = nextDate.getDay()
-      // const today = `${myMonth}月${ mydate }日 (周${weekArr[myWeek]})`;
-      // const nextday = `${nextMonth}月${ nextdate }日 (周${weekArr[nextWeek]})`;
-      // this.startDate = today
-      // this.endDate = nextday
     },
     bindDateChangeStart(even) { // 开始日期
-      console.log(even, 'evne')
+      // console.log(even, 'evne')
       const { value } = even.target;
       const { dateEnd } = this.$data;// 拿取结束日期，如果结束日期小于当前选择的下一个日期的事件戳，那么结束日期要修改
-      console.log(dateEnd, 'dateEnd')
+      // console.log(dateEnd, 'dateEnd')
       const endDateGetTime = new Date(dateEnd).getTime();// 结束日期的时间戳
       const nextDateGetTime = new Date(value).getTime() + 1000*60*60*24;// 下一日的时间戳
-      console.log(endDateGetTime, nextDateGetTime,(endDateGetTime - nextDateGetTime), '========================', (endDateGetTime < nextDateGetTime))
       if ((endDateGetTime - nextDateGetTime) < 0) {
-        console.log((endDateGetTime < nextDateGetTime))
-        console.log('1111111111111111111111')
         this.dateEnd = this.$base.formatDay(new Date(nextDateGetTime))
       }
       this.dateStart = value;
-      // this.pickerStart = value;
       this.pickerEnd = value;
-      console.log(value, this.pickerEnd);
       this.getToday(value, false, endDateGetTime, nextDateGetTime)
     },
     bindDateChangeEnd(even) { // 结束日期
@@ -387,13 +351,22 @@ export default {
       this.dateEnd = value;
       this.getToday(value, true)
     },
-    changeHotel(e) {// select选择框数据切换
-      console.log(e);
-      const { value: pickerValueDefault = '' } = e.target;
+    changeHotel(e, isSpace = false) {// select选择框数据切换
       const { pickerValueArray = [] } = this.$data;
-      this.pickerValueDefault = pickerValueArray[pickerValueDefault].value || '';
-      const pickerLabelDefault = pickerValueArray[pickerValueDefault].label || ''
-      this.pickerLabelDefault = pickerLabelDefault;
+      if (isSpace) {
+        const id = e.target.value;
+        const items = pickerValueArray.filter(item => {
+          return  item.value == id
+        })
+        const item = items[0] || {}
+        this.pickerValueDefault = item.value
+        this.pickerLabelDefault = item.label
+      } else {
+        const { value: pickerValueDefault = '' } = e.target;
+        this.pickerValueDefault = pickerValueArray[pickerValueDefault].value || '';
+        const pickerLabelDefault = pickerValueArray[pickerValueDefault].label || ''
+        this.pickerLabelDefault = pickerLabelDefault;
+      }
       this.checkHotelDetial();
     },
     searchHotel() { // 点击搜索按钮
