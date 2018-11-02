@@ -76,7 +76,7 @@
                   优惠券
                 </div>
                 <div class="app-right pl30">
-                  <span v-if="discountPrice > 0">提前3天预定立减{{discountPrice}}元</span>
+                  <span v-if="discountPrice > 0">{{discount}}</span>
                   <span v-else>暂无可用优惠券</span> 
                 </div>
               </div>
@@ -140,13 +140,15 @@ export default {
       dateStart: '',
       dateEnd: '',
       unoccupied: 1,
+      roomPriceId: '',
+      discount: ''
     }
   },
   onLoad(options) {
     const { newDetial = '' } = options;
     const newOptions = JSON.parse(newDetial)
     const { roomTypeId = '', unoccupied = 1 } = newOptions;
-    
+    this.roomPriceId = roomTypeId
     if (unoccupied < 1) {
       this.$base.toast('该房型暂无空房，请重新选择');
       wx.switchTab({
@@ -154,7 +156,7 @@ export default {
       })
       return
     }
-    console.log(newOptions, 'newOptions');
+    // console.log(newOptions, 'newOptions');
     let arr = ['1', '2', '3', '4', '5'];
     arr = arr.slice(0, unoccupied);
     this.aptNums = arr;
@@ -165,7 +167,7 @@ export default {
     this.price = newOptions.price;
     this.dataOptions = JSON.parse(newDetial);
     const dateAcount = this.$base.daysAcount(newOptions.dateStart, newOptions.dateEnd)
-    console.log(dateAcount, 'dateAcount')
+    // console.log(dateAcount, 'dateAcount')
     this.dateAcount = dateAcount;
     this.dateStart = this.$base.checkDate(newOptions.dateStart);
     this.dateEnd = this.$base.checkDate(newOptions.dateEnd)
@@ -174,7 +176,7 @@ export default {
   },
   methods: {
     bindPickerChange(even) {
-      console.log(even, 'val')
+      // console.log(even, 'val')
       const { couponPrice, discountPrice, price } = this.$data;
       const { value: checked = 0 } = even.target;
       const checkedIndex = parseInt(checked, 10);
@@ -184,7 +186,7 @@ export default {
       const countPrice = couponPrice * checkedNum + discountPrice;// 优惠的金额
       this.countPrice = countPrice;
       this.payPrice = checkedNum * price  - countPrice;
-      console.log(checkedIndex, 'checkedIndex', checkedNum);
+      // console.log(checkedIndex, 'checkedIndex', checkedNum);
       let arr = [];
       for(var i = 0; i < checkedNum; i++) {
         arr.push('')
@@ -198,15 +200,15 @@ export default {
       const { renterName, renterPhone, checkedIndex, roomTypeId, dataOptions = {} } = this.$data;
       const hoteltestUserId = this.$wxasync.getStorage('hoteltestUserId');
       const orderCounts = this.aptNums[checkedIndex]
-      console.log('renterName', renterName);
+      // console.log('renterName', renterName);
       let isNullRenterName = false;
       renterName.forEach(element => {
-        console.log(element,'element', this.$base.isNull(element))
+        // console.log(element,'element', this.$base.isNull(element))
         if(this.$base.isNull(element)) {
           isNullRenterName = true
         }
       })
-      console.log(isNullRenterName, 'isNullRenterName')
+      // console.log(isNullRenterName, 'isNullRenterName')
       if (isNullRenterName) {
         this.$base.toast('请填写入住人')
       } else if (! this.$base.isPhone(renterPhone)) {
@@ -214,7 +216,7 @@ export default {
       } else {
         this.$wxasync.getStorage('hoteltestUserId').then(res => {
           const { data:hoteltestUserId = '' } = res;
-          console.log(res, 'res')
+          // console.log(res, 'res')
           const params = {
             checkInTime: dataOptions.dateStart,
             checkOutTime: dataOptions.dateEnd,
@@ -225,7 +227,7 @@ export default {
             userId: hoteltestUserId
           }
           this.$http.post('/orderForms/create/orderForm', params).then((res = {}) => {
-            console.log(res, 'res1111');
+            // console.log(res, 'res1111');
             const { code = -1 } = res;
             if (code == 0) {
               this.$base.toast('预定成功，自动跳转到首页')
@@ -239,7 +241,7 @@ export default {
             console.log(err, 'err1111')
           })
         }).catch(err => {
-          console.log('用户信息失效，请重新登录')
+          // console.log('用户信息失效，请重新登录')
           this.$base.toast('用户信息失效，请重新登录')
           wx.navigateTo({
             url: `../../pages/register/index`
@@ -250,7 +252,7 @@ export default {
     checkDiscount() {// 获取优惠券
       const { roomTypeId = '', price } = this.$data;
       this.$wxasync.getStorage('hoteltestUserId').then((res = {}) => {
-        console.log(res, 'res--------');
+        // console.log(res, 'res--------');
         const { data: userId = 0 } = res;
         const params = {
           userId,
@@ -258,10 +260,12 @@ export default {
         }
         this.$http.get('/orderForms/calculate/discount', params).then((res = {}) => {
           console.log(res, 'res');
-          const { couponPrice = 0, discountPrice = 0 } = res;
+          const { data = {} } = res;
+          const { couponPrice = 0, discountPrice = 0, discount = '' } = data;
           this.couponPrice = couponPrice;
           this.discountPrice = discountPrice;
-          console.log()
+          this.discount = discount
+          console.log(couponPrice, discountPrice, 'discountPrice')
           this.payPrice = price - couponPrice - discountPrice;
         }).catch((err = {}) => {
           console.log(err, 'err')

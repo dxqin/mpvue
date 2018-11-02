@@ -60,3 +60,4 @@
   line-height: 100rpx;
   text-align: center;
 }
+.canvas {  width: 100%;  position: fixed;  top: 9999rpx;  left: 0;}

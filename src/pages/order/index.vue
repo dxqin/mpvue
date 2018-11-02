@@ -4,7 +4,7 @@
     <li class="list-tabs-tab" @click="changeTabs(index)" :class="{ active: select === index}" v-for="(tab,index) in tabs" :key="tab">{{tab}}</li>
   </ul>
   <scroll-view class="list-orders":scroll-y="true" @scrolltolower="scrollLower()">
-    <p class="list-orders-item-outer f14 cb2" v-show="orderList.length <= 0">暂无数据</p>
+    <p class="list-orders-item-outer f14 cb2" v-if="orderList.length <= 0">暂无数据</p>
     <div class="list-orders-item-outer" v-for="(li,index) in orderList" :key="li">
       <div class="list-orders-item" @click="detail(li.orderNumber)">
         <p class="list-orders-item-header">
@@ -37,17 +37,16 @@
           <span class="room-time">{{li.checkInTime}}~{{li.checkOutTime}}</span>
           <span class="room-time">共{{li.time}}晚</span>
            <div class="product product-btn"> 
-            <v-button  class="count2 mr28" @click="onDelete(li.orderNumber)">删除</v-button>
-            <v-button v-if="li.orderStatus != 0" class="count2" @click.stop="onOrder(li.hotelId)">再次预定</v-button>
-            <v-button v-if="li.orderStatus == 0" class="count2" @click.stop="onCancel(li.orderNumber)">取消订单</v-button>
+            <v-button  class="count2 mr28" @touchstart.stop="onDelete(li.orderNumber)">删除</v-button>
+            <v-button v-if="li.orderStatus != 0" class="count2" @touchstart.stop="onOrder(li.hotelId)">再次预定</v-button>
+            <!-- <v-button v-if="li.orderStatus == 0" class="count2" @touchstart.stop="onCancel(li.orderNumber)">取消订单</v-button> -->
+            <v-button v-if="li.orderStatus == 0" class="count2" @touchstart.stop="onOrder(li.hotelId)">取消订单</v-button>
           </div>
         </div>
       </div>
       <div class="gap"></div>
     </div>
   </scroll-view>
-  <toast type="loading" v-if="toastShow">数据加载中</toast>
-  <toast v-if="toastShowAll">已显示全部</toast>
 </div>
 </template>
  
@@ -55,18 +54,13 @@
 <script>
 "use strict";
 import Vue from "vue";
-import Toast from "../../components/toast/toast.vue";
-import countDown from "../../components/count-down/countDown";
 import './wxss/index.wxss'
 import { parse } from 'semver';
 export default {
   data() {
     const _this = this;
     return {
-      // dialogControl: _this.dialogControl,
-      toastShow: _this.toastShow,
-      toastShowAll: _this.toastShowAll,
-      orderList: _this.orderList,
+      orderList: [],
       statusArr: ['预定中', '预定成功', '预定取消','已入住','已完成'],
       tabs: _this.tabs,
       select: _this.select,
@@ -79,22 +73,13 @@ export default {
    onLoad() {
     const _this = this;
     _this.select = 0;
-    _this.toastShow = false;
-    _this.toastShowAll = false;
     _this.currentPage = 1;
     _this.tabs = ["全部"];
-    this.getList()
+    this.getList();
   },
   methods: {
-     showToast() {
-      const _this = this;
-      _this.toastShowAll = true;
-      setTimeout(() => {
-        _this.toastShowAll = false;
-      }, 2000);
-    },
     getList() {
-      // console.log("page="+this.page)
+      console.log("page=")
       const { isLast = false, isCanCatch = false, page = 1, size = 10, orderList } = this.$data;
       this.$wxasync.getStorage('hoteltestUserId').then(res => {
         const { data:hoteltestUserId = '' } = res;
@@ -134,7 +119,14 @@ export default {
         orderNumber : number
       }
       _this.$http.get('/orderForms/orderForm/delete', params).then((res = {}) => {
-        _this.$base.toast('删除成功')
+        if(res.code == 0){
+          _this.$base.toast('删除成功');
+          _this.orderList = [];
+          _this.page = 1;
+          _this.getList();
+        }else{
+          _this.$base.toast(res.msg);
+        }
       }).catch(res => {
         console.log(res, 'resErr')
       })
@@ -146,7 +138,12 @@ export default {
         orderNumber : number
       }
       this.$http.get('/orderForms/orderForm/cancel', params).then((res = {}) => {
-        _this.$base.toast('取消成功');
+        if(res.code == 0){
+          _this.$base.toast('取消成功');
+          _this.orderList = [];
+          _this.page = 1;
+          _this.getList();
+        }else _this.$base.toast(res.msg);
       }).catch(res => {
         console.log(res, 'resErr')
       })
@@ -162,11 +159,12 @@ export default {
         checkOutTime : outTime //离店时间
       };
       // console.log(params);
-       wx.navigateTo({
-        url: `../reserve-list/index?item=${JSON.stringify(params)}` 
+       wx.switchTab({
+        // url: `../reserve-list/index?item=${JSON.stringify(params)}` 
+        url: `../reserve-list/index?hotelId=${id}` 
       });
     },
-     detail(orderNumber) {
+    detail(orderNumber) {
       const _this = this;
       wx.navigateTo({
         url: `../reserve/index?orderNumber=${orderNumber}`
@@ -189,8 +187,7 @@ export default {
     else this.$base.toast('已加载全部');
   },
   components: {
-    Toast,
-    countDown
+   
   }
 };
 </script>

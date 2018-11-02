@@ -11,6 +11,13 @@
   width: 750rpx;
   height: 336rpx;
   background: #00A4A2;
+  display: flex;
+  justify-content: center;
+}
+.bg-head img{
+  width: 128rpx;
+  height: 108rpx;
+  margin-top: 46rpx;
 }
 .index-content{
   border-radius: 10rpx 10rpx 0 0;
