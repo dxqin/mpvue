@@ -1,22 +1,22 @@
 <template>
   <div class="reserve-list-index w-full container-middle">
     <!-- 预定选择 -->
-    <div class="reserve-list-search mt30 plr20 ptb20 pos-re">
-      <p class="c3b f16 ptb20">预定选择</p>
-      <div class="f14 c-app border-bottom-have">
+    <div class="reserve-list-search mt30 plr22 ptb20 pos-re">
+      <p class="c3b f16 ptb12">预定选择</p>
+      <div class="f14 c-app border-bottom-have" style="margin-top: 34rpx">
         <picker
           :range="pickerValueArray"
           range-key="label"
           @change="changeHotel"
         >
-          <view class="picker">
+          <view class="picker pb10">
             {{pickerLabelDefault || '请选择'}}
           </view>
         </picker>
       </div>
-      <div class="flex-row jc-bet border-bottom-have ptb14">
-        <div class="flex-col w50">
-          <p class="f12">入住</p>
+      <div class="flex-row jc-bet border-bottom-have ptb14 bsbb" style="height: 120rpx">
+        <div class="flex-col" style="width: 220rpx">
+          <p class="f12 c3b">入住</p>
           <picker mode="date"
             :value="startDate"
             :start="pickerStart" end="2217-09-01" @change="bindDateChangeStart($event)">
@@ -25,8 +25,8 @@
               </div>
           </picker>
         </div>
-        <div class="flex-col w50">
-          <p class="f12">退房</p>
+        <div class="flex-col" style="width: 220rpx">
+          <p class="f12 c3b">退房</p>
           <picker mode="date"
             :value="endDate"
             :start="pickerEnd" end="2217-09-01" @change="bindDateChangeEnd($event)">
@@ -36,16 +36,16 @@
           </picker>
         </div>
       </div>
-      <div class="flex-row jc-bet border-bottom-have ptb14">
-        <div class="flex-col w50">
-          <p class="f12">房间数</p>
+      <div class="flex-row jc-bet border-bottom-have ptb14 bsbb" style="height: 120rpx">
+        <div class="flex-col" style="width: 220rpx">
+          <p class="f12 c3b">房间数</p>
           <p class="f14 c-app dis-flex jc-str">
             <input type="number" v-model="houseNums" placeholder=" " style="width: 60rpx">
             <span>间</span>
           </p>
         </div>
-        <div class="flex-col w50">
-          <p class="f12">人数</p>
+        <div class="flex-col" style="width: 220rpx">
+          <p class="f12 c3b">人数</p>
           <p class="f14 c-app dis-flex jc-str">
             <input type="number" v-model="personNums" placeholder=" " style="width: 60rpx">
             <span>人</span>
@@ -53,13 +53,13 @@
         </div>
       </div>
       <div style="position: absolute; bottom: -35rpx; left: calc(50% - 180rpx)">
-        <div class="dis-flex jc-c">
-          <div class="search-btn tc cfff f16 app-btn br10" @click="searchHotel">搜索</div>
+        <div class="dis-flex jc-c br10">
+          <div class="search-btn tc cfff f15 app-btn br10" @click="searchHotel">搜索</div>
         </div>
       </div>
     </div>
     <!-- 搜索结果 -->
-    <div class="search-result" style="margin-top: 184rpx" v-show="hotelMsg.checkHotelId">
+    <div class="search-result" style="margin-top: 194rpx" v-show="hotelMsg.checkHotelId">
       <div class="hotel-index br10">
         <div class="img-box pos-re br10">
           <div >
@@ -105,8 +105,12 @@
         <div class="hotel-child-list bb br10 mt40" v-for="(item, index) in hotelDetialList" :key="index">
           <!-- 房源的总述 -->
           <div class="hotel-child-title flex-row jc-bet"  @click="checkHotel(item.roomTypeId)">
-            <div class="hotel-child-left bb">
+            <div class="hotel-child-left bb pos-re">
               <img class="hotel-child-left-img" :src="item.imgUrls[0] || hotelImgs" alt="">
+              <div class="pos-ab tc f10 cfff" style="right: 0;bottom: 0; width: 80rpx; height: 40rpx;line-heihgt: 40rpx;" >
+                <div class="pos-ab" style=" right: 0; bottom: 0; width: 80rpx;height: 40rpx;background: #D8D8D8; opacity: 0.5;"> </div>
+                <span class="pos-ab dib" style="right: 0; bottom: 0; width: 80rpx; height: 40rpx; line-height: 46rpx;">{{item.imgUrls.length || 1}} 张</span>
+              </div>
               <!-- {{item.imgUrls}} -->
             </div>
             <div class="hotel-child-right p10 bb dis-flex jc-ar">
@@ -131,11 +135,11 @@
             <div class="hotel-child-item-child pl10 bcbb border-bottom-have dis-flex jc-bet plr6 ptb16"
               v-for="(items, indexs) in item.roomPrices" :key="index"
             >
-              <div class="child-left pl10">
-                <p><span class="f14 cc2">{{items.roomPriceName}}</span><span class="f10 c3b">详情</span></p>
+              <div class="child-left pl10"  @click="reserveOrder(items.roomPriceId, item.unoccupied, items)">
+                <p class="dis-flex jc-str" style="align-items: center"><span class="f14 c3b dib text-overf-ell" style="max-width: 380rpx">{{items.roomPriceName}}</span><span class="f10 cc2">详情</span></p>
                 <p class=" f12 c3b">{{items.bedType}}</p>
-                <p class="f10 c-app">
-                  <span class="mr10">{{items.valueAddedService}}</span>
+                <p class="f10 c-app mt10">
+                  <span class="mr10" style="border: 1px solid #00A4A2; border-radius: 4rpx; padding: 6rpx">{{items.valueAddedService}}</span>
                 </p>
               </div>
               <div class="c3b f20  dis-flex jc-bet aic">
@@ -214,7 +218,12 @@ export default {
   },
   methods: {
     checkHotel(val = -1) {
-      this.isactive = val;
+      const { isactive } = this.$data;
+      if (isactive == val) {
+        this.isactive = -1;
+      } else {
+        this.isactive = val;
+      }
     },
     changeShow(type = '') {
       this.type = type;
@@ -256,7 +265,29 @@ export default {
         pickerLabelDefault: pickerLabelDefault,
         dateStart: dateStart,
         dateEnd: dateEnd,
-        unoccupied
+        unoccupied,
+        roomTypeId: id,
+      }
+      wx.navigateTo({
+        url: `../reserve-order/index?newDetial=${JSON.stringify(newItem)}`
+      })
+    },
+    reserveOrder(id = '', unoccupied = 1, item) {
+      const { 
+        pickerLabelDefault = '', // 酒店名
+        dateStart = '', // 入住日
+        dateEnd = '', //  离店日
+
+       } = this.$data;
+      // console.log(item, 'item', pickerLabelDefault, dateStart, dateEnd )
+      const newItem = {
+        ...item,
+        id: id,
+        pickerLabelDefault: pickerLabelDefault,
+        dateStart: dateStart,
+        dateEnd: dateEnd,
+        unoccupied,
+        roomTypeId: id,
       }
       wx.navigateTo({
         url: `../reserve-detial/index?item=${JSON.stringify(newItem)}`
