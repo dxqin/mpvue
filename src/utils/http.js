@@ -55,20 +55,23 @@ fly.interceptors.request.use((request) => {
 })
 
 fly.interceptors.response.use(
- (response, promise) => {
-   wx.hideNavigationBarLoading()
-   wx.hideLoading()
-   // console.log(response);
-   let res = response.data
-   //处理登录失效
-   if (res.code === 4004 || res.code === 4003 || res.code === 4001 || res.code === 4002) {
-     user.removeToken()
-     //重新登录
-     //user.login()
-     tools.navigate('/pages/mine/login', 'redirect')
-   }
-   return promise.resolve(res)
- },
+  (response, promise) => {
+    wx.hideNavigationBarLoading()
+    wx.hideLoading()
+    // console.log(response);
+    let res = response.data
+    //处理登录失效
+    if (res.code === 6) {
+    user.removeToken('hoteltestToken')
+      //重新登录
+    wx.redirectTo({
+      url: '/pages/register/index?type=register',
+    });
+    } else if (res.code === 102) {
+    tools.navigate('/pages/register/index', 'redirect')
+    }
+    return promise.resolve(res)
+  },
  (err, promise) => {
    wx.hideNavigationBarLoading()
    wx.hideLoading()
